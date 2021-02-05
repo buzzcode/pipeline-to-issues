@@ -1,0 +1,10 @@
+name: 'Veracode Pipeline scan results to GitHub issues'
+description: 'Import the results of a Veracode Pipeline scan as issues for a repo'
+inputs:
+  pipeline-results-json:  # id of input
+    description: 'Pipeline scan results'
+    required: true
+    default: 'results.json'
+runs:
+  using: 'node12'
+  main: 'index.js'
