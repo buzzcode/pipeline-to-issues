@@ -1,0 +1,2313 @@
+{
+  "_links": {
+    "root": {
+      "href": "/"
+    },
+    "self": {
+      "href": "/scans/8fdfdd13-2284-4e67-bd1a-23357cc42065/findings"
+    },
+    "help": {
+      "href": "https://help.veracode.com/reader/tS9CaFwL4_lbIEWWomsJoA/ovfZGgu96UINQxIuTqRDwg"
+    }
+  },
+  "scan_id": "8fdfdd13-2284-4e67-bd1a-23357cc42065",
+  "scan_status": "SUCCESS",
+  "message": "Scan successful. Results size: 119586 bytes",
+  "modules": [
+    "webgoat-container-7.1-SNAPSHOT.war",
+    "JS files within webgoat-container-7.1-SNAPSHOT.war",
+    "JS files within webgoat-container-7.1-SNAPSHOT.war",
+    "JS files within webgoat-container-7.1-SNAPSHOT.war",
+    "JS files within webgoat-container-7.1-SNAPSHOT.war",
+    "JS files within webgoat-container-7.1-SNAPSHOT.war",
+    "JS files within webgoat-container-7.1-SNAPSHOT.war",
+    "JS files within webgoat-container-7.1-SNAPSHOT.war",
+    "JS files within webgoat-container-7.1-SNAPSHOT.war",
+    "JS files within webgoat-container-7.1-SNAPSHOT.war"
+  ],
+  "modules_count": 10,
+  "findings": [
+    {
+      "title": "java.sql.Statement.executeQuery",
+      "issue_id": 1004,
+      "gob": "B",
+      "severity": 4,
+      "issue_type_id": "taint",
+      "issue_type": "Improper Neutralization of Special Elements used in an SQL Command (\u0027SQL Injection\u0027)",
+      "cwe_id": "89",
+      "display_text": "\u003cspan\u003eThis database query contains a SQL injection flaw.  The call to java.sql.Statement.executeQuery() constructs a dynamic SQL query using a variable derived from untrusted input.  An attacker could exploit this flaw to execute arbitrary SQL queries against the database. The first argument to executeQuery() contains tainted data from the variable sqlStatement. The tainted data originated from an earlier call to javax.servlet.ServletRequest.getParameterValues.\u003c/span\u003e \u003cspan\u003eAvoid dynamically constructing SQL queries.  Instead, use parameterized prepared statements to prevent the database from interpreting the contents of bind variables as part of the query.  Always validate untrusted input to ensure that it conforms to the expected format, using centralized data validation routines when possible.\u003c/span\u003e \u003cspan\u003eReferences: \u003ca href\u003d\"https://cwe.mitre.org/data/definitions/89.html\"\u003eCWE\u003c/a\u003e \u003ca href\u003d\"https://www.owasp.org/index.php/SQL_injection\"\u003eOWASP\u003c/a\u003e \u003ca href\u003d\"https://webappsec.pbworks.com/SQL-Injection\"\u003eWASC\u003c/a\u003e\u003c/span\u003e",
+      "files": {
+        "source_file": {
+          "file": "org/owasp/webgoat/lessons/admin/ViewDatabase.java",
+          "line": 80,
+          "function_name": "createContent",
+          "qualified_function_name": "org.owasp.webgoat.lessons.admin.ViewDatabase.createContent",
+          "function_prototype": "apache.ecs.Element createContent(session.WebSession)",
+          "scope": "org.owasp.webgoat.lessons.admin.ViewDatabase"
+        }
+      },
+      "flaw_match": {
+        "procedure_hash": "3496192803",
+        "prototype_hash": "1953662963",
+        "flaw_hash": "390377922",
+        "flaw_hash_count": 1,
+        "flaw_hash_ordinal": 1,
+        "cause_hash": "153293750",
+        "cause_hash_count": 1,
+        "cause_hash_ordinal": 1
+      }
+    },
+    {
+      "title": "javax.servlet.http.HttpServletResponse.addCookie",
+      "issue_id": 1050,
+      "gob": "B",
+      "severity": 3,
+      "issue_type_id": "taint",
+      "issue_type": "Improper Neutralization of CRLF Sequences in HTTP Headers (\u0027HTTP Response Splitting\u0027)",
+      "cwe_id": "113",
+      "display_text": "\u003cspan\u003eThis call to javax.servlet.http.HttpServletResponse.addCookie() contains an HTTP response splitting flaw.  Writing untrusted input into an HTTP header allows an attacker to manipulate the HTTP response rendered by the browser, to inject additional headers or an entire response body into the response stream. Injecting headers can be used to trick various security mechanisms in browsers into allowing XSS style attacks. Injecting entire response bodies can not only cause XSS attacks to succeed but may even poison the cache of any intermediary proxies between the clients and the application server. The first argument to addCookie() contains tainted data from the variable cookies. The tainted data originated from an earlier call to javax.servlet.http.HttpServletRequest.getCookies.\u003c/span\u003e \u003cspan\u003eEscape, encode, or remove carriage return and line feed characters from untrusted data before inclusion in HTTP response headers.  Whenever possible, use a security library such as ESAPI that provides safe versions of addHeader(), etc. that will automatically remove unexpected carriage returns and line feeds and can be configured to use HTML entity encoding for non-alphanumeric data.  Alternatively, some of the XSS escaping functions from the OWASP Java Encoder project will also sanitize CRLF sequences.  Only create a custom blocklist when absolutely necessary.  Always validate untrusted input to ensure that it conforms to the expected format, using centralized data validation routines when possible.\u003c/span\u003e \u003cspan\u003eReferences: \u003ca href\u003d\"https://cwe.mitre.org/data/definitions/113.html\"\u003eCWE\u003c/a\u003e \u003ca href\u003d\"https://www.owasp.org/index.php/HTTP_Response_Splitting\"\u003eOWASP\u003c/a\u003e \u003ca href\u003d\"https://webappsec.pbworks.com/HTTP-Response-Splitting\"\u003eWASC\u003c/a\u003e \u003ca href\u003d\"https://help.veracode.com/reader/4EKhlLSMHm5jC8P8j3XccQ/IiF_rOE79ANbwnZwreSPGA\"\u003eSupported Cleansers\u003c/a\u003e\u003c/span\u003e",
+      "files": {
+        "source_file": {
+          "file": "org/owasp/webgoat/session/WebSession.java",
+          "line": 297,
+          "function_name": "eatCookies",
+          "qualified_function_name": "org.owasp.webgoat.session.WebSession.eatCookies",
+          "function_prototype": "void eatCookies()",
+          "scope": "org.owasp.webgoat.session.WebSession"
+        }
+      },
+      "flaw_match": {
+        "procedure_hash": "985378488",
+        "prototype_hash": "4146034803",
+        "flaw_hash": "4257640498",
+        "flaw_hash_count": 1,
+        "flaw_hash_ordinal": 1,
+        "cause_hash": "765725407",
+        "cause_hash_count": 1,
+        "cause_hash_ordinal": 1
+      }
+    },
+    {
+      "title": "org.slf4j.Logger.info",
+      "issue_id": 1055,
+      "gob": "B",
+      "severity": 3,
+      "issue_type_id": "taint",
+      "issue_type": "Improper Output Neutralization for Logs",
+      "cwe_id": "117",
+      "display_text": "\u003cspan\u003eThis call to org.slf4j.Logger.info() could result in a log forging attack.  Writing untrusted data into a log file allows an attacker to forge log entries or inject malicious content into log files.  Corrupted log files can be used to cover an attacker\u0027s tracks or as a delivery mechanism for an attack on a log viewing or processing utility.  For example, if a web administrator uses a browser-based utility to review logs, a cross-site scripting attack might be possible. The first argument to info() contains tainted data. The tainted data originated from an earlier call to javax.servlet.ServletRequest.getParameterMap.\u003c/span\u003e \u003cspan\u003eAvoid directly embedding user input in log files when possible.  Sanitize untrusted data used to construct log entries by using a safe logging mechanism such as the OWASP ESAPI Logger, which will automatically remove unexpected carriage returns and line feeds and can be configured to use HTML entity encoding for non-alphanumeric data.  Alternatively, some of the XSS escaping functions from the OWASP Java Encoder project will also sanitize CRLF sequences.  Only create a custom blocklist when absolutely necessary.  Always validate untrusted input to ensure that it conforms to the expected format, using centralized data validation routines when possible.\u003c/span\u003e \u003cspan\u003eReferences: \u003ca href\u003d\"https://cwe.mitre.org/data/definitions/117.html\"\u003eCWE\u003c/a\u003e \u003ca href\u003d\"https://www.owasp.org/index.php/Log_injection\"\u003eOWASP\u003c/a\u003e \u003ca href\u003d\"https://webappsec.pbworks.com/Improper-Output-Handling\"\u003eWASC\u003c/a\u003e \u003ca href\u003d\"https://help.veracode.com/reader/4EKhlLSMHm5jC8P8j3XccQ/IiF_rOE79ANbwnZwreSPGA\"\u003eSupported Cleansers\u003c/a\u003e\u003c/span\u003e",
+      "files": {
+        "source_file": {
+          "file": "org/owasp/webgoat/session/WebSession.java",
+          "line": 1181,
+          "function_name": "updateLastAttackRequestInfo",
+          "qualified_function_name": "org.owasp.webgoat.session.WebSession.updateLastAttackRequestInfo",
+          "function_prototype": "void updateLastAttackRequestInfo(javax.servlet.http.HttpServletRequest)",
+          "scope": "org.owasp.webgoat.session.WebSession"
+        }
+      },
+      "flaw_match": {
+        "procedure_hash": "2284745939",
+        "prototype_hash": "497972403",
+        "flaw_hash": "3159190312",
+        "flaw_hash_count": 1,
+        "flaw_hash_ordinal": 1,
+        "cause_hash": "2962402947",
+        "cause_hash_count": 1,
+        "cause_hash_ordinal": 1
+      }
+    },
+    {
+      "title": "java.io.FileInputStream.!operator_javanewinit",
+      "issue_id": 1023,
+      "gob": "B",
+      "severity": 3,
+      "issue_type_id": "taint",
+      "issue_type": "External Control of File Name or Path",
+      "cwe_id": "73",
+      "display_text": "\u003cspan\u003eThis call to java.io.FileInputStream.!operator_javanewinit() contains a path manipulation flaw.  The argument to the function is a filename constructed using untrusted input.  If an attacker is allowed to specify all or part of the filename, it may be possible to gain unauthorized access to files on the server, including those outside the webroot, that would be normally be inaccessible to end users.  The level of exposure depends on the effectiveness of input validation routines, if any. The first argument to !operator_javanewinit() contains tainted data from the variable fileName. The tainted data originated from earlier calls to javax.servlet.ServletRequest.getParameterValues, javax.servlet.ServletRequest.getParameterNames, and java.sql.Statement.executeQuery.\u003c/span\u003e \u003cspan\u003eValidate all untrusted input to ensure that it conforms to the expected format, using centralized data validation routines when possible.  When using blocklists, be sure that the sanitizing routine performs a sufficient number of iterations to remove all instances of disallowed characters.\u003c/span\u003e \u003cspan\u003eReferences: \u003ca href\u003d\"https://cwe.mitre.org/data/definitions/73.html\"\u003eCWE\u003c/a\u003e \u003ca href\u003d\"https://webappsec.pbworks.com/Path-Traversal\"\u003eWASC\u003c/a\u003e\u003c/span\u003e",
+      "files": {
+        "source_file": {
+          "file": "org/owasp/webgoat/session/LessonTracker.java",
+          "line": 226,
+          "function_name": "load",
+          "qualified_function_name": "org.owasp.webgoat.session.LessonTracker.load",
+          "function_prototype": "LessonTracker load(WebSession, java.lang.String, Screen)",
+          "scope": "org.owasp.webgoat.session.LessonTracker"
+        }
+      },
+      "flaw_match": {
+        "procedure_hash": "1337647823",
+        "prototype_hash": "1871355003",
+        "flaw_hash": "1480817290",
+        "flaw_hash_count": 1,
+        "flaw_hash_ordinal": 1,
+        "cause_hash": "2866949028",
+        "cause_hash_count": 1,
+        "cause_hash_ordinal": 1
+      }
+    },
+    {
+      "title": "PASSWORD initializer",
+      "issue_id": 1003,
+      "gob": "B",
+      "severity": 3,
+      "issue_type_id": "crypto",
+      "issue_type": "Use of Hard-coded Password",
+      "cwe_id": "259",
+      "display_text": "\u003cspan\u003eThis variable assignment uses a hard-coded password that may compromise system security in a way that cannot be easily remedied.  The use of a hard-coded password significantly increases the possibility that the account being protected will be compromised.  Moreover, the password cannot be changed without patching the software.  If a hard-coded password is compromised in a commercial product, all deployed instances may be vulnerable to attack.  In some cases, this finding may indicate a reference to a password (e.g. the name of a key in a properties file) rather than an actual password. PASSWORD initializer\u003c/span\u003e \u003cspan\u003eStore passwords out-of-band from the application code.  Follow best practices for protecting credentials stored in locations such as configuration or properties files. An HSM may be appropriate for particularly sensitive credentials.\u003c/span\u003e \u003cspan\u003eReferences: \u003ca href\u003d\"https://cwe.mitre.org/data/definitions/259.html\"\u003eCWE\u003c/a\u003e\u003c/span\u003e",
+      "files": {
+        "source_file": {
+          "file": "org/owasp/webgoat/session/ECSFactory.java",
+          "line": 1,
+          "function_name": "UNKNOWN",
+          "qualified_function_name": "UNKNOWN",
+          "function_prototype": "UNKNOWN",
+          "scope": "UNKNOWN"
+        }
+      },
+      "flaw_match": {
+        "procedure_hash": "327047908",
+        "prototype_hash": "0",
+        "flaw_hash": "1935972869",
+        "flaw_hash_count": 1,
+        "flaw_hash_ordinal": 1,
+        "cause_hash": "0",
+        "cause_hash_count": 0,
+        "cause_hash_ordinal": 0
+      }
+    },
+    {
+      "title": "java.sql.DriverManager.getConnection",
+      "issue_id": 1016,
+      "gob": "B",
+      "severity": 3,
+      "issue_type_id": "crypto",
+      "issue_type": "Plaintext Storage of a Password",
+      "cwe_id": "256",
+      "display_text": "\u003cspan\u003eThe java.sql.DriverManager.getConnection() method reads and/or stores sensitive information in plaintext, making the data more susceptible to compromise.\u003c/span\u003e \u003cspan\u003eNever store sensitive data in plaintext.  Consider using cryptographic hashes as an alternative to plaintext. The third argument to getConnection() contains data from server-side storage from the variable password. The data from server-side storage originated from an earlier call to javax.servlet.GenericServlet.getInitParameter.\u003c/span\u003e \u003cspan\u003eReferences: \u003ca href\u003d\"https://cwe.mitre.org/data/definitions/256.html\"\u003eCWE\u003c/a\u003e\u003c/span\u003e",
+      "files": {
+        "source_file": {
+          "file": "org/owasp/webgoat/session/DatabaseUtilities.java",
+          "line": 120,
+          "function_name": "makeConnection",
+          "qualified_function_name": "org.owasp.webgoat.session.DatabaseUtilities.makeConnection",
+          "function_prototype": "java.sql.Connection makeConnection(java.lang.String, WebgoatContext)",
+          "scope": "org.owasp.webgoat.session.DatabaseUtilities"
+        }
+      },
+      "flaw_match": {
+        "procedure_hash": "1934905278",
+        "prototype_hash": "275072211",
+        "flaw_hash": "3800558521",
+        "flaw_hash_count": 1,
+        "flaw_hash_ordinal": 1,
+        "cause_hash": "2461251541",
+        "cause_hash_count": 1,
+        "cause_hash_ordinal": 1
+      }
+    },
+    {
+      "title": "org.slf4j.Logger.error",
+      "issue_id": 1053,
+      "gob": "B",
+      "severity": 3,
+      "issue_type_id": "taint",
+      "issue_type": "Improper Output Neutralization for Logs",
+      "cwe_id": "117",
+      "display_text": "\u003cspan\u003eThis call to org.slf4j.Logger.error() could result in a log forging attack.  Writing untrusted data into a log file allows an attacker to forge log entries or inject malicious content into log files.  Corrupted log files can be used to cover an attacker\u0027s tracks or as a delivery mechanism for an attack on a log viewing or processing utility.  For example, if a web administrator uses a browser-based utility to review logs, a cross-site scripting attack might be possible. The first argument to error() contains tainted data. The tainted data originated from earlier calls to javax.servlet.http.HttpServletRequest.getRequestURL, and AnnotationVirtualController.vc_annotation_entry.\u003c/span\u003e \u003cspan\u003eAvoid directly embedding user input in log files when possible.  Sanitize untrusted data used to construct log entries by using a safe logging mechanism such as the OWASP ESAPI Logger, which will automatically remove unexpected carriage returns and line feeds and can be configured to use HTML entity encoding for non-alphanumeric data.  Alternatively, some of the XSS escaping functions from the OWASP Java Encoder project will also sanitize CRLF sequences.  Only create a custom blocklist when absolutely necessary.  Always validate untrusted input to ensure that it conforms to the expected format, using centralized data validation routines when possible.\u003c/span\u003e \u003cspan\u003eReferences: \u003ca href\u003d\"https://cwe.mitre.org/data/definitions/117.html\"\u003eCWE\u003c/a\u003e \u003ca href\u003d\"https://www.owasp.org/index.php/Log_injection\"\u003eOWASP\u003c/a\u003e \u003ca href\u003d\"https://webappsec.pbworks.com/Improper-Output-Handling\"\u003eWASC\u003c/a\u003e \u003ca href\u003d\"https://help.veracode.com/reader/4EKhlLSMHm5jC8P8j3XccQ/IiF_rOE79ANbwnZwreSPGA\"\u003eSupported Cleansers\u003c/a\u003e\u003c/span\u003e",
+      "files": {
+        "source_file": {
+          "file": "org/owasp/webgoat/service/BaseService.java",
+          "line": 68,
+          "function_name": "handleException",
+          "qualified_function_name": "org.owasp.webgoat.service.BaseService.handleException",
+          "function_prototype": "ExceptionInfo handleException(javax.servlet.http.HttpServletRequest, java.lang.Exception)",
+          "scope": "org.owasp.webgoat.service.BaseService"
+        }
+      },
+      "flaw_match": {
+        "procedure_hash": "1894091224",
+        "prototype_hash": "3641233508",
+        "flaw_hash": "4170013373",
+        "flaw_hash_count": 1,
+        "flaw_hash_ordinal": 1,
+        "cause_hash": "3495227459",
+        "cause_hash_count": 1,
+        "cause_hash_ordinal": 1
+      }
+    },
+    {
+      "title": "org.slf4j.Logger.error",
+      "issue_id": 1054,
+      "gob": "B",
+      "severity": 3,
+      "issue_type_id": "taint",
+      "issue_type": "Improper Output Neutralization for Logs",
+      "cwe_id": "117",
+      "display_text": "\u003cspan\u003eThis call to org.slf4j.Logger.error() could result in a log forging attack.  Writing untrusted data into a log file allows an attacker to forge log entries or inject malicious content into log files.  Corrupted log files can be used to cover an attacker\u0027s tracks or as a delivery mechanism for an attack on a log viewing or processing utility.  For example, if a web administrator uses a browser-based utility to review logs, a cross-site scripting attack might be possible. The second argument to error() contains tainted data from the variable ex. The tainted data originated from earlier calls to javax.servlet.http.HttpServletRequest.getRequestURL, and AnnotationVirtualController.vc_annotation_entry.\u003c/span\u003e \u003cspan\u003eAvoid directly embedding user input in log files when possible.  Sanitize untrusted data used to construct log entries by using a safe logging mechanism such as the OWASP ESAPI Logger, which will automatically remove unexpected carriage returns and line feeds and can be configured to use HTML entity encoding for non-alphanumeric data.  Alternatively, some of the XSS escaping functions from the OWASP Java Encoder project will also sanitize CRLF sequences.  Only create a custom blocklist when absolutely necessary.  Always validate untrusted input to ensure that it conforms to the expected format, using centralized data validation routines when possible.\u003c/span\u003e \u003cspan\u003eReferences: \u003ca href\u003d\"https://cwe.mitre.org/data/definitions/117.html\"\u003eCWE\u003c/a\u003e \u003ca href\u003d\"https://www.owasp.org/index.php/Log_injection\"\u003eOWASP\u003c/a\u003e \u003ca href\u003d\"https://webappsec.pbworks.com/Improper-Output-Handling\"\u003eWASC\u003c/a\u003e \u003ca href\u003d\"https://help.veracode.com/reader/4EKhlLSMHm5jC8P8j3XccQ/IiF_rOE79ANbwnZwreSPGA\"\u003eSupported Cleansers\u003c/a\u003e\u003c/span\u003e",
+      "files": {
+        "source_file": {
+          "file": "org/owasp/webgoat/service/BaseService.java",
+          "line": 68,
+          "function_name": "handleException",
+          "qualified_function_name": "org.owasp.webgoat.service.BaseService.handleException",
+          "function_prototype": "ExceptionInfo handleException(javax.servlet.http.HttpServletRequest, java.lang.Exception)",
+          "scope": "org.owasp.webgoat.service.BaseService"
+        }
+      },
+      "flaw_match": {
+        "procedure_hash": "1894091224",
+        "prototype_hash": "3641233508",
+        "flaw_hash": "4170013373",
+        "flaw_hash_count": 1,
+        "flaw_hash_ordinal": 1,
+        "cause_hash": "3495227459",
+        "cause_hash_count": 1,
+        "cause_hash_ordinal": 1
+      }
+    },
+    {
+      "title": "getSession",
+      "issue_id": 1069,
+      "gob": "B",
+      "severity": 3,
+      "issue_type_id": "guide",
+      "issue_type": "Session Fixation",
+      "cwe_id": "384",
+      "display_text": "\u003cspan\u003eThe application calls getSession(), and never invalidates user sessions, which can lead to session fixation attacks.  As a result, the session identifier stays the same before, during, and after a user has logged in or out.  An attacker may attempt to force a user into using a specific session identifier, then hijack the session once the user has logged in.\u003c/span\u003e \u003cspan\u003eInvalidate any existing session after the user has authenticated but before calling methods that establish the UserPrincipal.  Also, invalidate the session object when a user logs out, otherwise the session will remain valid on the server.\u003c/span\u003e \u003cspan\u003eReferences: \u003ca href\u003d\"https://cwe.mitre.org/data/definitions/384.html\"\u003eCWE\u003c/a\u003e \u003ca href\u003d\"https://www.owasp.org/index.php/Session_Fixation\"\u003eOWASP\u003c/a\u003e \u003ca href\u003d\"https://webappsec.pbworks.com/Session-Fixation\"\u003eWASC\u003c/a\u003e\u003c/span\u003e",
+      "files": {
+        "source_file": {
+          "file": "org/owasp/webgoat/controller/Welcome.java",
+          "line": 46,
+          "function_name": "welcome",
+          "qualified_function_name": "org.owasp.webgoat.controller.Welcome.welcome",
+          "function_prototype": "springframework.web.servlet.ModelAndView welcome(javax.servlet.http.HttpServletRequest, java.lang.String, java.lang.String)",
+          "scope": "org.owasp.webgoat.controller.Welcome"
+        }
+      },
+      "flaw_match": {
+        "procedure_hash": "417234038",
+        "prototype_hash": "2841937868",
+        "flaw_hash": "1480817290",
+        "flaw_hash_count": 1,
+        "flaw_hash_ordinal": 1,
+        "cause_hash": "2866949028",
+        "cause_hash_count": 1,
+        "cause_hash_ordinal": 1
+      }
+    },
+    {
+      "title": "javax.servlet.GenericServlet.log",
+      "issue_id": 1056,
+      "gob": "B",
+      "severity": 3,
+      "issue_type_id": "taint",
+      "issue_type": "Improper Output Neutralization for Logs",
+      "cwe_id": "117",
+      "display_text": "\u003cspan\u003eThis call to javax.servlet.GenericServlet.log() could result in a log forging attack.  Writing untrusted data into a log file allows an attacker to forge log entries or inject malicious content into log files.  Corrupted log files can be used to cover an attacker\u0027s tracks or as a delivery mechanism for an attack on a log viewing or processing utility.  For example, if a web administrator uses a browser-based utility to review logs, a cross-site scripting attack might be possible. The first argument to log() contains tainted data from the variable output. The tainted data originated from earlier calls to javax.servlet.ServletRequest.getRemoteHost, javax.servlet.ServletRequest.getParameterNames, and javax.servlet.ServletRequest.getParameterValues.\u003c/span\u003e \u003cspan\u003eAvoid directly embedding user input in log files when possible.  Sanitize untrusted data used to construct log entries by using a safe logging mechanism such as the OWASP ESAPI Logger, which will automatically remove unexpected carriage returns and line feeds and can be configured to use HTML entity encoding for non-alphanumeric data.  Alternatively, some of the XSS escaping functions from the OWASP Java Encoder project will also sanitize CRLF sequences.  Only create a custom blocklist when absolutely necessary.  Always validate untrusted input to ensure that it conforms to the expected format, using centralized data validation routines when possible.\u003c/span\u003e \u003cspan\u003eReferences: \u003ca href\u003d\"https://cwe.mitre.org/data/definitions/117.html\"\u003eCWE\u003c/a\u003e \u003ca href\u003d\"https://www.owasp.org/index.php/Log_injection\"\u003eOWASP\u003c/a\u003e \u003ca href\u003d\"https://webappsec.pbworks.com/Improper-Output-Handling\"\u003eWASC\u003c/a\u003e \u003ca href\u003d\"https://help.veracode.com/reader/4EKhlLSMHm5jC8P8j3XccQ/IiF_rOE79ANbwnZwreSPGA\"\u003eSupported Cleansers\u003c/a\u003e\u003c/span\u003e",
+      "files": {
+        "source_file": {
+          "file": "org/owasp/webgoat/HammerHead.java",
+          "line": 257,
+          "function_name": "log",
+          "qualified_function_name": "org.owasp.webgoat.HammerHead.log",
+          "function_prototype": "void log(javax.servlet.http.HttpServletRequest, java.lang.String)",
+          "scope": "org.owasp.webgoat.HammerHead"
+        }
+      },
+      "flaw_match": {
+        "procedure_hash": "3460658295",
+        "prototype_hash": "1026419332",
+        "flaw_hash": "239218340",
+        "flaw_hash_count": 1,
+        "flaw_hash_ordinal": 1,
+        "cause_hash": "1176028798",
+        "cause_hash_count": 1,
+        "cause_hash_ordinal": 1
+      }
+    },
+    {
+      "title": "org.slf4j.Logger.debug",
+      "issue_id": 1052,
+      "gob": "B",
+      "severity": 3,
+      "issue_type_id": "taint",
+      "issue_type": "Improper Output Neutralization for Logs",
+      "cwe_id": "117",
+      "display_text": "\u003cspan\u003eThis call to org.slf4j.Logger.debug() could result in a log forging attack.  Writing untrusted data into a log file allows an attacker to forge log entries or inject malicious content into log files.  Corrupted log files can be used to cover an attacker\u0027s tracks or as a delivery mechanism for an attack on a log viewing or processing utility.  For example, if a web administrator uses a browser-based utility to review logs, a cross-site scripting attack might be possible. The first argument to debug() contains tainted data from the variable output. The tainted data originated from earlier calls to javax.servlet.ServletRequest.getRemoteHost, javax.servlet.ServletRequest.getParameterNames, and javax.servlet.ServletRequest.getParameterValues.\u003c/span\u003e \u003cspan\u003eAvoid directly embedding user input in log files when possible.  Sanitize untrusted data used to construct log entries by using a safe logging mechanism such as the OWASP ESAPI Logger, which will automatically remove unexpected carriage returns and line feeds and can be configured to use HTML entity encoding for non-alphanumeric data.  Alternatively, some of the XSS escaping functions from the OWASP Java Encoder project will also sanitize CRLF sequences.  Only create a custom blocklist when absolutely necessary.  Always validate untrusted input to ensure that it conforms to the expected format, using centralized data validation routines when possible.\u003c/span\u003e \u003cspan\u003eReferences: \u003ca href\u003d\"https://cwe.mitre.org/data/definitions/117.html\"\u003eCWE\u003c/a\u003e \u003ca href\u003d\"https://www.owasp.org/index.php/Log_injection\"\u003eOWASP\u003c/a\u003e \u003ca href\u003d\"https://webappsec.pbworks.com/Improper-Output-Handling\"\u003eWASC\u003c/a\u003e \u003ca href\u003d\"https://help.veracode.com/reader/4EKhlLSMHm5jC8P8j3XccQ/IiF_rOE79ANbwnZwreSPGA\"\u003eSupported Cleansers\u003c/a\u003e\u003c/span\u003e",
+      "files": {
+        "source_file": {
+          "file": "org/owasp/webgoat/HammerHead.java",
+          "line": 258,
+          "function_name": "log",
+          "qualified_function_name": "org.owasp.webgoat.HammerHead.log",
+          "function_prototype": "void log(javax.servlet.http.HttpServletRequest, java.lang.String)",
+          "scope": "org.owasp.webgoat.HammerHead"
+        }
+      },
+      "flaw_match": {
+        "procedure_hash": "3460658295",
+        "prototype_hash": "1026419332",
+        "flaw_hash": "1486957064",
+        "flaw_hash_count": 1,
+        "flaw_hash_ordinal": 1,
+        "cause_hash": "748381785",
+        "cause_hash_count": 1,
+        "cause_hash_ordinal": 1
+      }
+    },
+    {
+      "title": "javax.servlet.jsp.JspWriter.println",
+      "issue_id": 1067,
+      "gob": "B",
+      "severity": 3,
+      "issue_type_id": "taint",
+      "issue_type": "Improper Neutralization of Script-Related HTML Tags in a Web Page (Basic XSS)",
+      "cwe_id": "80",
+      "display_text": "\u003cspan\u003eThis call to javax.servlet.jsp.JspWriter.println() contains a cross-site scripting (XSS) flaw.  The application populates the HTTP response with untrusted input, allowing an attacker to embed malicious content, such as Javascript code, which will be executed in the context of the victim\u0027s browser.  XSS vulnerabilities are commonly exploited to steal or manipulate cookies, modify presentation of content, and compromise confidential information, with new attack vectors being discovered on a regular basis. The first argument to println() contains tainted data from the variable printParameters. The tainted data originated from earlier calls to javax.servlet.ServletRequest.getParameterNames, and javax.servlet.ServletRequest.getParameterValues. The tainted data is directed into an output stream returned by javax.servlet.jsp.JspWriter.\u003c/span\u003e \u003cspan\u003eUse contextual escaping on all untrusted data before using it to construct any portion of an HTTP response.  The escaping method should be chosen based on the specific use case of the untrusted data, otherwise it may not protect fully against the attack. For example, if the data is being written to the body of an HTML page, use HTML entity escaping; if the data is being written to an attribute, use attribute escaping; etc.  Both the OWASP Java Encoder library and the Microsoft AntiXSS library provide contextual escaping methods. For more details on contextual escaping, see https://github.com/OWASP/CheatSheetSeries/blob/master/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.md. In addition, as a best practice, always validate untrusted input to ensure that it conforms to the expected format, using centralized data validation routines when possible.\u003c/span\u003e \u003cspan\u003eReferences: \u003ca href\u003d\"https://cwe.mitre.org/data/definitions/79.html\"\u003eCWE\u003c/a\u003e \u003ca href\u003d\"https://www.owasp.org/index.php/XSS\"\u003eOWASP\u003c/a\u003e \u003ca href\u003d\"https://webappsec.pbworks.com/Cross-Site-Scripting\"\u003eWASC\u003c/a\u003e \u003ca href\u003d\"https://help.veracode.com/reader/4EKhlLSMHm5jC8P8j3XccQ/IiF_rOE79ANbwnZwreSPGA\"\u003eSupported Cleansers\u003c/a\u003e\u003c/span\u003e",
+      "files": {
+        "source_file": {
+          "file": "main.jsp",
+          "line": 238,
+          "function_name": "_jspService",
+          "qualified_function_name": "com.veracode.compiledjsp.xwebgoatcontainer71SNAPSHOTwar.main_jsp._jspService",
+          "function_prototype": "void _jspService(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)",
+          "scope": "com.veracode.compiledjsp.xwebgoatcontainer71SNAPSHOTwar.main_jsp"
+        }
+      },
+      "flaw_match": {
+        "procedure_hash": "1984494374",
+        "prototype_hash": "2859867794",
+        "flaw_hash": "239218340",
+        "flaw_hash_count": 12,
+        "flaw_hash_ordinal": 10,
+        "cause_hash": "1176028798",
+        "cause_hash_count": 1,
+        "cause_hash_ordinal": 1
+      }
+    },
+    {
+      "title": "javax.servlet.jsp.JspWriter.println",
+      "issue_id": 1066,
+      "gob": "B",
+      "severity": 3,
+      "issue_type_id": "taint",
+      "issue_type": "Improper Neutralization of Script-Related HTML Tags in a Web Page (Basic XSS)",
+      "cwe_id": "80",
+      "display_text": "\u003cspan\u003eThis call to javax.servlet.jsp.JspWriter.println() contains a cross-site scripting (XSS) flaw.  The application populates the HTTP response with untrusted input, allowing an attacker to embed malicious content, such as Javascript code, which will be executed in the context of the victim\u0027s browser.  XSS vulnerabilities are commonly exploited to steal or manipulate cookies, modify presentation of content, and compromise confidential information, with new attack vectors being discovered on a regular basis. The first argument to println() contains tainted data from the variable printCookies. The tainted data originated from an earlier call to javax.servlet.http.HttpServletRequest.getCookies. The tainted data is directed into an output stream returned by javax.servlet.jsp.JspWriter.\u003c/span\u003e \u003cspan\u003eUse contextual escaping on all untrusted data before using it to construct any portion of an HTTP response.  The escaping method should be chosen based on the specific use case of the untrusted data, otherwise it may not protect fully against the attack. For example, if the data is being written to the body of an HTML page, use HTML entity escaping; if the data is being written to an attribute, use attribute escaping; etc.  Both the OWASP Java Encoder library and the Microsoft AntiXSS library provide contextual escaping methods. For more details on contextual escaping, see https://github.com/OWASP/CheatSheetSeries/blob/master/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.md. In addition, as a best practice, always validate untrusted input to ensure that it conforms to the expected format, using centralized data validation routines when possible.\u003c/span\u003e \u003cspan\u003eReferences: \u003ca href\u003d\"https://cwe.mitre.org/data/definitions/79.html\"\u003eCWE\u003c/a\u003e \u003ca href\u003d\"https://www.owasp.org/index.php/XSS\"\u003eOWASP\u003c/a\u003e \u003ca href\u003d\"https://webappsec.pbworks.com/Cross-Site-Scripting\"\u003eWASC\u003c/a\u003e \u003ca href\u003d\"https://help.veracode.com/reader/4EKhlLSMHm5jC8P8j3XccQ/IiF_rOE79ANbwnZwreSPGA\"\u003eSupported Cleansers\u003c/a\u003e\u003c/span\u003e",
+      "files": {
+        "source_file": {
+          "file": "main.jsp",
+          "line": 247,
+          "function_name": "_jspService",
+          "qualified_function_name": "com.veracode.compiledjsp.xwebgoatcontainer71SNAPSHOTwar.main_jsp._jspService",
+          "function_prototype": "void _jspService(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)",
+          "scope": "com.veracode.compiledjsp.xwebgoatcontainer71SNAPSHOTwar.main_jsp"
+        }
+      },
+      "flaw_match": {
+        "procedure_hash": "1984494374",
+        "prototype_hash": "2859867794",
+        "flaw_hash": "239218340",
+        "flaw_hash_count": 12,
+        "flaw_hash_ordinal": 11,
+        "cause_hash": "1176028798",
+        "cause_hash_count": 1,
+        "cause_hash_ordinal": 1
+      }
+    },
+    {
+      "title": "javax.servlet.jsp.JspWriter.print",
+      "issue_id": 1060,
+      "gob": "B",
+      "severity": 3,
+      "issue_type_id": "taint",
+      "issue_type": "Improper Neutralization of Script-Related HTML Tags in a Web Page (Basic XSS)",
+      "cwe_id": "80",
+      "display_text": "\u003cspan\u003eThis call to javax.servlet.jsp.JspWriter.print() contains a cross-site scripting (XSS) flaw.  The application populates the HTTP response with untrusted input, allowing an attacker to embed malicious content, such as Javascript code, which will be executed in the context of the victim\u0027s browser.  XSS vulnerabilities are commonly exploited to steal or manipulate cookies, modify presentation of content, and compromise confidential information, with new attack vectors being discovered on a regular basis. The first argument to print() contains tainted data from the variable webSession.getMessage(). The tainted data originated from an earlier call to getMessage. The tainted data is directed into an output stream returned by javax.servlet.jsp.JspWriter.\u003c/span\u003e \u003cspan\u003eUse contextual escaping on all untrusted data before using it to construct any portion of an HTTP response.  The escaping method should be chosen based on the specific use case of the untrusted data, otherwise it may not protect fully against the attack. For example, if the data is being written to the body of an HTML page, use HTML entity escaping; if the data is being written to an attribute, use attribute escaping; etc.  Both the OWASP Java Encoder library and the Microsoft AntiXSS library provide contextual escaping methods. For more details on contextual escaping, see https://github.com/OWASP/CheatSheetSeries/blob/master/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.md. In addition, as a best practice, always validate untrusted input to ensure that it conforms to the expected format, using centralized data validation routines when possible.\u003c/span\u003e \u003cspan\u003eReferences: \u003ca href\u003d\"https://cwe.mitre.org/data/definitions/79.html\"\u003eCWE\u003c/a\u003e \u003ca href\u003d\"https://www.owasp.org/index.php/XSS\"\u003eOWASP\u003c/a\u003e \u003ca href\u003d\"https://webappsec.pbworks.com/Cross-Site-Scripting\"\u003eWASC\u003c/a\u003e \u003ca href\u003d\"https://help.veracode.com/reader/4EKhlLSMHm5jC8P8j3XccQ/IiF_rOE79ANbwnZwreSPGA\"\u003eSupported Cleansers\u003c/a\u003e\u003c/span\u003e",
+      "files": {
+        "source_file": {
+          "file": "main.jsp",
+          "line": 266,
+          "function_name": "_jspService",
+          "qualified_function_name": "com.veracode.compiledjsp.xwebgoatcontainer71SNAPSHOTwar.main_jsp._jspService",
+          "function_prototype": "void _jspService(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)",
+          "scope": "com.veracode.compiledjsp.xwebgoatcontainer71SNAPSHOTwar.main_jsp"
+        }
+      },
+      "flaw_match": {
+        "procedure_hash": "1984494374",
+        "prototype_hash": "2859867794",
+        "flaw_hash": "2559643004",
+        "flaw_hash_count": 11,
+        "flaw_hash_ordinal": 10,
+        "cause_hash": "3228581583",
+        "cause_hash_count": 1,
+        "cause_hash_ordinal": 1
+      }
+    },
+    {
+      "title": "javax.servlet.jsp.JspWriter.print",
+      "issue_id": 1058,
+      "gob": "B",
+      "severity": 3,
+      "issue_type_id": "taint",
+      "issue_type": "Improper Neutralization of Script-Related HTML Tags in a Web Page (Basic XSS)",
+      "cwe_id": "80",
+      "display_text": "\u003cspan\u003eThis call to javax.servlet.jsp.JspWriter.print() contains a cross-site scripting (XSS) flaw.  The application populates the HTTP response with untrusted input, allowing an attacker to embed malicious content, such as Javascript code, which will be executed in the context of the victim\u0027s browser.  XSS vulnerabilities are commonly exploited to steal or manipulate cookies, modify presentation of content, and compromise confidential information, with new attack vectors being discovered on a regular basis. The first argument to print() contains tainted data from the variable webSession.getMessage(). The tainted data originated from an earlier call to getMessage. The tainted data is directed into an output stream returned by javax.servlet.jsp.JspWriter.\u003c/span\u003e \u003cspan\u003eUse contextual escaping on all untrusted data before using it to construct any portion of an HTTP response.  The escaping method should be chosen based on the specific use case of the untrusted data, otherwise it may not protect fully against the attack. For example, if the data is being written to the body of an HTML page, use HTML entity escaping; if the data is being written to an attribute, use attribute escaping; etc.  Both the OWASP Java Encoder library and the Microsoft AntiXSS library provide contextual escaping methods. For more details on contextual escaping, see https://github.com/OWASP/CheatSheetSeries/blob/master/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.md. In addition, as a best practice, always validate untrusted input to ensure that it conforms to the expected format, using centralized data validation routines when possible.\u003c/span\u003e \u003cspan\u003eReferences: \u003ca href\u003d\"https://cwe.mitre.org/data/definitions/79.html\"\u003eCWE\u003c/a\u003e \u003ca href\u003d\"https://www.owasp.org/index.php/XSS\"\u003eOWASP\u003c/a\u003e \u003ca href\u003d\"https://webappsec.pbworks.com/Cross-Site-Scripting\"\u003eWASC\u003c/a\u003e \u003ca href\u003d\"https://help.veracode.com/reader/4EKhlLSMHm5jC8P8j3XccQ/IiF_rOE79ANbwnZwreSPGA\"\u003eSupported Cleansers\u003c/a\u003e\u003c/span\u003e",
+      "files": {
+        "source_file": {
+          "file": "lesson_content.jsp",
+          "line": 26,
+          "function_name": "_jspService",
+          "qualified_function_name": "com.veracode.compiledjsp.xwebgoatcontainer71SNAPSHOTwar.lesson_005fcontent_jsp._jspService",
+          "function_prototype": "void _jspService(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)",
+          "scope": "com.veracode.compiledjsp.xwebgoatcontainer71SNAPSHOTwar.lesson_005fcontent_jsp"
+        }
+      },
+      "flaw_match": {
+        "procedure_hash": "416627620",
+        "prototype_hash": "1939205303",
+        "flaw_hash": "2559643004",
+        "flaw_hash_count": 3,
+        "flaw_hash_ordinal": 2,
+        "cause_hash": "3228581583",
+        "cause_hash_count": 1,
+        "cause_hash_ordinal": 1
+      }
+    },
+    {
+      "title": "javax.servlet.jsp.JspWriter.print",
+      "issue_id": 1061,
+      "gob": "B",
+      "severity": 2,
+      "issue_type_id": "taint",
+      "issue_type": "Information Exposure Through Sent Data",
+      "cwe_id": "201",
+      "display_text": "\u003cspan\u003e The application calls the javax.servlet.jsp.JspWriter.print() function, which will result in data being transferred out of the application (via the network or another medium).  This data contains sensitive information.  The first argument to print() contains potentially sensitive data from the variable webSession.getWebgoatContext().getFeedbackAddress(). The potentially sensitive data originated from an earlier call to java.lang.System.getenv. The potentially sensitive data is directed into an output stream returned by javax.servlet.jsp.JspWriter.\u003c/span\u003e \u003cspan\u003eEnsure that the transfer of the sensitive data is intended and that it does not violate application security policy.  This flaw is categorized as low severity because it only impacts confidentiality, not integrity or availability.  However, in the context of a mobile application, the significance of an information leak may be much greater, especially if misaligned with user expectations or data privacy policies.\u003c/span\u003e \u003cspan\u003eReferences: \u003ca href\u003d\"https://cwe.mitre.org/data/definitions/201.html\"\u003eCWE\u003c/a\u003e \u003ca href\u003d\"https://webappsec.pbworks.com/Information-Leakage\"\u003eWASC\u003c/a\u003e\u003c/span\u003e",
+      "files": {
+        "source_file": {
+          "file": "reportBug.jsp",
+          "line": 48,
+          "function_name": "_jspService",
+          "qualified_function_name": "com.veracode.compiledjsp.xwebgoatcontainer71SNAPSHOTwar.reportBug_jsp._jspService",
+          "function_prototype": "void _jspService(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)",
+          "scope": "com.veracode.compiledjsp.xwebgoatcontainer71SNAPSHOTwar.reportBug_jsp"
+        }
+      },
+      "flaw_match": {
+        "procedure_hash": "3820494298",
+        "prototype_hash": "3252960496",
+        "flaw_hash": "1001489962",
+        "flaw_hash_count": 2,
+        "flaw_hash_ordinal": 1,
+        "cause_hash": "182372847",
+        "cause_hash_count": 1,
+        "cause_hash_ordinal": 1
+      }
+    },
+    {
+      "title": "javax.servlet.jsp.JspWriter.print",
+      "issue_id": 1059,
+      "gob": "B",
+      "severity": 2,
+      "issue_type_id": "taint",
+      "issue_type": "Information Exposure Through Sent Data",
+      "cwe_id": "201",
+      "display_text": "\u003cspan\u003e The application calls the javax.servlet.jsp.JspWriter.print() function, which will result in data being transferred out of the application (via the network or another medium).  This data contains sensitive information.  The first argument to print() contains potentially sensitive data from the variable webSession.getWebgoatContext().getFeedbackAddress(). The potentially sensitive data originated from an earlier call to java.lang.System.getenv. The potentially sensitive data is directed into an output stream returned by javax.servlet.jsp.JspWriter.\u003c/span\u003e \u003cspan\u003eEnsure that the transfer of the sensitive data is intended and that it does not violate application security policy.  This flaw is categorized as low severity because it only impacts confidentiality, not integrity or availability.  However, in the context of a mobile application, the significance of an information leak may be much greater, especially if misaligned with user expectations or data privacy policies.\u003c/span\u003e \u003cspan\u003eReferences: \u003ca href\u003d\"https://cwe.mitre.org/data/definitions/201.html\"\u003eCWE\u003c/a\u003e \u003ca href\u003d\"https://webappsec.pbworks.com/Information-Leakage\"\u003eWASC\u003c/a\u003e\u003c/span\u003e",
+      "files": {
+        "source_file": {
+          "file": "reportBug.jsp",
+          "line": 55,
+          "function_name": "_jspService",
+          "qualified_function_name": "com.veracode.compiledjsp.xwebgoatcontainer71SNAPSHOTwar.reportBug_jsp._jspService",
+          "function_prototype": "void _jspService(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)",
+          "scope": "com.veracode.compiledjsp.xwebgoatcontainer71SNAPSHOTwar.reportBug_jsp"
+        }
+      },
+      "flaw_match": {
+        "procedure_hash": "3820494298",
+        "prototype_hash": "3252960496",
+        "flaw_hash": "1001489962",
+        "flaw_hash_count": 2,
+        "flaw_hash_ordinal": 2,
+        "cause_hash": "182372847",
+        "cause_hash_count": 1,
+        "cause_hash_ordinal": 1
+      }
+    },
+    {
+      "title": "javax.servlet.http.HttpServletResponse.addCookie",
+      "issue_id": 1049,
+      "gob": "B",
+      "severity": 2,
+      "issue_type_id": "crypto",
+      "issue_type": "Sensitive Cookie in HTTPS Session Without \u0027Secure\u0027 Attribute",
+      "cwe_id": "614",
+      "display_text": "\u003cspan\u003eThis call to javax.servlet.http.HttpServletResponse.addCookie() adds a cookie to the HTTP response that does not have the Secure attribute set.  Failing to set this attribute allows the browser to send the cookie unencrypted over an HTTP session. \u003c/span\u003e \u003cspan\u003eSet the Secure attribute for all cookies used by HTTPS sessions.\u003c/span\u003e \u003cspan\u003eReferences: \u003ca href\u003d\"https://cwe.mitre.org/data/definitions/614.html\"\u003eCWE\u003c/a\u003e \u003ca href\u003d\"https://webappsec.pbworks.com/Insufficient-Transport-Layer-Protection\"\u003eWASC\u003c/a\u003e\u003c/span\u003e",
+      "files": {
+        "source_file": {
+          "file": "org/owasp/webgoat/session/WebSession.java",
+          "line": 297,
+          "function_name": "eatCookies",
+          "qualified_function_name": "org.owasp.webgoat.session.WebSession.eatCookies",
+          "function_prototype": "void eatCookies()",
+          "scope": "org.owasp.webgoat.session.WebSession"
+        }
+      },
+      "flaw_match": {
+        "procedure_hash": "985378488",
+        "prototype_hash": "4146034803",
+        "flaw_hash": "4257640498",
+        "flaw_hash_count": 1,
+        "flaw_hash_ordinal": 1,
+        "cause_hash": "765725407",
+        "cause_hash_count": 1,
+        "cause_hash_ordinal": 1
+      }
+    },
+    {
+      "title": "java.sql.DriverManager.getConnection",
+      "issue_id": 1014,
+      "gob": "B",
+      "severity": 2,
+      "issue_type_id": "reliability",
+      "issue_type": "J2EE Bad Practices: Direct Management of Connections",
+      "cwe_id": "245",
+      "display_text": "\u003cspan\u003eThis call to getConnection() fails to use the J2EE container\u0027s resource management facilities as required by the J2EE standard.\u003c/span\u003e \u003cspan\u003eRequest the connection from the container rather than attempting to access it directly.\u003c/span\u003e \u003cspan\u003eReferences: \u003ca href\u003d\"https://cwe.mitre.org/data/definitions/245.html\"\u003eCWE\u003c/a\u003e\u003c/span\u003e",
+      "files": {
+        "source_file": {
+          "file": "org/owasp/webgoat/session/UserDatabase.java",
+          "line": 51,
+          "function_name": "open",
+          "qualified_function_name": "org.owasp.webgoat.session.UserDatabase.open",
+          "function_prototype": "boolean open()",
+          "scope": "org.owasp.webgoat.session.UserDatabase"
+        }
+      },
+      "flaw_match": {
+        "procedure_hash": "474392968",
+        "prototype_hash": "3850940339",
+        "flaw_hash": "4270446569",
+        "flaw_hash_count": 1,
+        "flaw_hash_ordinal": 1,
+        "cause_hash": "4227920952",
+        "cause_hash_count": 1,
+        "cause_hash_ordinal": 1
+      }
+    },
+    {
+      "title": "java.sql.DriverManager.getConnection",
+      "issue_id": 1013,
+      "gob": "B",
+      "severity": 2,
+      "issue_type_id": "reliability",
+      "issue_type": "J2EE Bad Practices: Direct Management of Connections",
+      "cwe_id": "245",
+      "display_text": "\u003cspan\u003eThis call to getConnection() fails to use the J2EE container\u0027s resource management facilities as required by the J2EE standard.\u003c/span\u003e \u003cspan\u003eRequest the connection from the container rather than attempting to access it directly.\u003c/span\u003e \u003cspan\u003eReferences: \u003ca href\u003d\"https://cwe.mitre.org/data/definitions/245.html\"\u003eCWE\u003c/a\u003e\u003c/span\u003e",
+      "files": {
+        "source_file": {
+          "file": "org/owasp/webgoat/session/DatabaseUtilities.java",
+          "line": 120,
+          "function_name": "makeConnection",
+          "qualified_function_name": "org.owasp.webgoat.session.DatabaseUtilities.makeConnection",
+          "function_prototype": "java.sql.Connection makeConnection(java.lang.String, WebgoatContext)",
+          "scope": "org.owasp.webgoat.session.DatabaseUtilities"
+        }
+      },
+      "flaw_match": {
+        "procedure_hash": "1934905278",
+        "prototype_hash": "275072211",
+        "flaw_hash": "3800558521",
+        "flaw_hash_count": 1,
+        "flaw_hash_ordinal": 1,
+        "cause_hash": "2461251541",
+        "cause_hash_count": 1,
+        "cause_hash_ordinal": 1
+      }
+    },
+    {
+      "title": "java.sql.DriverManager.getConnection",
+      "issue_id": 1011,
+      "gob": "B",
+      "severity": 2,
+      "issue_type_id": "reliability",
+      "issue_type": "J2EE Bad Practices: Direct Management of Connections",
+      "cwe_id": "245",
+      "display_text": "\u003cspan\u003eThis call to getConnection() fails to use the J2EE container\u0027s resource management facilities as required by the J2EE standard.\u003c/span\u003e \u003cspan\u003eRequest the connection from the container rather than attempting to access it directly.\u003c/span\u003e \u003cspan\u003eReferences: \u003ca href\u003d\"https://cwe.mitre.org/data/definitions/245.html\"\u003eCWE\u003c/a\u003e\u003c/span\u003e",
+      "files": {
+        "source_file": {
+          "file": "org/owasp/webgoat/session/DatabaseUtilities.java",
+          "line": 132,
+          "function_name": "getHsqldbConnection",
+          "qualified_function_name": "org.owasp.webgoat.session.DatabaseUtilities.getHsqldbConnection",
+          "function_prototype": "java.sql.Connection getHsqldbConnection(java.lang.String, WebgoatContext)",
+          "scope": "org.owasp.webgoat.session.DatabaseUtilities"
+        }
+      },
+      "flaw_match": {
+        "procedure_hash": "1413193291",
+        "prototype_hash": "4150996556",
+        "flaw_hash": "3116991933",
+        "flaw_hash_count": 1,
+        "flaw_hash_ordinal": 1,
+        "cause_hash": "3521584090",
+        "cause_hash_count": 1,
+        "cause_hash_ordinal": 1
+      }
+    },
+    {
+      "title": "showSource",
+      "issue_id": 1002,
+      "gob": "B",
+      "severity": 2,
+      "issue_type_id": "taint",
+      "issue_type": "Information Exposure Through Sent Data",
+      "cwe_id": "201",
+      "display_text": "\u003cspan\u003e The application calls the showSource() function, which will result in data being transferred out of the application (via the network or another medium).  This data contains sensitive information.  The potentially sensitive data originated from earlier calls to java.lang.System.getenv, and java.lang.System.getProperty.\u003c/span\u003e \u003cspan\u003eEnsure that the transfer of the sensitive data is intended and that it does not violate application security policy.  This flaw is categorized as low severity because it only impacts confidentiality, not integrity or availability.  However, in the context of a mobile application, the significance of an information leak may be much greater, especially if misaligned with user expectations or data privacy policies.\u003c/span\u003e \u003cspan\u003eReferences: \u003ca href\u003d\"https://cwe.mitre.org/data/definitions/201.html\"\u003eCWE\u003c/a\u003e \u003ca href\u003d\"https://webappsec.pbworks.com/Information-Leakage\"\u003eWASC\u003c/a\u003e\u003c/span\u003e",
+      "files": {
+        "source_file": {
+          "file": "org/owasp/webgoat/service/SourceService.java",
+          "line": 68,
+          "function_name": "showSource",
+          "qualified_function_name": "org.owasp.webgoat.service.SourceService.showSource",
+          "function_prototype": "java.lang.String showSource(javax.servlet.http.HttpSession)",
+          "scope": "org.owasp.webgoat.service.SourceService"
+        }
+      },
+      "flaw_match": {
+        "procedure_hash": "2194861750",
+        "prototype_hash": "2121049123",
+        "flaw_hash": "3152419664",
+        "flaw_hash_count": 1,
+        "flaw_hash_ordinal": 1,
+        "cause_hash": "2866949028",
+        "cause_hash_count": 1,
+        "cause_hash_ordinal": 1
+      }
+    },
+    {
+      "title": "showSolution",
+      "issue_id": 1001,
+      "gob": "B",
+      "severity": 2,
+      "issue_type_id": "taint",
+      "issue_type": "Information Exposure Through Sent Data",
+      "cwe_id": "201",
+      "display_text": "\u003cspan\u003e The application calls the showSolution() function, which will result in data being transferred out of the application (via the network or another medium).  This data contains sensitive information.  The potentially sensitive data originated from earlier calls to java.lang.System.getenv, and java.lang.System.getProperty.\u003c/span\u003e \u003cspan\u003eEnsure that the transfer of the sensitive data is intended and that it does not violate application security policy.  This flaw is categorized as low severity because it only impacts confidentiality, not integrity or availability.  However, in the context of a mobile application, the significance of an information leak may be much greater, especially if misaligned with user expectations or data privacy policies.\u003c/span\u003e \u003cspan\u003eReferences: \u003ca href\u003d\"https://cwe.mitre.org/data/definitions/201.html\"\u003eCWE\u003c/a\u003e \u003ca href\u003d\"https://webappsec.pbworks.com/Information-Leakage\"\u003eWASC\u003c/a\u003e\u003c/span\u003e",
+      "files": {
+        "source_file": {
+          "file": "org/owasp/webgoat/service/SolutionService.java",
+          "line": 61,
+          "function_name": "showSolution",
+          "qualified_function_name": "org.owasp.webgoat.service.SolutionService.showSolution",
+          "function_prototype": "java.lang.String showSolution(javax.servlet.http.HttpSession)",
+          "scope": "org.owasp.webgoat.service.SolutionService"
+        }
+      },
+      "flaw_match": {
+        "procedure_hash": "1792948822",
+        "prototype_hash": "3888158601",
+        "flaw_hash": "2083412287",
+        "flaw_hash_count": 1,
+        "flaw_hash_ordinal": 1,
+        "cause_hash": "1522093433",
+        "cause_hash_count": 1,
+        "cause_hash_ordinal": 1
+      }
+    },
+    {
+      "title": "showPlan",
+      "issue_id": 1000,
+      "gob": "B",
+      "severity": 2,
+      "issue_type_id": "taint",
+      "issue_type": "Information Exposure Through Sent Data",
+      "cwe_id": "201",
+      "display_text": "\u003cspan\u003e The application calls the showPlan() function, which will result in data being transferred out of the application (via the network or another medium).  This data contains sensitive information.  The potentially sensitive data originated from earlier calls to java.lang.System.getenv, and java.lang.System.getProperty.\u003c/span\u003e \u003cspan\u003eEnsure that the transfer of the sensitive data is intended and that it does not violate application security policy.  This flaw is categorized as low severity because it only impacts confidentiality, not integrity or availability.  However, in the context of a mobile application, the significance of an information leak may be much greater, especially if misaligned with user expectations or data privacy policies.\u003c/span\u003e \u003cspan\u003eReferences: \u003ca href\u003d\"https://cwe.mitre.org/data/definitions/201.html\"\u003eCWE\u003c/a\u003e \u003ca href\u003d\"https://webappsec.pbworks.com/Information-Leakage\"\u003eWASC\u003c/a\u003e\u003c/span\u003e",
+      "files": {
+        "source_file": {
+          "file": "org/owasp/webgoat/service/LessonPlanService.java",
+          "line": 61,
+          "function_name": "showPlan",
+          "qualified_function_name": "org.owasp.webgoat.service.LessonPlanService.showPlan",
+          "function_prototype": "java.lang.String showPlan(javax.servlet.http.HttpSession)",
+          "scope": "org.owasp.webgoat.service.LessonPlanService"
+        }
+      },
+      "flaw_match": {
+        "procedure_hash": "815782373",
+        "prototype_hash": "3327243717",
+        "flaw_hash": "2083412287",
+        "flaw_hash_count": 1,
+        "flaw_hash_ordinal": 1,
+        "cause_hash": "1522093433",
+        "cause_hash_count": 1,
+        "cause_hash_ordinal": 1
+      }
+    },
+    {
+      "title": "java.io.PrintWriter.print",
+      "issue_id": 1068,
+      "gob": "B",
+      "severity": 2,
+      "issue_type_id": "taint",
+      "issue_type": "Information Exposure Through Sent Data",
+      "cwe_id": "201",
+      "display_text": "\u003cspan\u003e The application calls the java.io.PrintWriter.print() function, which will result in data being transferred out of the application (via the network or another medium).  This data contains sensitive information.  The first argument to print() contains potentially sensitive data from the variable s. The potentially sensitive data originated from earlier calls to java.lang.System.getenv, and java.lang.System.getProperty.\u003c/span\u003e \u003cspan\u003eEnsure that the transfer of the sensitive data is intended and that it does not violate application security policy.  This flaw is categorized as low severity because it only impacts confidentiality, not integrity or availability.  However, in the context of a mobile application, the significance of an information leak may be much greater, especially if misaligned with user expectations or data privacy policies.\u003c/span\u003e \u003cspan\u003eReferences: \u003ca href\u003d\"https://cwe.mitre.org/data/definitions/201.html\"\u003eCWE\u003c/a\u003e \u003ca href\u003d\"https://webappsec.pbworks.com/Information-Leakage\"\u003eWASC\u003c/a\u003e\u003c/span\u003e",
+      "files": {
+        "source_file": {
+          "file": "org/owasp/webgoat/LessonSource.java",
+          "line": 188,
+          "function_name": "writeSource",
+          "qualified_function_name": "org.owasp.webgoat.LessonSource.writeSource",
+          "function_prototype": "void writeSource(java.lang.String, javax.servlet.http.HttpServletResponse)",
+          "scope": "org.owasp.webgoat.LessonSource"
+        }
+      },
+      "flaw_match": {
+        "procedure_hash": "573230242",
+        "prototype_hash": "1758861191",
+        "flaw_hash": "239218340",
+        "flaw_hash_count": 1,
+        "flaw_hash_ordinal": 1,
+        "cause_hash": "1176028798",
+        "cause_hash_count": 1,
+        "cause_hash_ordinal": 1
+      }
+    },
+    {
+      "title": "javax.servlet.jsp.JspWriter.print",
+      "issue_id": 1064,
+      "gob": "B",
+      "severity": 2,
+      "issue_type_id": "taint",
+      "issue_type": "Information Exposure Through Sent Data",
+      "cwe_id": "201",
+      "display_text": "\u003cspan\u003e The application calls the javax.servlet.jsp.JspWriter.print() function, which will result in data being transferred out of the application (via the network or another medium).  This data contains sensitive information.  The first argument to print() contains potentially sensitive data from the variable currentLesson.getLessonPlan(). The potentially sensitive data originated from earlier calls to java.lang.System.getenv, and java.lang.System.getProperty. The potentially sensitive data is directed into an output stream returned by javax.servlet.jsp.JspWriter.\u003c/span\u003e \u003cspan\u003eEnsure that the transfer of the sensitive data is intended and that it does not violate application security policy.  This flaw is categorized as low severity because it only impacts confidentiality, not integrity or availability.  However, in the context of a mobile application, the significance of an information leak may be much greater, especially if misaligned with user expectations or data privacy policies.\u003c/span\u003e \u003cspan\u003eReferences: \u003ca href\u003d\"https://cwe.mitre.org/data/definitions/201.html\"\u003eCWE\u003c/a\u003e \u003ca href\u003d\"https://webappsec.pbworks.com/Information-Leakage\"\u003eWASC\u003c/a\u003e\u003c/span\u003e",
+      "files": {
+        "source_file": {
+          "file": "main.jsp",
+          "line": 250,
+          "function_name": "_jspService",
+          "qualified_function_name": "com.veracode.compiledjsp.xwebgoatcontainer71SNAPSHOTwar.main_jsp._jspService",
+          "function_prototype": "void _jspService(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)",
+          "scope": "com.veracode.compiledjsp.xwebgoatcontainer71SNAPSHOTwar.main_jsp"
+        }
+      },
+      "flaw_match": {
+        "procedure_hash": "1984494374",
+        "prototype_hash": "2859867794",
+        "flaw_hash": "3368518665",
+        "flaw_hash_count": 1,
+        "flaw_hash_ordinal": 1,
+        "cause_hash": "4051837523",
+        "cause_hash_count": 1,
+        "cause_hash_ordinal": 1
+      }
+    },
+    {
+      "title": "java.sql.DriverManager.getConnection",
+      "issue_id": 1015,
+      "gob": "B",
+      "severity": 0,
+      "issue_type_id": "reliability",
+      "issue_type": "Improper Resource Shutdown or Release",
+      "cwe_id": "404",
+      "display_text": "\u003cspan\u003eThe program fails to release or incorrectly releases the variable userDB, which was previously allocated by a call to java.sql.DriverManager.getConnection().\u003c/span\u003e \u003cspan\u003eEnsure that all code paths properly release this resource.\u003c/span\u003e \u003cspan\u003eReferences: \u003ca href\u003d\"https://cwe.mitre.org/data/definitions/404.html\"\u003eCWE\u003c/a\u003e\u003c/span\u003e",
+      "files": {
+        "source_file": {
+          "file": "org/owasp/webgoat/session/UserDatabase.java",
+          "line": 51,
+          "function_name": "open",
+          "qualified_function_name": "org.owasp.webgoat.session.UserDatabase.open",
+          "function_prototype": "boolean open()",
+          "scope": "org.owasp.webgoat.session.UserDatabase"
+        }
+      },
+      "flaw_match": {
+        "procedure_hash": "474392968",
+        "prototype_hash": "3850940339",
+        "flaw_hash": "4270446569",
+        "flaw_hash_count": 1,
+        "flaw_hash_ordinal": 1,
+        "cause_hash": "4227920952",
+        "cause_hash_count": 1,
+        "cause_hash_ordinal": 1
+      }
+    },
+    {
+      "title": "java.sql.Connection.createStatement",
+      "issue_id": 1047,
+      "gob": "B",
+      "severity": 0,
+      "issue_type_id": "reliability",
+      "issue_type": "Improper Resource Shutdown or Release",
+      "cwe_id": "404",
+      "display_text": "\u003cspan\u003eThe program fails to release or incorrectly releases the variable statement, which was previously allocated by a call to java.sql.Connection.createStatement().\u003c/span\u003e \u003cspan\u003eEnsure that all code paths properly release this resource.\u003c/span\u003e \u003cspan\u003eReferences: \u003ca href\u003d\"https://cwe.mitre.org/data/definitions/404.html\"\u003eCWE\u003c/a\u003e\u003c/span\u003e",
+      "files": {
+        "source_file": {
+          "file": "org/owasp/webgoat/session/UserDatabase.java",
+          "line": 89,
+          "function_name": "getTableCount",
+          "qualified_function_name": "org.owasp.webgoat.session.UserDatabase.getTableCount",
+          "function_prototype": "int getTableCount(java.lang.String)",
+          "scope": "org.owasp.webgoat.session.UserDatabase"
+        }
+      },
+      "flaw_match": {
+        "procedure_hash": "3530485450",
+        "prototype_hash": "1096793561",
+        "flaw_hash": "1744979309",
+        "flaw_hash_count": 1,
+        "flaw_hash_ordinal": 1,
+        "cause_hash": "2439302015",
+        "cause_hash_count": 1,
+        "cause_hash_ordinal": 1
+      }
+    },
+    {
+      "title": "java.sql.Statement.executeQuery",
+      "issue_id": 1009,
+      "gob": "B",
+      "severity": 0,
+      "issue_type_id": "reliability",
+      "issue_type": "Improper Resource Shutdown or Release",
+      "cwe_id": "404",
+      "display_text": "\u003cspan\u003eThe program fails to release or incorrectly releases the variable countResult, which was previously allocated by a call to java.sql.Statement.executeQuery().\u003c/span\u003e \u003cspan\u003eEnsure that all code paths properly release this resource.\u003c/span\u003e \u003cspan\u003eReferences: \u003ca href\u003d\"https://cwe.mitre.org/data/definitions/404.html\"\u003eCWE\u003c/a\u003e\u003c/span\u003e",
+      "files": {
+        "source_file": {
+          "file": "org/owasp/webgoat/session/UserDatabase.java",
+          "line": 90,
+          "function_name": "getTableCount",
+          "qualified_function_name": "org.owasp.webgoat.session.UserDatabase.getTableCount",
+          "function_prototype": "int getTableCount(java.lang.String)",
+          "scope": "org.owasp.webgoat.session.UserDatabase"
+        }
+      },
+      "flaw_match": {
+        "procedure_hash": "3530485450",
+        "prototype_hash": "1096793561",
+        "flaw_hash": "72185834",
+        "flaw_hash_count": 1,
+        "flaw_hash_ordinal": 1,
+        "cause_hash": "676911471",
+        "cause_hash_count": 1,
+        "cause_hash_ordinal": 1
+      }
+    },
+    {
+      "title": "java.sql.Connection.createStatement",
+      "issue_id": 1048,
+      "gob": "B",
+      "severity": 0,
+      "issue_type_id": "reliability",
+      "issue_type": "Improper Resource Shutdown or Release",
+      "cwe_id": "404",
+      "display_text": "\u003cspan\u003eThe program fails to release or incorrectly releases the variable statement, which was previously allocated by a call to java.sql.Connection.createStatement().\u003c/span\u003e \u003cspan\u003eEnsure that all code paths properly release this resource.\u003c/span\u003e \u003cspan\u003eReferences: \u003ca href\u003d\"https://cwe.mitre.org/data/definitions/404.html\"\u003eCWE\u003c/a\u003e\u003c/span\u003e",
+      "files": {
+        "source_file": {
+          "file": "org/owasp/webgoat/session/UserDatabase.java",
+          "line": 116,
+          "function_name": "getUsers",
+          "qualified_function_name": "org.owasp.webgoat.session.UserDatabase.getUsers",
+          "function_prototype": "java.util.Iterator getUsers()",
+          "scope": "org.owasp.webgoat.session.UserDatabase"
+        }
+      },
+      "flaw_match": {
+        "procedure_hash": "3244336853",
+        "prototype_hash": "3850940339",
+        "flaw_hash": "1744979309",
+        "flaw_hash_count": 1,
+        "flaw_hash_ordinal": 1,
+        "cause_hash": "2439302015",
+        "cause_hash_count": 1,
+        "cause_hash_ordinal": 1
+      }
+    },
+    {
+      "title": "java.sql.Statement.executeQuery",
+      "issue_id": 1010,
+      "gob": "B",
+      "severity": 0,
+      "issue_type_id": "reliability",
+      "issue_type": "Improper Resource Shutdown or Release",
+      "cwe_id": "404",
+      "display_text": "\u003cspan\u003eThe program fails to release or incorrectly releases the variable userResults, which was previously allocated by a call to java.sql.Statement.executeQuery().\u003c/span\u003e \u003cspan\u003eEnsure that all code paths properly release this resource.\u003c/span\u003e \u003cspan\u003eReferences: \u003ca href\u003d\"https://cwe.mitre.org/data/definitions/404.html\"\u003eCWE\u003c/a\u003e\u003c/span\u003e",
+      "files": {
+        "source_file": {
+          "file": "org/owasp/webgoat/session/UserDatabase.java",
+          "line": 119,
+          "function_name": "getUsers",
+          "qualified_function_name": "org.owasp.webgoat.session.UserDatabase.getUsers",
+          "function_prototype": "java.util.Iterator getUsers()",
+          "scope": "org.owasp.webgoat.session.UserDatabase"
+        }
+      },
+      "flaw_match": {
+        "procedure_hash": "3244336853",
+        "prototype_hash": "3850940339",
+        "flaw_hash": "1793541258",
+        "flaw_hash_count": 1,
+        "flaw_hash_ordinal": 1,
+        "cause_hash": "1569550939",
+        "cause_hash_count": 1,
+        "cause_hash_ordinal": 1
+      }
+    },
+    {
+      "title": "java.sql.Connection.createStatement",
+      "issue_id": 1045,
+      "gob": "B",
+      "severity": 0,
+      "issue_type_id": "reliability",
+      "issue_type": "Improper Resource Shutdown or Release",
+      "cwe_id": "404",
+      "display_text": "\u003cspan\u003eThe program fails to release or incorrectly releases the variable statement, which was previously allocated by a call to java.sql.Connection.createStatement().\u003c/span\u003e \u003cspan\u003eEnsure that all code paths properly release this resource.\u003c/span\u003e \u003cspan\u003eReferences: \u003ca href\u003d\"https://cwe.mitre.org/data/definitions/404.html\"\u003eCWE\u003c/a\u003e\u003c/span\u003e",
+      "files": {
+        "source_file": {
+          "file": "org/owasp/webgoat/session/UserDatabase.java",
+          "line": 210,
+          "function_name": "createDefaultTables",
+          "qualified_function_name": "org.owasp.webgoat.session.UserDatabase.createDefaultTables",
+          "function_prototype": "boolean createDefaultTables()",
+          "scope": "org.owasp.webgoat.session.UserDatabase"
+        }
+      },
+      "flaw_match": {
+        "procedure_hash": "2930831646",
+        "prototype_hash": "3850940339",
+        "flaw_hash": "1744979309",
+        "flaw_hash_count": 1,
+        "flaw_hash_ordinal": 1,
+        "cause_hash": "2439302015",
+        "cause_hash_count": 1,
+        "cause_hash_ordinal": 1
+      }
+    },
+    {
+      "title": "java.sql.Connection.createStatement",
+      "issue_id": 1046,
+      "gob": "B",
+      "severity": 0,
+      "issue_type_id": "reliability",
+      "issue_type": "Improper Resource Shutdown or Release",
+      "cwe_id": "404",
+      "display_text": "\u003cspan\u003eThe program fails to release or incorrectly releases the variable statement, which was previously allocated by a call to java.sql.Connection.createStatement().\u003c/span\u003e \u003cspan\u003eEnsure that all code paths properly release this resource.\u003c/span\u003e \u003cspan\u003eReferences: \u003ca href\u003d\"https://cwe.mitre.org/data/definitions/404.html\"\u003eCWE\u003c/a\u003e\u003c/span\u003e",
+      "files": {
+        "source_file": {
+          "file": "org/owasp/webgoat/session/UserDatabase.java",
+          "line": 226,
+          "function_name": "createDefaultUsers",
+          "qualified_function_name": "org.owasp.webgoat.session.UserDatabase.createDefaultUsers",
+          "function_prototype": "boolean createDefaultUsers()",
+          "scope": "org.owasp.webgoat.session.UserDatabase"
+        }
+      },
+      "flaw_match": {
+        "procedure_hash": "174868654",
+        "prototype_hash": "3850940339",
+        "flaw_hash": "1744979309",
+        "flaw_hash_count": 1,
+        "flaw_hash_ordinal": 1,
+        "cause_hash": "2439302015",
+        "cause_hash_count": 1,
+        "cause_hash_ordinal": 1
+      }
+    },
+    {
+      "title": "java.sql.Connection.createStatement",
+      "issue_id": 1044,
+      "gob": "B",
+      "severity": 0,
+      "issue_type_id": "reliability",
+      "issue_type": "Improper Resource Shutdown or Release",
+      "cwe_id": "404",
+      "display_text": "\u003cspan\u003eThe program fails to release or incorrectly releases the variable statement, which was previously allocated by a call to java.sql.Connection.createStatement().\u003c/span\u003e \u003cspan\u003eEnsure that all code paths properly release this resource.\u003c/span\u003e \u003cspan\u003eReferences: \u003ca href\u003d\"https://cwe.mitre.org/data/definitions/404.html\"\u003eCWE\u003c/a\u003e\u003c/span\u003e",
+      "files": {
+        "source_file": {
+          "file": "org/owasp/webgoat/session/UserDatabase.java",
+          "line": 240,
+          "function_name": "createDefaultRoles",
+          "qualified_function_name": "org.owasp.webgoat.session.UserDatabase.createDefaultRoles",
+          "function_prototype": "boolean createDefaultRoles()",
+          "scope": "org.owasp.webgoat.session.UserDatabase"
+        }
+      },
+      "flaw_match": {
+        "procedure_hash": "843638755",
+        "prototype_hash": "3850940339",
+        "flaw_hash": "1744979309",
+        "flaw_hash_count": 1,
+        "flaw_hash_ordinal": 1,
+        "cause_hash": "2439302015",
+        "cause_hash_count": 1,
+        "cause_hash_ordinal": 1
+      }
+    },
+    {
+      "title": "java.sql.DriverManager.getConnection",
+      "issue_id": 1012,
+      "gob": "B",
+      "severity": 0,
+      "issue_type_id": "reliability",
+      "issue_type": "Improper Resource Shutdown or Release",
+      "cwe_id": "404",
+      "display_text": "\u003cspan\u003eThe program fails to release or incorrectly releases the variable getHsqldbConnection, which was previously allocated by a call to java.sql.DriverManager.getConnection().\u003c/span\u003e \u003cspan\u003eEnsure that all code paths properly release this resource.\u003c/span\u003e \u003cspan\u003eReferences: \u003ca href\u003d\"https://cwe.mitre.org/data/definitions/404.html\"\u003eCWE\u003c/a\u003e\u003c/span\u003e",
+      "files": {
+        "source_file": {
+          "file": "org/owasp/webgoat/session/DatabaseUtilities.java",
+          "line": 132,
+          "function_name": "getHsqldbConnection",
+          "qualified_function_name": "org.owasp.webgoat.session.DatabaseUtilities.getHsqldbConnection",
+          "function_prototype": "java.sql.Connection getHsqldbConnection(java.lang.String, WebgoatContext)",
+          "scope": "org.owasp.webgoat.session.DatabaseUtilities"
+        }
+      },
+      "flaw_match": {
+        "procedure_hash": "1413193291",
+        "prototype_hash": "4150996556",
+        "flaw_hash": "3116991933",
+        "flaw_hash_count": 1,
+        "flaw_hash_ordinal": 1,
+        "cause_hash": "3521584090",
+        "cause_hash_count": 1,
+        "cause_hash_ordinal": 1
+      }
+    },
+    {
+      "title": "java.sql.Connection.createStatement",
+      "issue_id": 1033,
+      "gob": "B",
+      "severity": 0,
+      "issue_type_id": "reliability",
+      "issue_type": "Improper Resource Shutdown or Release",
+      "cwe_id": "404",
+      "display_text": "\u003cspan\u003eThe program fails to release or incorrectly releases the variable statement, which was previously allocated by a call to java.sql.Connection.createStatement().\u003c/span\u003e \u003cspan\u003eEnsure that all code paths properly release this resource.\u003c/span\u003e \u003cspan\u003eReferences: \u003ca href\u003d\"https://cwe.mitre.org/data/definitions/404.html\"\u003eCWE\u003c/a\u003e\u003c/span\u003e",
+      "files": {
+        "source_file": {
+          "file": "org/owasp/webgoat/session/CreateDB.java",
+          "line": 53,
+          "function_name": "createMessageTable",
+          "qualified_function_name": "org.owasp.webgoat.session.CreateDB.createMessageTable",
+          "function_prototype": "void createMessageTable(java.sql.Connection)",
+          "scope": "org.owasp.webgoat.session.CreateDB"
+        }
+      },
+      "flaw_match": {
+        "procedure_hash": "2530375802",
+        "prototype_hash": "3761270941",
+        "flaw_hash": "1480817290",
+        "flaw_hash_count": 1,
+        "flaw_hash_ordinal": 1,
+        "cause_hash": "2866949028",
+        "cause_hash_count": 1,
+        "cause_hash_ordinal": 1
+      }
+    },
+    {
+      "title": "java.sql.Connection.createStatement",
+      "issue_id": 1032,
+      "gob": "B",
+      "severity": 0,
+      "issue_type_id": "reliability",
+      "issue_type": "Improper Resource Shutdown or Release",
+      "cwe_id": "404",
+      "display_text": "\u003cspan\u003eThe program fails to release or incorrectly releases the variable statement, which was previously allocated by a call to java.sql.Connection.createStatement().\u003c/span\u003e \u003cspan\u003eEnsure that all code paths properly release this resource.\u003c/span\u003e \u003cspan\u003eReferences: \u003ca href\u003d\"https://cwe.mitre.org/data/definitions/404.html\"\u003eCWE\u003c/a\u003e\u003c/span\u003e",
+      "files": {
+        "source_file": {
+          "file": "org/owasp/webgoat/session/CreateDB.java",
+          "line": 87,
+          "function_name": "createMFEImagesTable",
+          "qualified_function_name": "org.owasp.webgoat.session.CreateDB.createMFEImagesTable",
+          "function_prototype": "void createMFEImagesTable(java.sql.Connection)",
+          "scope": "org.owasp.webgoat.session.CreateDB"
+        }
+      },
+      "flaw_match": {
+        "procedure_hash": "1576753329",
+        "prototype_hash": "2012055962",
+        "flaw_hash": "1480817290",
+        "flaw_hash_count": 1,
+        "flaw_hash_ordinal": 1,
+        "cause_hash": "2866949028",
+        "cause_hash_count": 1,
+        "cause_hash_ordinal": 1
+      }
+    },
+    {
+      "title": "java.sql.Connection.createStatement",
+      "issue_id": 1036,
+      "gob": "B",
+      "severity": 0,
+      "issue_type_id": "reliability",
+      "issue_type": "Improper Resource Shutdown or Release",
+      "cwe_id": "404",
+      "display_text": "\u003cspan\u003eThe program fails to release or incorrectly releases the variable statement, which was previously allocated by a call to java.sql.Connection.createStatement().\u003c/span\u003e \u003cspan\u003eEnsure that all code paths properly release this resource.\u003c/span\u003e \u003cspan\u003eReferences: \u003ca href\u003d\"https://cwe.mitre.org/data/definitions/404.html\"\u003eCWE\u003c/a\u003e\u003c/span\u003e",
+      "files": {
+        "source_file": {
+          "file": "org/owasp/webgoat/session/CreateDB.java",
+          "line": 127,
+          "function_name": "createProductTable",
+          "qualified_function_name": "org.owasp.webgoat.session.CreateDB.createProductTable",
+          "function_prototype": "void createProductTable(java.sql.Connection)",
+          "scope": "org.owasp.webgoat.session.CreateDB"
+        }
+      },
+      "flaw_match": {
+        "procedure_hash": "2339843433",
+        "prototype_hash": "721034894",
+        "flaw_hash": "1480817290",
+        "flaw_hash_count": 1,
+        "flaw_hash_ordinal": 1,
+        "cause_hash": "2866949028",
+        "cause_hash_count": 1,
+        "cause_hash_ordinal": 1
+      }
+    },
+    {
+      "title": "java.sql.Connection.createStatement",
+      "issue_id": 1041,
+      "gob": "B",
+      "severity": 0,
+      "issue_type_id": "reliability",
+      "issue_type": "Improper Resource Shutdown or Release",
+      "cwe_id": "404",
+      "display_text": "\u003cspan\u003eThe program fails to release or incorrectly releases the variable statement, which was previously allocated by a call to java.sql.Connection.createStatement().\u003c/span\u003e \u003cspan\u003eEnsure that all code paths properly release this resource.\u003c/span\u003e \u003cspan\u003eReferences: \u003ca href\u003d\"https://cwe.mitre.org/data/definitions/404.html\"\u003eCWE\u003c/a\u003e\u003c/span\u003e",
+      "files": {
+        "source_file": {
+          "file": "org/owasp/webgoat/session/CreateDB.java",
+          "line": 175,
+          "function_name": "createUserAdminTable",
+          "qualified_function_name": "org.owasp.webgoat.session.CreateDB.createUserAdminTable",
+          "function_prototype": "void createUserAdminTable(java.sql.Connection)",
+          "scope": "org.owasp.webgoat.session.CreateDB"
+        }
+      },
+      "flaw_match": {
+        "procedure_hash": "3340135186",
+        "prototype_hash": "1991650991",
+        "flaw_hash": "1480817290",
+        "flaw_hash_count": 1,
+        "flaw_hash_ordinal": 1,
+        "cause_hash": "2866949028",
+        "cause_hash_count": 1,
+        "cause_hash_ordinal": 1
+      }
+    },
+    {
+      "title": "java.sql.Connection.createStatement",
+      "issue_id": 1042,
+      "gob": "B",
+      "severity": 0,
+      "issue_type_id": "reliability",
+      "issue_type": "Improper Resource Shutdown or Release",
+      "cwe_id": "404",
+      "display_text": "\u003cspan\u003eThe program fails to release or incorrectly releases the variable statement, which was previously allocated by a call to java.sql.Connection.createStatement().\u003c/span\u003e \u003cspan\u003eEnsure that all code paths properly release this resource.\u003c/span\u003e \u003cspan\u003eReferences: \u003ca href\u003d\"https://cwe.mitre.org/data/definitions/404.html\"\u003eCWE\u003c/a\u003e\u003c/span\u003e",
+      "files": {
+        "source_file": {
+          "file": "org/owasp/webgoat/session/CreateDB.java",
+          "line": 222,
+          "function_name": "createUserDataTable",
+          "qualified_function_name": "org.owasp.webgoat.session.CreateDB.createUserDataTable",
+          "function_prototype": "void createUserDataTable(java.sql.Connection)",
+          "scope": "org.owasp.webgoat.session.CreateDB"
+        }
+      },
+      "flaw_match": {
+        "procedure_hash": "1888566195",
+        "prototype_hash": "3578224650",
+        "flaw_hash": "1480817290",
+        "flaw_hash_count": 1,
+        "flaw_hash_ordinal": 1,
+        "cause_hash": "2866949028",
+        "cause_hash_count": 1,
+        "cause_hash_ordinal": 1
+      }
+    },
+    {
+      "title": "java.sql.Connection.createStatement",
+      "issue_id": 1031,
+      "gob": "B",
+      "severity": 0,
+      "issue_type_id": "reliability",
+      "issue_type": "Improper Resource Shutdown or Release",
+      "cwe_id": "404",
+      "display_text": "\u003cspan\u003eThe program fails to release or incorrectly releases the variable statement, which was previously allocated by a call to java.sql.Connection.createStatement().\u003c/span\u003e \u003cspan\u003eEnsure that all code paths properly release this resource.\u003c/span\u003e \u003cspan\u003eReferences: \u003ca href\u003d\"https://cwe.mitre.org/data/definitions/404.html\"\u003eCWE\u003c/a\u003e\u003c/span\u003e",
+      "files": {
+        "source_file": {
+          "file": "org/owasp/webgoat/session/CreateDB.java",
+          "line": 278,
+          "function_name": "createLoginTable",
+          "qualified_function_name": "org.owasp.webgoat.session.CreateDB.createLoginTable",
+          "function_prototype": "void createLoginTable(java.sql.Connection)",
+          "scope": "org.owasp.webgoat.session.CreateDB"
+        }
+      },
+      "flaw_match": {
+        "procedure_hash": "3610632901",
+        "prototype_hash": "2516432880",
+        "flaw_hash": "1480817290",
+        "flaw_hash_count": 1,
+        "flaw_hash_ordinal": 1,
+        "cause_hash": "2866949028",
+        "cause_hash_count": 1,
+        "cause_hash_ordinal": 1
+      }
+    },
+    {
+      "title": "java.sql.Connection.createStatement",
+      "issue_id": 1029,
+      "gob": "B",
+      "severity": 0,
+      "issue_type_id": "reliability",
+      "issue_type": "Improper Resource Shutdown or Release",
+      "cwe_id": "404",
+      "display_text": "\u003cspan\u003eThe program fails to release or incorrectly releases the variable statement, which was previously allocated by a call to java.sql.Connection.createStatement().\u003c/span\u003e \u003cspan\u003eEnsure that all code paths properly release this resource.\u003c/span\u003e \u003cspan\u003eReferences: \u003ca href\u003d\"https://cwe.mitre.org/data/definitions/404.html\"\u003eCWE\u003c/a\u003e\u003c/span\u003e",
+      "files": {
+        "source_file": {
+          "file": "org/owasp/webgoat/session/CreateDB.java",
+          "line": 306,
+          "function_name": "createBlindSQLLessonTable",
+          "qualified_function_name": "org.owasp.webgoat.session.CreateDB.createBlindSQLLessonTable",
+          "function_prototype": "void createBlindSQLLessonTable(java.sql.Connection)",
+          "scope": "org.owasp.webgoat.session.CreateDB"
+        }
+      },
+      "flaw_match": {
+        "procedure_hash": "2368084286",
+        "prototype_hash": "42387663",
+        "flaw_hash": "1480817290",
+        "flaw_hash_count": 1,
+        "flaw_hash_ordinal": 1,
+        "cause_hash": "2866949028",
+        "cause_hash_count": 1,
+        "cause_hash_ordinal": 1
+      }
+    },
+    {
+      "title": "java.sql.Connection.createStatement",
+      "issue_id": 1034,
+      "gob": "B",
+      "severity": 0,
+      "issue_type_id": "reliability",
+      "issue_type": "Improper Resource Shutdown or Release",
+      "cwe_id": "404",
+      "display_text": "\u003cspan\u003eThe program fails to release or incorrectly releases the variable statement, which was previously allocated by a call to java.sql.Connection.createStatement().\u003c/span\u003e \u003cspan\u003eEnsure that all code paths properly release this resource.\u003c/span\u003e \u003cspan\u003eReferences: \u003ca href\u003d\"https://cwe.mitre.org/data/definitions/404.html\"\u003eCWE\u003c/a\u003e\u003c/span\u003e",
+      "files": {
+        "source_file": {
+          "file": "org/owasp/webgoat/session/CreateDB.java",
+          "line": 353,
+          "function_name": "createModifyWithSQLLessonTable",
+          "qualified_function_name": "org.owasp.webgoat.session.CreateDB.createModifyWithSQLLessonTable",
+          "function_prototype": "void createModifyWithSQLLessonTable(java.sql.Connection)",
+          "scope": "org.owasp.webgoat.session.CreateDB"
+        }
+      },
+      "flaw_match": {
+        "procedure_hash": "3548357648",
+        "prototype_hash": "2587506924",
+        "flaw_hash": "1480817290",
+        "flaw_hash_count": 1,
+        "flaw_hash_ordinal": 1,
+        "cause_hash": "2866949028",
+        "cause_hash_count": 1,
+        "cause_hash_ordinal": 1
+      }
+    },
+    {
+      "title": "java.sql.Connection.createStatement",
+      "issue_id": 1043,
+      "gob": "B",
+      "severity": 0,
+      "issue_type_id": "reliability",
+      "issue_type": "Improper Resource Shutdown or Release",
+      "cwe_id": "404",
+      "display_text": "\u003cspan\u003eThe program fails to release or incorrectly releases the variable statement, which was previously allocated by a call to java.sql.Connection.createStatement().\u003c/span\u003e \u003cspan\u003eEnsure that all code paths properly release this resource.\u003c/span\u003e \u003cspan\u003eReferences: \u003ca href\u003d\"https://cwe.mitre.org/data/definitions/404.html\"\u003eCWE\u003c/a\u003e\u003c/span\u003e",
+      "files": {
+        "source_file": {
+          "file": "org/owasp/webgoat/session/CreateDB.java",
+          "line": 406,
+          "function_name": "createWeatherDataTable",
+          "qualified_function_name": "org.owasp.webgoat.session.CreateDB.createWeatherDataTable",
+          "function_prototype": "void createWeatherDataTable(java.sql.Connection)",
+          "scope": "org.owasp.webgoat.session.CreateDB"
+        }
+      },
+      "flaw_match": {
+        "procedure_hash": "358904955",
+        "prototype_hash": "3881923092",
+        "flaw_hash": "1480817290",
+        "flaw_hash_count": 1,
+        "flaw_hash_ordinal": 1,
+        "cause_hash": "2866949028",
+        "cause_hash_count": 1,
+        "cause_hash_ordinal": 1
+      }
+    },
+    {
+      "title": "java.sql.Connection.createStatement",
+      "issue_id": 1039,
+      "gob": "B",
+      "severity": 0,
+      "issue_type_id": "reliability",
+      "issue_type": "Improper Resource Shutdown or Release",
+      "cwe_id": "404",
+      "display_text": "\u003cspan\u003eThe program fails to release or incorrectly releases the variable statement, which was previously allocated by a call to java.sql.Connection.createStatement().\u003c/span\u003e \u003cspan\u003eEnsure that all code paths properly release this resource.\u003c/span\u003e \u003cspan\u003eReferences: \u003ca href\u003d\"https://cwe.mitre.org/data/definitions/404.html\"\u003eCWE\u003c/a\u003e\u003c/span\u003e",
+      "files": {
+        "source_file": {
+          "file": "org/owasp/webgoat/session/CreateDB.java",
+          "line": 453,
+          "function_name": "createTanUserDataTable",
+          "qualified_function_name": "org.owasp.webgoat.session.CreateDB.createTanUserDataTable",
+          "function_prototype": "void createTanUserDataTable(java.sql.Connection)",
+          "scope": "org.owasp.webgoat.session.CreateDB"
+        }
+      },
+      "flaw_match": {
+        "procedure_hash": "3916947799",
+        "prototype_hash": "939834609",
+        "flaw_hash": "1480817290",
+        "flaw_hash_count": 1,
+        "flaw_hash_ordinal": 1,
+        "cause_hash": "2866949028",
+        "cause_hash_count": 1,
+        "cause_hash_ordinal": 1
+      }
+    },
+    {
+      "title": "java.sql.Connection.createStatement",
+      "issue_id": 1038,
+      "gob": "B",
+      "severity": 0,
+      "issue_type_id": "reliability",
+      "issue_type": "Improper Resource Shutdown or Release",
+      "cwe_id": "404",
+      "display_text": "\u003cspan\u003eThe program fails to release or incorrectly releases the variable statement, which was previously allocated by a call to java.sql.Connection.createStatement().\u003c/span\u003e \u003cspan\u003eEnsure that all code paths properly release this resource.\u003c/span\u003e \u003cspan\u003eReferences: \u003ca href\u003d\"https://cwe.mitre.org/data/definitions/404.html\"\u003eCWE\u003c/a\u003e\u003c/span\u003e",
+      "files": {
+        "source_file": {
+          "file": "org/owasp/webgoat/session/CreateDB.java",
+          "line": 496,
+          "function_name": "createTanTable",
+          "qualified_function_name": "org.owasp.webgoat.session.CreateDB.createTanTable",
+          "function_prototype": "void createTanTable(java.sql.Connection)",
+          "scope": "org.owasp.webgoat.session.CreateDB"
+        }
+      },
+      "flaw_match": {
+        "procedure_hash": "822594853",
+        "prototype_hash": "2517984306",
+        "flaw_hash": "1480817290",
+        "flaw_hash_count": 1,
+        "flaw_hash_ordinal": 1,
+        "cause_hash": "2866949028",
+        "cause_hash_count": 1,
+        "cause_hash_ordinal": 1
+      }
+    },
+    {
+      "title": "java.sql.Connection.createStatement",
+      "issue_id": 1030,
+      "gob": "B",
+      "severity": 0,
+      "issue_type_id": "reliability",
+      "issue_type": "Improper Resource Shutdown or Release",
+      "cwe_id": "404",
+      "display_text": "\u003cspan\u003eThe program fails to release or incorrectly releases the variable statement, which was previously allocated by a call to java.sql.Connection.createStatement().\u003c/span\u003e \u003cspan\u003eEnsure that all code paths properly release this resource.\u003c/span\u003e \u003cspan\u003eReferences: \u003ca href\u003d\"https://cwe.mitre.org/data/definitions/404.html\"\u003eCWE\u003c/a\u003e\u003c/span\u003e",
+      "files": {
+        "source_file": {
+          "file": "org/owasp/webgoat/session/CreateDB.java",
+          "line": 558,
+          "function_name": "createEmployeeTable",
+          "qualified_function_name": "org.owasp.webgoat.session.CreateDB.createEmployeeTable",
+          "function_prototype": "void createEmployeeTable(java.sql.Connection)",
+          "scope": "org.owasp.webgoat.session.CreateDB"
+        }
+      },
+      "flaw_match": {
+        "procedure_hash": "2586622",
+        "prototype_hash": "3438232133",
+        "flaw_hash": "1480817290",
+        "flaw_hash_count": 1,
+        "flaw_hash_ordinal": 1,
+        "cause_hash": "2866949028",
+        "cause_hash_count": 1,
+        "cause_hash_ordinal": 1
+      }
+    },
+    {
+      "title": "java.sql.Connection.createStatement",
+      "issue_id": 1037,
+      "gob": "B",
+      "severity": 0,
+      "issue_type_id": "reliability",
+      "issue_type": "Improper Resource Shutdown or Release",
+      "cwe_id": "404",
+      "display_text": "\u003cspan\u003eThe program fails to release or incorrectly releases the variable statement, which was previously allocated by a call to java.sql.Connection.createStatement().\u003c/span\u003e \u003cspan\u003eEnsure that all code paths properly release this resource.\u003c/span\u003e \u003cspan\u003eReferences: \u003ca href\u003d\"https://cwe.mitre.org/data/definitions/404.html\"\u003eCWE\u003c/a\u003e\u003c/span\u003e",
+      "files": {
+        "source_file": {
+          "file": "org/owasp/webgoat/session/CreateDB.java",
+          "line": 655,
+          "function_name": "createRolesTable",
+          "qualified_function_name": "org.owasp.webgoat.session.CreateDB.createRolesTable",
+          "function_prototype": "void createRolesTable(java.sql.Connection)",
+          "scope": "org.owasp.webgoat.session.CreateDB"
+        }
+      },
+      "flaw_match": {
+        "procedure_hash": "3094034904",
+        "prototype_hash": "779073747",
+        "flaw_hash": "1480817290",
+        "flaw_hash_count": 1,
+        "flaw_hash_ordinal": 1,
+        "cause_hash": "2866949028",
+        "cause_hash_count": 1,
+        "cause_hash_ordinal": 1
+      }
+    },
+    {
+      "title": "java.sql.Connection.createStatement",
+      "issue_id": 1028,
+      "gob": "B",
+      "severity": 0,
+      "issue_type_id": "reliability",
+      "issue_type": "Improper Resource Shutdown or Release",
+      "cwe_id": "404",
+      "display_text": "\u003cspan\u003eThe program fails to release or incorrectly releases the variable statement, which was previously allocated by a call to java.sql.Connection.createStatement().\u003c/span\u003e \u003cspan\u003eEnsure that all code paths properly release this resource.\u003c/span\u003e \u003cspan\u003eReferences: \u003ca href\u003d\"https://cwe.mitre.org/data/definitions/404.html\"\u003eCWE\u003c/a\u003e\u003c/span\u003e",
+      "files": {
+        "source_file": {
+          "file": "org/owasp/webgoat/session/CreateDB.java",
+          "line": 706,
+          "function_name": "createAuthTable",
+          "qualified_function_name": "org.owasp.webgoat.session.CreateDB.createAuthTable",
+          "function_prototype": "void createAuthTable(java.sql.Connection)",
+          "scope": "org.owasp.webgoat.session.CreateDB"
+        }
+      },
+      "flaw_match": {
+        "procedure_hash": "1243165841",
+        "prototype_hash": "288164627",
+        "flaw_hash": "1480817290",
+        "flaw_hash_count": 1,
+        "flaw_hash_ordinal": 1,
+        "cause_hash": "2866949028",
+        "cause_hash_count": 1,
+        "cause_hash_ordinal": 1
+      }
+    },
+    {
+      "title": "java.sql.Connection.createStatement",
+      "issue_id": 1035,
+      "gob": "B",
+      "severity": 0,
+      "issue_type_id": "reliability",
+      "issue_type": "Improper Resource Shutdown or Release",
+      "cwe_id": "404",
+      "display_text": "\u003cspan\u003eThe program fails to release or incorrectly releases the variable statement, which was previously allocated by a call to java.sql.Connection.createStatement().\u003c/span\u003e \u003cspan\u003eEnsure that all code paths properly release this resource.\u003c/span\u003e \u003cspan\u003eReferences: \u003ca href\u003d\"https://cwe.mitre.org/data/definitions/404.html\"\u003eCWE\u003c/a\u003e\u003c/span\u003e",
+      "files": {
+        "source_file": {
+          "file": "org/owasp/webgoat/session/CreateDB.java",
+          "line": 813,
+          "function_name": "createOwnershipTable",
+          "qualified_function_name": "org.owasp.webgoat.session.CreateDB.createOwnershipTable",
+          "function_prototype": "void createOwnershipTable(java.sql.Connection)",
+          "scope": "org.owasp.webgoat.session.CreateDB"
+        }
+      },
+      "flaw_match": {
+        "procedure_hash": "34946125",
+        "prototype_hash": "3968857914",
+        "flaw_hash": "1480817290",
+        "flaw_hash_count": 1,
+        "flaw_hash_ordinal": 1,
+        "cause_hash": "2866949028",
+        "cause_hash_count": 1,
+        "cause_hash_ordinal": 1
+      }
+    },
+    {
+      "title": "java.sql.Connection.createStatement",
+      "issue_id": 1040,
+      "gob": "B",
+      "severity": 0,
+      "issue_type_id": "reliability",
+      "issue_type": "Improper Resource Shutdown or Release",
+      "cwe_id": "404",
+      "display_text": "\u003cspan\u003eThe program fails to release or incorrectly releases the variable statement, which was previously allocated by a call to java.sql.Connection.createStatement().\u003c/span\u003e \u003cspan\u003eEnsure that all code paths properly release this resource.\u003c/span\u003e \u003cspan\u003eReferences: \u003ca href\u003d\"https://cwe.mitre.org/data/definitions/404.html\"\u003eCWE\u003c/a\u003e\u003c/span\u003e",
+      "files": {
+        "source_file": {
+          "file": "org/owasp/webgoat/session/CreateDB.java",
+          "line": 957,
+          "function_name": "createTransactionTable",
+          "qualified_function_name": "org.owasp.webgoat.session.CreateDB.createTransactionTable",
+          "function_prototype": "void createTransactionTable(java.sql.Connection)",
+          "scope": "org.owasp.webgoat.session.CreateDB"
+        }
+      },
+      "flaw_match": {
+        "procedure_hash": "1423680544",
+        "prototype_hash": "715637012",
+        "flaw_hash": "1480817290",
+        "flaw_hash_count": 2,
+        "flaw_hash_ordinal": 1,
+        "cause_hash": "2866949028",
+        "cause_hash_count": 1,
+        "cause_hash_ordinal": 1
+      }
+    },
+    {
+      "title": "java.sql.Connection.createStatement",
+      "issue_id": 1027,
+      "gob": "B",
+      "severity": 0,
+      "issue_type_id": "reliability",
+      "issue_type": "Improper Resource Shutdown or Release",
+      "cwe_id": "404",
+      "display_text": "\u003cspan\u003eThe program fails to release or incorrectly releases the variable statement, which was previously allocated by a call to java.sql.Connection.createStatement().\u003c/span\u003e \u003cspan\u003eEnsure that all code paths properly release this resource.\u003c/span\u003e \u003cspan\u003eReferences: \u003ca href\u003d\"https://cwe.mitre.org/data/definitions/404.html\"\u003eCWE\u003c/a\u003e\u003c/span\u003e",
+      "files": {
+        "source_file": {
+          "file": "org/owasp/webgoat/lessons/admin/ViewDatabase.java",
+          "line": 78,
+          "function_name": "createContent",
+          "qualified_function_name": "org.owasp.webgoat.lessons.admin.ViewDatabase.createContent",
+          "function_prototype": "apache.ecs.Element createContent(session.WebSession)",
+          "scope": "org.owasp.webgoat.lessons.admin.ViewDatabase"
+        }
+      },
+      "flaw_match": {
+        "procedure_hash": "3496192803",
+        "prototype_hash": "1953662963",
+        "flaw_hash": "1125133445",
+        "flaw_hash_count": 1,
+        "flaw_hash_ordinal": 1,
+        "cause_hash": "1867222784",
+        "cause_hash_count": 1,
+        "cause_hash_ordinal": 1
+      }
+    },
+    {
+      "title": "java.sql.Statement.executeQuery",
+      "issue_id": 1008,
+      "gob": "B",
+      "severity": 0,
+      "issue_type_id": "reliability",
+      "issue_type": "Improper Resource Shutdown or Release",
+      "cwe_id": "404",
+      "display_text": "\u003cspan\u003eThe program fails to release or incorrectly releases the variable results, which was previously allocated by a call to java.sql.Statement.executeQuery().\u003c/span\u003e \u003cspan\u003eEnsure that all code paths properly release this resource.\u003c/span\u003e \u003cspan\u003eReferences: \u003ca href\u003d\"https://cwe.mitre.org/data/definitions/404.html\"\u003eCWE\u003c/a\u003e\u003c/span\u003e",
+      "files": {
+        "source_file": {
+          "file": "org/owasp/webgoat/lessons/admin/ViewDatabase.java",
+          "line": 80,
+          "function_name": "createContent",
+          "qualified_function_name": "org.owasp.webgoat.lessons.admin.ViewDatabase.createContent",
+          "function_prototype": "apache.ecs.Element createContent(session.WebSession)",
+          "scope": "org.owasp.webgoat.lessons.admin.ViewDatabase"
+        }
+      },
+      "flaw_match": {
+        "procedure_hash": "3496192803",
+        "prototype_hash": "1953662963",
+        "flaw_hash": "390377922",
+        "flaw_hash_count": 1,
+        "flaw_hash_ordinal": 1,
+        "cause_hash": "153293750",
+        "cause_hash_count": 1,
+        "cause_hash_ordinal": 1
+      }
+    },
+    {
+      "title": "java.sql.Connection.createStatement",
+      "issue_id": 1026,
+      "gob": "B",
+      "severity": 0,
+      "issue_type_id": "reliability",
+      "issue_type": "Improper Resource Shutdown or Release",
+      "cwe_id": "404",
+      "display_text": "\u003cspan\u003eThe program fails to release or incorrectly releases the variable statement, which was previously allocated by a call to java.sql.Connection.createStatement().\u003c/span\u003e \u003cspan\u003eEnsure that all code paths properly release this resource.\u003c/span\u003e \u003cspan\u003eReferences: \u003ca href\u003d\"https://cwe.mitre.org/data/definitions/404.html\"\u003eCWE\u003c/a\u003e\u003c/span\u003e",
+      "files": {
+        "source_file": {
+          "file": "org/owasp/webgoat/lessons/admin/UserAdminScreen.java",
+          "line": 64,
+          "function_name": "createContent",
+          "qualified_function_name": "org.owasp.webgoat.lessons.admin.UserAdminScreen.createContent",
+          "function_prototype": "apache.ecs.Element createContent(session.WebSession)",
+          "scope": "org.owasp.webgoat.lessons.admin.UserAdminScreen"
+        }
+      },
+      "flaw_match": {
+        "procedure_hash": "3201352107",
+        "prototype_hash": "4073985870",
+        "flaw_hash": "1125133445",
+        "flaw_hash_count": 1,
+        "flaw_hash_ordinal": 1,
+        "cause_hash": "1867222784",
+        "cause_hash_count": 1,
+        "cause_hash_ordinal": 1
+      }
+    },
+    {
+      "title": "java.sql.Statement.executeQuery",
+      "issue_id": 1007,
+      "gob": "B",
+      "severity": 0,
+      "issue_type_id": "reliability",
+      "issue_type": "Improper Resource Shutdown or Release",
+      "cwe_id": "404",
+      "display_text": "\u003cspan\u003eThe program fails to release or incorrectly releases the variable results, which was previously allocated by a call to java.sql.Statement.executeQuery().\u003c/span\u003e \u003cspan\u003eEnsure that all code paths properly release this resource.\u003c/span\u003e \u003cspan\u003eReferences: \u003ca href\u003d\"https://cwe.mitre.org/data/definitions/404.html\"\u003eCWE\u003c/a\u003e\u003c/span\u003e",
+      "files": {
+        "source_file": {
+          "file": "org/owasp/webgoat/lessons/admin/UserAdminScreen.java",
+          "line": 66,
+          "function_name": "createContent",
+          "qualified_function_name": "org.owasp.webgoat.lessons.admin.UserAdminScreen.createContent",
+          "function_prototype": "apache.ecs.Element createContent(session.WebSession)",
+          "scope": "org.owasp.webgoat.lessons.admin.UserAdminScreen"
+        }
+      },
+      "flaw_match": {
+        "procedure_hash": "3201352107",
+        "prototype_hash": "4073985870",
+        "flaw_hash": "3960258923",
+        "flaw_hash_count": 1,
+        "flaw_hash_ordinal": 1,
+        "cause_hash": "3410575978",
+        "cause_hash_count": 1,
+        "cause_hash_ordinal": 1
+      }
+    },
+    {
+      "title": "java.sql.Connection.createStatement",
+      "issue_id": 1025,
+      "gob": "B",
+      "severity": 0,
+      "issue_type_id": "reliability",
+      "issue_type": "Improper Resource Shutdown or Release",
+      "cwe_id": "404",
+      "display_text": "\u003cspan\u003eThe program fails to release or incorrectly releases the variable statement, which was previously allocated by a call to java.sql.Connection.createStatement().\u003c/span\u003e \u003cspan\u003eEnsure that all code paths properly release this resource.\u003c/span\u003e \u003cspan\u003eReferences: \u003ca href\u003d\"https://cwe.mitre.org/data/definitions/404.html\"\u003eCWE\u003c/a\u003e\u003c/span\u003e",
+      "files": {
+        "source_file": {
+          "file": "org/owasp/webgoat/lessons/admin/ProductsAdminScreen.java",
+          "line": 64,
+          "function_name": "createContent",
+          "qualified_function_name": "org.owasp.webgoat.lessons.admin.ProductsAdminScreen.createContent",
+          "function_prototype": "apache.ecs.Element createContent(session.WebSession)",
+          "scope": "org.owasp.webgoat.lessons.admin.ProductsAdminScreen"
+        }
+      },
+      "flaw_match": {
+        "procedure_hash": "3825754788",
+        "prototype_hash": "3699768753",
+        "flaw_hash": "1125133445",
+        "flaw_hash_count": 1,
+        "flaw_hash_ordinal": 1,
+        "cause_hash": "1867222784",
+        "cause_hash_count": 1,
+        "cause_hash_ordinal": 1
+      }
+    },
+    {
+      "title": "java.sql.Statement.executeQuery",
+      "issue_id": 1006,
+      "gob": "B",
+      "severity": 0,
+      "issue_type_id": "reliability",
+      "issue_type": "Improper Resource Shutdown or Release",
+      "cwe_id": "404",
+      "display_text": "\u003cspan\u003eThe program fails to release or incorrectly releases the variable results, which was previously allocated by a call to java.sql.Statement.executeQuery().\u003c/span\u003e \u003cspan\u003eEnsure that all code paths properly release this resource.\u003c/span\u003e \u003cspan\u003eReferences: \u003ca href\u003d\"https://cwe.mitre.org/data/definitions/404.html\"\u003eCWE\u003c/a\u003e\u003c/span\u003e",
+      "files": {
+        "source_file": {
+          "file": "org/owasp/webgoat/lessons/admin/ProductsAdminScreen.java",
+          "line": 66,
+          "function_name": "createContent",
+          "qualified_function_name": "org.owasp.webgoat.lessons.admin.ProductsAdminScreen.createContent",
+          "function_prototype": "apache.ecs.Element createContent(session.WebSession)",
+          "scope": "org.owasp.webgoat.lessons.admin.ProductsAdminScreen"
+        }
+      },
+      "flaw_match": {
+        "procedure_hash": "3825754788",
+        "prototype_hash": "3699768753",
+        "flaw_hash": "2890526768",
+        "flaw_hash_count": 1,
+        "flaw_hash_ordinal": 1,
+        "cause_hash": "2385257561",
+        "cause_hash_count": 1,
+        "cause_hash_ordinal": 1
+      }
+    },
+    {
+      "title": "java.io.BufferedReader.!operator_javanewinit",
+      "issue_id": 1022,
+      "gob": "B",
+      "severity": 0,
+      "issue_type_id": "reliability",
+      "issue_type": "Improper Resource Shutdown or Release",
+      "cwe_id": "404",
+      "display_text": "\u003cspan\u003eThe program fails to release or incorrectly releases the variable in, which was previously allocated by a call to java.io.BufferedReader.!operator_javanewinit().\u003c/span\u003e \u003cspan\u003eEnsure that all code paths properly release this resource.\u003c/span\u003e \u003cspan\u003eReferences: \u003ca href\u003d\"https://cwe.mitre.org/data/definitions/404.html\"\u003eCWE\u003c/a\u003e\u003c/span\u003e",
+      "files": {
+        "source_file": {
+          "file": "org/owasp/webgoat/lessons/LessonAdapter.java",
+          "line": 182,
+          "function_name": "getInstructions",
+          "qualified_function_name": "org.owasp.webgoat.lessons.LessonAdapter.getInstructions",
+          "function_prototype": "java.lang.String getInstructions(session.WebSession)",
+          "scope": "org.owasp.webgoat.lessons.LessonAdapter"
+        }
+      },
+      "flaw_match": {
+        "procedure_hash": "2272850618",
+        "prototype_hash": "1258875268",
+        "flaw_hash": "2893105776",
+        "flaw_hash_count": 1,
+        "flaw_hash_ordinal": 1,
+        "cause_hash": "2853736140",
+        "cause_hash_count": 1,
+        "cause_hash_ordinal": 1
+      }
+    },
+    {
+      "title": "java.io.BufferedReader.!operator_javanewinit",
+      "issue_id": 1017,
+      "gob": "B",
+      "severity": 0,
+      "issue_type_id": "reliability",
+      "issue_type": "Improper Resource Shutdown or Release",
+      "cwe_id": "404",
+      "display_text": "\u003cspan\u003eThe program fails to release or incorrectly releases the variable getLessonPlan, which was previously allocated by a call to java.io.BufferedReader.!operator_javanewinit().\u003c/span\u003e \u003cspan\u003eEnsure that all code paths properly release this resource.\u003c/span\u003e \u003cspan\u003eReferences: \u003ca href\u003d\"https://cwe.mitre.org/data/definitions/404.html\"\u003eCWE\u003c/a\u003e\u003c/span\u003e",
+      "files": {
+        "source_file": {
+          "file": "org/owasp/webgoat/lessons/AbstractLesson.java",
+          "line": 437,
+          "function_name": "getLessonPlan",
+          "qualified_function_name": "org.owasp.webgoat.lessons.AbstractLesson.getLessonPlan",
+          "function_prototype": "java.lang.String getLessonPlan(session.WebSession)",
+          "scope": "org.owasp.webgoat.lessons.AbstractLesson"
+        }
+      },
+      "flaw_match": {
+        "procedure_hash": "3910967231",
+        "prototype_hash": "734864698",
+        "flaw_hash": "2651301481",
+        "flaw_hash_count": 1,
+        "flaw_hash_ordinal": 1,
+        "cause_hash": "2853736140",
+        "cause_hash_count": 1,
+        "cause_hash_ordinal": 1
+      }
+    },
+    {
+      "title": "java.io.BufferedReader.!operator_javanewinit",
+      "issue_id": 1020,
+      "gob": "B",
+      "severity": 0,
+      "issue_type_id": "reliability",
+      "issue_type": "Improper Resource Shutdown or Release",
+      "cwe_id": "404",
+      "display_text": "\u003cspan\u003eThe program fails to release or incorrectly releases the variable getSource, which was previously allocated by a call to java.io.BufferedReader.!operator_javanewinit().\u003c/span\u003e \u003cspan\u003eEnsure that all code paths properly release this resource.\u003c/span\u003e \u003cspan\u003eReferences: \u003ca href\u003d\"https://cwe.mitre.org/data/definitions/404.html\"\u003eCWE\u003c/a\u003e\u003c/span\u003e",
+      "files": {
+        "source_file": {
+          "file": "org/owasp/webgoat/lessons/AbstractLesson.java",
+          "line": 531,
+          "function_name": "getSource",
+          "qualified_function_name": "org.owasp.webgoat.lessons.AbstractLesson.getSource",
+          "function_prototype": "java.lang.String getSource(session.WebSession)",
+          "scope": "org.owasp.webgoat.lessons.AbstractLesson"
+        }
+      },
+      "flaw_match": {
+        "procedure_hash": "848377150",
+        "prototype_hash": "3461016895",
+        "flaw_hash": "2804672116",
+        "flaw_hash_count": 1,
+        "flaw_hash_ordinal": 1,
+        "cause_hash": "596026696",
+        "cause_hash_count": 1,
+        "cause_hash_ordinal": 1
+      }
+    },
+    {
+      "title": "java.io.BufferedReader.!operator_javanewinit",
+      "issue_id": 1018,
+      "gob": "B",
+      "severity": 0,
+      "issue_type_id": "reliability",
+      "issue_type": "Improper Resource Shutdown or Release",
+      "cwe_id": "404",
+      "display_text": "\u003cspan\u003eThe program fails to release or incorrectly releases the variable getRawSource, which was previously allocated by a call to java.io.BufferedReader.!operator_javanewinit().\u003c/span\u003e \u003cspan\u003eEnsure that all code paths properly release this resource.\u003c/span\u003e \u003cspan\u003eReferences: \u003ca href\u003d\"https://cwe.mitre.org/data/definitions/404.html\"\u003eCWE\u003c/a\u003e\u003c/span\u003e",
+      "files": {
+        "source_file": {
+          "file": "org/owasp/webgoat/lessons/AbstractLesson.java",
+          "line": 574,
+          "function_name": "getRawSource",
+          "qualified_function_name": "org.owasp.webgoat.lessons.AbstractLesson.getRawSource",
+          "function_prototype": "java.lang.String getRawSource(session.WebSession)",
+          "scope": "org.owasp.webgoat.lessons.AbstractLesson"
+        }
+      },
+      "flaw_match": {
+        "procedure_hash": "1376263820",
+        "prototype_hash": "64806012",
+        "flaw_hash": "794819815",
+        "flaw_hash_count": 1,
+        "flaw_hash_ordinal": 1,
+        "cause_hash": "596026696",
+        "cause_hash_count": 1,
+        "cause_hash_ordinal": 1
+      }
+    },
+    {
+      "title": "java.io.BufferedReader.!operator_javanewinit",
+      "issue_id": 1019,
+      "gob": "B",
+      "severity": 0,
+      "issue_type_id": "reliability",
+      "issue_type": "Improper Resource Shutdown or Release",
+      "cwe_id": "404",
+      "display_text": "\u003cspan\u003eThe program fails to release or incorrectly releases the variable getSolution, which was previously allocated by a call to java.io.BufferedReader.!operator_javanewinit().\u003c/span\u003e \u003cspan\u003eEnsure that all code paths properly release this resource.\u003c/span\u003e \u003cspan\u003eReferences: \u003ca href\u003d\"https://cwe.mitre.org/data/definitions/404.html\"\u003eCWE\u003c/a\u003e\u003c/span\u003e",
+      "files": {
+        "source_file": {
+          "file": "org/owasp/webgoat/lessons/AbstractLesson.java",
+          "line": 599,
+          "function_name": "getSolution",
+          "qualified_function_name": "org.owasp.webgoat.lessons.AbstractLesson.getSolution",
+          "function_prototype": "java.lang.String getSolution(session.WebSession)",
+          "scope": "org.owasp.webgoat.lessons.AbstractLesson"
+        }
+      },
+      "flaw_match": {
+        "procedure_hash": "4102783065",
+        "prototype_hash": "961225520",
+        "flaw_hash": "794819815",
+        "flaw_hash_count": 1,
+        "flaw_hash_ordinal": 1,
+        "cause_hash": "596026696",
+        "cause_hash_count": 1,
+        "cause_hash_ordinal": 1
+      }
+    },
+    {
+      "title": "java.sql.Connection.createStatement",
+      "issue_id": 1024,
+      "gob": "B",
+      "severity": 0,
+      "issue_type_id": "reliability",
+      "issue_type": "Improper Resource Shutdown or Release",
+      "cwe_id": "404",
+      "display_text": "\u003cspan\u003eThe program fails to release or incorrectly releases the variable answer_statement, which was previously allocated by a call to java.sql.Connection.createStatement().\u003c/span\u003e \u003cspan\u003eEnsure that all code paths properly release this resource.\u003c/span\u003e \u003cspan\u003eReferences: \u003ca href\u003d\"https://cwe.mitre.org/data/definitions/404.html\"\u003eCWE\u003c/a\u003e\u003c/span\u003e",
+      "files": {
+        "source_file": {
+          "file": "org/owasp/webgoat/lessons/AbstractLesson.java",
+          "line": 737,
+          "function_name": "isAuthorized",
+          "qualified_function_name": "org.owasp.webgoat.lessons.AbstractLesson.isAuthorized",
+          "function_prototype": "boolean isAuthorized(session.WebSession, java.lang.String, java.lang.String)",
+          "scope": "org.owasp.webgoat.lessons.AbstractLesson"
+        }
+      },
+      "flaw_match": {
+        "procedure_hash": "997597753",
+        "prototype_hash": "1076406706",
+        "flaw_hash": "3442584249",
+        "flaw_hash_count": 1,
+        "flaw_hash_ordinal": 1,
+        "cause_hash": "1854009896",
+        "cause_hash_count": 1,
+        "cause_hash_ordinal": 1
+      }
+    },
+    {
+      "title": "java.sql.Statement.executeQuery",
+      "issue_id": 1005,
+      "gob": "B",
+      "severity": 0,
+      "issue_type_id": "reliability",
+      "issue_type": "Improper Resource Shutdown or Release",
+      "cwe_id": "404",
+      "display_text": "\u003cspan\u003eThe program fails to release or incorrectly releases the variable answer_results, which was previously allocated by a call to java.sql.Statement.executeQuery().\u003c/span\u003e \u003cspan\u003eEnsure that all code paths properly release this resource.\u003c/span\u003e \u003cspan\u003eReferences: \u003ca href\u003d\"https://cwe.mitre.org/data/definitions/404.html\"\u003eCWE\u003c/a\u003e\u003c/span\u003e",
+      "files": {
+        "source_file": {
+          "file": "org/owasp/webgoat/lessons/AbstractLesson.java",
+          "line": 739,
+          "function_name": "isAuthorized",
+          "qualified_function_name": "org.owasp.webgoat.lessons.AbstractLesson.isAuthorized",
+          "function_prototype": "boolean isAuthorized(session.WebSession, java.lang.String, java.lang.String)",
+          "scope": "org.owasp.webgoat.lessons.AbstractLesson"
+        }
+      },
+      "flaw_match": {
+        "procedure_hash": "997597753",
+        "prototype_hash": "1076406706",
+        "flaw_hash": "3392777041",
+        "flaw_hash_count": 1,
+        "flaw_hash_ordinal": 1,
+        "cause_hash": "1176028798",
+        "cause_hash_count": 1,
+        "cause_hash_ordinal": 1
+      }
+    },
+    {
+      "title": "java.io.BufferedReader.!operator_javanewinit",
+      "issue_id": 1021,
+      "gob": "B",
+      "severity": 0,
+      "issue_type_id": "reliability",
+      "issue_type": "Improper Resource Shutdown or Release",
+      "cwe_id": "404",
+      "display_text": "\u003cspan\u003eThe program fails to release or incorrectly releases the variable reader, which was previously allocated by a call to java.io.BufferedReader.!operator_javanewinit().\u003c/span\u003e \u003cspan\u003eEnsure that all code paths properly release this resource.\u003c/span\u003e \u003cspan\u003eReferences: \u003ca href\u003d\"https://cwe.mitre.org/data/definitions/404.html\"\u003eCWE\u003c/a\u003e\u003c/span\u003e",
+      "files": {
+        "source_file": {
+          "file": "org/owasp/webgoat/lessons/AbstractLesson.java",
+          "line": 830,
+          "function_name": "readFromURL",
+          "qualified_function_name": "org.owasp.webgoat.lessons.AbstractLesson.readFromURL",
+          "function_prototype": "apache.ecs.Element readFromURL(java.lang.String)",
+          "scope": "org.owasp.webgoat.lessons.AbstractLesson"
+        }
+      },
+      "flaw_match": {
+        "procedure_hash": "1717567759",
+        "prototype_hash": "2632111808",
+        "flaw_hash": "1419674411",
+        "flaw_hash_count": 1,
+        "flaw_hash_ordinal": 1,
+        "cause_hash": "596026696",
+        "cause_hash_count": 1,
+        "cause_hash_ordinal": 1
+      }
+    },
+    {
+      "title": "Node.appendChild",
+      "issue_id": 1000,
+      "gob": "B",
+      "severity": 3,
+      "issue_type_id": "taint",
+      "issue_type": "Improper Neutralization of Script-Related HTML Tags in a Web Page (Basic XSS)",
+      "cwe_id": "80",
+      "display_text": "\u003cspan\u003eThis call to Node.appendChild() contains a cross-site scripting (XSS) flaw.  The application populates the HTTP response with untrusted input, allowing an attacker to embed malicious content, such as Javascript code, which will be executed in the context of the victim\u0027s browser.  XSS vulnerabilities are commonly exploited to steal or manipulate cookies, modify presentation of content, and compromise confidential information, with new attack vectors being discovered on a regular basis. \u003c/span\u003e \u003cspan\u003eUse contextual escaping on all untrusted data before using it to construct any portion of an HTTP response.  The escaping method should be chosen based on the specific use case of the untrusted data, otherwise it may not protect fully against the attack. For example, if the data is being written to the body of an HTML page, use HTML entity escaping; if the data is being written to an attribute, use attribute escaping; etc.  Both the OWASP Java Encoder library and the Microsoft AntiXSS library provide contextual escaping methods. For more details on contextual escaping, see https://github.com/OWASP/CheatSheetSeries/blob/master/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.md. In addition, as a best practice, always validate untrusted input to ensure that it conforms to the expected format, using centralized data validation routines when possible.\u003c/span\u003e \u003cspan\u003eReferences: \u003ca href\u003d\"https://cwe.mitre.org/data/definitions/79.html\"\u003eCWE\u003c/a\u003e \u003ca href\u003d\"https://www.owasp.org/index.php/XSS\"\u003eOWASP\u003c/a\u003e \u003ca href\u003d\"https://webappsec.pbworks.com/Cross-Site-Scripting\"\u003eWASC\u003c/a\u003e \u003ca href\u003d\"https://help.veracode.com/reader/4EKhlLSMHm5jC8P8j3XccQ/IiF_rOE79ANbwnZwreSPGA\"\u003eSupported Cleansers\u003c/a\u003e\u003c/span\u003e",
+      "files": {
+        "source_file": {
+          "file": "plugins/bootstrap-wysihtml5/js/wysihtml5-0.3.0.js",
+          "line": 4352,
+          "function_name": "!func",
+          "qualified_function_name": "!main.!lambda254.!func.!lambda255.!func",
+          "function_prototype": "!js_object !func(!js_object, !js_object, !js_object, ...)",
+          "scope": "^::!main::!lambda254::!func::!lambda255"
+        }
+      },
+      "flaw_match": {
+        "procedure_hash": "2611868011",
+        "prototype_hash": "4128428565",
+        "flaw_hash": "85533767",
+        "flaw_hash_count": 2,
+        "flaw_hash_ordinal": 1,
+        "cause_hash": "748381785",
+        "cause_hash_count": 1,
+        "cause_hash_ordinal": 1
+      }
+    },
+    {
+      "title": "Node.appendChild",
+      "issue_id": 1001,
+      "gob": "B",
+      "severity": 3,
+      "issue_type_id": "taint",
+      "issue_type": "Improper Neutralization of Script-Related HTML Tags in a Web Page (Basic XSS)",
+      "cwe_id": "80",
+      "display_text": "\u003cspan\u003eThis call to Node.appendChild() contains a cross-site scripting (XSS) flaw.  The application populates the HTTP response with untrusted input, allowing an attacker to embed malicious content, such as Javascript code, which will be executed in the context of the victim\u0027s browser.  XSS vulnerabilities are commonly exploited to steal or manipulate cookies, modify presentation of content, and compromise confidential information, with new attack vectors being discovered on a regular basis. \u003c/span\u003e \u003cspan\u003eUse contextual escaping on all untrusted data before using it to construct any portion of an HTTP response.  The escaping method should be chosen based on the specific use case of the untrusted data, otherwise it may not protect fully against the attack. For example, if the data is being written to the body of an HTML page, use HTML entity escaping; if the data is being written to an attribute, use attribute escaping; etc.  Both the OWASP Java Encoder library and the Microsoft AntiXSS library provide contextual escaping methods. For more details on contextual escaping, see https://github.com/OWASP/CheatSheetSeries/blob/master/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.md. In addition, as a best practice, always validate untrusted input to ensure that it conforms to the expected format, using centralized data validation routines when possible.\u003c/span\u003e \u003cspan\u003eReferences: \u003ca href\u003d\"https://cwe.mitre.org/data/definitions/79.html\"\u003eCWE\u003c/a\u003e \u003ca href\u003d\"https://www.owasp.org/index.php/XSS\"\u003eOWASP\u003c/a\u003e \u003ca href\u003d\"https://webappsec.pbworks.com/Cross-Site-Scripting\"\u003eWASC\u003c/a\u003e \u003ca href\u003d\"https://help.veracode.com/reader/4EKhlLSMHm5jC8P8j3XccQ/IiF_rOE79ANbwnZwreSPGA\"\u003eSupported Cleansers\u003c/a\u003e\u003c/span\u003e",
+      "files": {
+        "source_file": {
+          "file": "plugins/bootstrap-wysihtml5/js/wysihtml5-0.3.0.js",
+          "line": 4388,
+          "function_name": "!func",
+          "qualified_function_name": "!main.!lambda254.!func.!lambda257.!func",
+          "function_prototype": "!js_object !func(!js_object, !js_object, !js_object, ...)",
+          "scope": "^::!main::!lambda254::!func::!lambda257"
+        }
+      },
+      "flaw_match": {
+        "procedure_hash": "2657655016",
+        "prototype_hash": "2117816963",
+        "flaw_hash": "3132762339",
+        "flaw_hash_count": 1,
+        "flaw_hash_ordinal": 1,
+        "cause_hash": "1176028798",
+        "cause_hash_count": 1,
+        "cause_hash_ordinal": 1
+      }
+    },
+    {
+      "title": "console.error",
+      "issue_id": 1004,
+      "gob": "B",
+      "severity": 3,
+      "issue_type_id": "taint",
+      "issue_type": "Improper Output Neutralization for Logs",
+      "cwe_id": "117",
+      "display_text": "\u003cspan\u003eThis call to console.error() could result in a log forging attack.  Writing untrusted data into a log file allows an attacker to forge log entries or inject malicious content into log files.  Corrupted log files can be used to cover an attacker\u0027s tracks or as a delivery mechanism for an attack on a log viewing or processing utility.  For example, if a web administrator uses a browser-based utility to review logs, a cross-site scripting attack might be possible. \u003c/span\u003e \u003cspan\u003eAvoid directly embedding user input in log files when possible.  Sanitize untrusted data used to construct log entries by using a safe logging mechanism such as the OWASP ESAPI Logger, which will automatically remove unexpected carriage returns and line feeds and can be configured to use HTML entity encoding for non-alphanumeric data.  Alternatively, some of the XSS escaping functions from the OWASP Java Encoder project will also sanitize CRLF sequences.  Only create a custom blocklist when absolutely necessary.  Always validate untrusted input to ensure that it conforms to the expected format, using centralized data validation routines when possible.\u003c/span\u003e \u003cspan\u003eReferences: \u003ca href\u003d\"https://cwe.mitre.org/data/definitions/117.html\"\u003eCWE\u003c/a\u003e \u003ca href\u003d\"https://www.owasp.org/index.php/Log_injection\"\u003eOWASP\u003c/a\u003e \u003ca href\u003d\"https://webappsec.pbworks.com/Improper-Output-Handling\"\u003eWASC\u003c/a\u003e \u003ca href\u003d\"https://help.veracode.com/reader/4EKhlLSMHm5jC8P8j3XccQ/IiF_rOE79ANbwnZwreSPGA\"\u003eSupported Cleansers\u003c/a\u003e\u003c/span\u003e",
+      "files": {
+        "source_file": {
+          "file": "js/libs/text.js",
+          "line": 191,
+          "function_name": "!func",
+          "qualified_function_name": "!main.!lambda1.!func.!lambda8.!func.!lambda10.!func",
+          "function_prototype": "!js_object !func(!js_object, !js_object, ...)",
+          "scope": "^::!main::!lambda1::!func::!lambda8::!func::!lambda10"
+        }
+      },
+      "flaw_match": {
+        "procedure_hash": "2227642124",
+        "prototype_hash": "953672477",
+        "flaw_hash": "2560374387",
+        "flaw_hash_count": 1,
+        "flaw_hash_ordinal": 1,
+        "cause_hash": "61553967",
+        "cause_hash_count": 1,
+        "cause_hash_ordinal": 1
+      }
+    },
+    {
+      "title": "jQueryResult.html",
+      "issue_id": 1003,
+      "gob": "B",
+      "severity": 3,
+      "issue_type_id": "taint",
+      "issue_type": "Improper Neutralization of Script-Related HTML Tags in a Web Page (Basic XSS)",
+      "cwe_id": "80",
+      "display_text": "\u003cspan\u003eThis call to jQueryResult.html() contains a cross-site scripting (XSS) flaw.  The application populates the HTTP response with untrusted input, allowing an attacker to embed malicious content, such as Javascript code, which will be executed in the context of the victim\u0027s browser.  XSS vulnerabilities are commonly exploited to steal or manipulate cookies, modify presentation of content, and compromise confidential information, with new attack vectors being discovered on a regular basis. \u003c/span\u003e \u003cspan\u003eUse contextual escaping on all untrusted data before using it to construct any portion of an HTTP response.  The escaping method should be chosen based on the specific use case of the untrusted data, otherwise it may not protect fully against the attack. For example, if the data is being written to the body of an HTML page, use HTML entity escaping; if the data is being written to an attribute, use attribute escaping; etc.  Both the OWASP Java Encoder library and the Microsoft AntiXSS library provide contextual escaping methods. For more details on contextual escaping, see https://github.com/OWASP/CheatSheetSeries/blob/master/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.md. In addition, as a best practice, always validate untrusted input to ensure that it conforms to the expected format, using centralized data validation routines when possible.\u003c/span\u003e \u003cspan\u003eReferences: \u003ca href\u003d\"https://cwe.mitre.org/data/definitions/79.html\"\u003eCWE\u003c/a\u003e \u003ca href\u003d\"https://www.owasp.org/index.php/XSS\"\u003eOWASP\u003c/a\u003e \u003ca href\u003d\"https://webappsec.pbworks.com/Cross-Site-Scripting\"\u003eWASC\u003c/a\u003e \u003ca href\u003d\"https://help.veracode.com/reader/4EKhlLSMHm5jC8P8j3XccQ/IiF_rOE79ANbwnZwreSPGA\"\u003eSupported Cleansers\u003c/a\u003e\u003c/span\u003e",
+      "files": {
+        "source_file": {
+          "file": "js/goatApp/support/GoatUtils.js",
+          "line": 57,
+          "function_name": "!func",
+          "qualified_function_name": "!main.!lambda1.!func.!lambda6.!func.!lambda7.!func",
+          "function_prototype": "!js_object !func(!js_object, !js_object, ...)",
+          "scope": "^::!main::!lambda1::!func::!lambda6::!func::!lambda7"
+        }
+      },
+      "flaw_match": {
+        "procedure_hash": "1127976691",
+        "prototype_hash": "1021728143",
+        "flaw_hash": "3132762339",
+        "flaw_hash_count": 1,
+        "flaw_hash_ordinal": 1,
+        "cause_hash": "1176028798",
+        "cause_hash_count": 1,
+        "cause_hash_ordinal": 1
+      }
+    },
+    {
+      "title": "console.log",
+      "issue_id": 1002,
+      "gob": "B",
+      "severity": 3,
+      "issue_type_id": "taint",
+      "issue_type": "Improper Output Neutralization for Logs",
+      "cwe_id": "117",
+      "display_text": "\u003cspan\u003eThis call to console.log() could result in a log forging attack.  Writing untrusted data into a log file allows an attacker to forge log entries or inject malicious content into log files.  Corrupted log files can be used to cover an attacker\u0027s tracks or as a delivery mechanism for an attack on a log viewing or processing utility.  For example, if a web administrator uses a browser-based utility to review logs, a cross-site scripting attack might be possible. \u003c/span\u003e \u003cspan\u003eAvoid directly embedding user input in log files when possible.  Sanitize untrusted data used to construct log entries by using a safe logging mechanism such as the OWASP ESAPI Logger, which will automatically remove unexpected carriage returns and line feeds and can be configured to use HTML entity encoding for non-alphanumeric data.  Alternatively, some of the XSS escaping functions from the OWASP Java Encoder project will also sanitize CRLF sequences.  Only create a custom blocklist when absolutely necessary.  Always validate untrusted input to ensure that it conforms to the expected format, using centralized data validation routines when possible.\u003c/span\u003e \u003cspan\u003eReferences: \u003ca href\u003d\"https://cwe.mitre.org/data/definitions/117.html\"\u003eCWE\u003c/a\u003e \u003ca href\u003d\"https://www.owasp.org/index.php/Log_injection\"\u003eOWASP\u003c/a\u003e \u003ca href\u003d\"https://webappsec.pbworks.com/Improper-Output-Handling\"\u003eWASC\u003c/a\u003e \u003ca href\u003d\"https://help.veracode.com/reader/4EKhlLSMHm5jC8P8j3XccQ/IiF_rOE79ANbwnZwreSPGA\"\u003eSupported Cleansers\u003c/a\u003e\u003c/span\u003e",
+      "files": {
+        "source_file": {
+          "file": "js/goatApp/controller/LessonController.js",
+          "line": 192,
+          "function_name": "!func",
+          "qualified_function_name": "!main.!lambda1.!func.!lambda2.!func.!lambda10.!func.!lambda11.!func",
+          "function_prototype": "!js_object !func(!js_object, !js_object, ...)",
+          "scope": "^::!main::!lambda1::!func::!lambda2::!func::!lambda10::!func::!lambda11"
+        }
+      },
+      "flaw_match": {
+        "procedure_hash": "2907146091",
+        "prototype_hash": "2540510535",
+        "flaw_hash": "3449619450",
+        "flaw_hash_count": 1,
+        "flaw_hash_ordinal": 1,
+        "cause_hash": "3592896013",
+        "cause_hash_count": 1,
+        "cause_hash_ordinal": 1
+      }
+    },
+    {
+      "title": "innerHTML",
+      "issue_id": 1000,
+      "gob": "B",
+      "severity": 3,
+      "issue_type_id": "taint",
+      "issue_type": "Improper Neutralization of Script-Related HTML Tags in a Web Page (Basic XSS)",
+      "cwe_id": "80",
+      "display_text": "\u003cspan\u003eThis call to innerHTML() contains a cross-site scripting (XSS) flaw.  The application populates the HTTP response with untrusted input, allowing an attacker to embed malicious content, such as Javascript code, which will be executed in the context of the victim\u0027s browser.  XSS vulnerabilities are commonly exploited to steal or manipulate cookies, modify presentation of content, and compromise confidential information, with new attack vectors being discovered on a regular basis. \u003c/span\u003e \u003cspan\u003eUse contextual escaping on all untrusted data before using it to construct any portion of an HTTP response.  The escaping method should be chosen based on the specific use case of the untrusted data, otherwise it may not protect fully against the attack. For example, if the data is being written to the body of an HTML page, use HTML entity escaping; if the data is being written to an attribute, use attribute escaping; etc.  Both the OWASP Java Encoder library and the Microsoft AntiXSS library provide contextual escaping methods. For more details on contextual escaping, see https://github.com/OWASP/CheatSheetSeries/blob/master/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.md. In addition, as a best practice, always validate untrusted input to ensure that it conforms to the expected format, using centralized data validation routines when possible.\u003c/span\u003e \u003cspan\u003eReferences: \u003ca href\u003d\"https://cwe.mitre.org/data/definitions/79.html\"\u003eCWE\u003c/a\u003e \u003ca href\u003d\"https://www.owasp.org/index.php/XSS\"\u003eOWASP\u003c/a\u003e \u003ca href\u003d\"https://webappsec.pbworks.com/Cross-Site-Scripting\"\u003eWASC\u003c/a\u003e \u003ca href\u003d\"https://help.veracode.com/reader/4EKhlLSMHm5jC8P8j3XccQ/IiF_rOE79ANbwnZwreSPGA\"\u003eSupported Cleansers\u003c/a\u003e\u003c/span\u003e",
+      "files": {
+        "source_file": {
+          "file": "plugin/SameOriginPolicyProtection/js/sameOrigin.js",
+          "line": 64,
+          "function_name": "!func",
+          "qualified_function_name": "!main.ajaxFunction.!func.!lambda1.!func",
+          "function_prototype": "!js_object !func(!js_object, ...)",
+          "scope": "^::!main::ajaxFunction::!func::!lambda1"
+        }
+      },
+      "flaw_match": {
+        "procedure_hash": "3845965985",
+        "prototype_hash": "410821927",
+        "flaw_hash": "1149871536",
+        "flaw_hash_count": 1,
+        "flaw_hash_ordinal": 1,
+        "cause_hash": "2866949028",
+        "cause_hash_count": 1,
+        "cause_hash_ordinal": 1
+      }
+    },
+    {
+      "title": "eval",
+      "issue_id": 1000,
+      "gob": "B",
+      "severity": 5,
+      "issue_type_id": "taint",
+      "issue_type": "Improper Neutralization of Directives in Dynamically Evaluated Code (\u0027Eval Injection\u0027)",
+      "cwe_id": "95",
+      "display_text": "\u003cspan\u003eThis call to eval() contains untrusted input or potentially untrusted data.  If this input could be modified by an attacker, arbitrary JS code could be executed. \u003c/span\u003e \u003cspan\u003eValidate all untrusted and untrusted input to ensure that it conforms to the expected format, using centralized data validation routines when possible.  In general, avoid executing code derived from untrusted input.\u003c/span\u003e \u003cspan\u003eReferences: \u003ca href\u003d\"https://cwe.mitre.org/data/definitions/95.html\"\u003eCWE\u003c/a\u003e\u003c/span\u003e",
+      "files": {
+        "source_file": {
+          "file": "plugin/DOMInjection/js/dom_injection.js",
+          "line": 19,
+          "function_name": "!func",
+          "qualified_function_name": "!main.validate.!func.callback.!func",
+          "function_prototype": "!js_object !func(!js_object, ...)",
+          "scope": "^::!main::validate::!func::callback"
+        }
+      },
+      "flaw_match": {
+        "procedure_hash": "3426706679",
+        "prototype_hash": "1101077008",
+        "flaw_hash": "1817837575",
+        "flaw_hash_count": 1,
+        "flaw_hash_ordinal": 1,
+        "cause_hash": "584528949",
+        "cause_hash_count": 1,
+        "cause_hash_ordinal": 1
+      }
+    },
+    {
+      "title": "eval",
+      "issue_id": 1000,
+      "gob": "B",
+      "severity": 5,
+      "issue_type_id": "taint",
+      "issue_type": "Improper Neutralization of Directives in Dynamically Evaluated Code (\u0027Eval Injection\u0027)",
+      "cwe_id": "95",
+      "display_text": "\u003cspan\u003eThis call to eval() contains untrusted input or potentially untrusted data.  If this input could be modified by an attacker, arbitrary JS code could be executed. \u003c/span\u003e \u003cspan\u003eValidate all untrusted and untrusted input to ensure that it conforms to the expected format, using centralized data validation routines when possible.  In general, avoid executing code derived from untrusted input.\u003c/span\u003e \u003cspan\u003eReferences: \u003ca href\u003d\"https://cwe.mitre.org/data/definitions/95.html\"\u003eCWE\u003c/a\u003e\u003c/span\u003e",
+      "files": {
+        "source_file": {
+          "file": "plugin/DangerousEval/js/eval.js",
+          "line": 39,
+          "function_name": "!func",
+          "qualified_function_name": "!main.makeXHR.!func.!lambda1.!func",
+          "function_prototype": "!js_object !func(!js_object, ...)",
+          "scope": "^::!main::makeXHR::!func::!lambda1"
+        }
+      },
+      "flaw_match": {
+        "procedure_hash": "2219568826",
+        "prototype_hash": "383551320",
+        "flaw_hash": "3442322166",
+        "flaw_hash_count": 1,
+        "flaw_hash_ordinal": 1,
+        "cause_hash": "1732126437",
+        "cause_hash_count": 1,
+        "cause_hash_ordinal": 1
+      }
+    },
+    {
+      "title": "eval",
+      "issue_id": 1000,
+      "gob": "B",
+      "severity": 5,
+      "issue_type_id": "taint",
+      "issue_type": "Improper Neutralization of Directives in Dynamically Evaluated Code (\u0027Eval Injection\u0027)",
+      "cwe_id": "95",
+      "display_text": "\u003cspan\u003eThis call to eval() contains untrusted input or potentially untrusted data.  If this input could be modified by an attacker, arbitrary JS code could be executed. \u003c/span\u003e \u003cspan\u003eValidate all untrusted and untrusted input to ensure that it conforms to the expected format, using centralized data validation routines when possible.  In general, avoid executing code derived from untrusted input.\u003c/span\u003e \u003cspan\u003eReferences: \u003ca href\u003d\"https://cwe.mitre.org/data/definitions/95.html\"\u003eCWE\u003c/a\u003e\u003c/span\u003e",
+      "files": {
+        "source_file": {
+          "file": "plugin/JSONInjection/js/jsonInjection.js",
+          "line": 25,
+          "function_name": "!func",
+          "qualified_function_name": "!main.callback.!func",
+          "function_prototype": "!js_object !func(!js_object, ...)",
+          "scope": "^::!main::callback"
+        }
+      },
+      "flaw_match": {
+        "procedure_hash": "1338050072",
+        "prototype_hash": "2050584367",
+        "flaw_hash": "2335971312",
+        "flaw_hash_count": 1,
+        "flaw_hash_ordinal": 1,
+        "cause_hash": "3317220915",
+        "cause_hash_count": 1,
+        "cause_hash_ordinal": 1
+      }
+    },
+    {
+      "title": "innerHTML",
+      "issue_id": 1000,
+      "gob": "B",
+      "severity": 3,
+      "issue_type_id": "taint",
+      "issue_type": "Improper Neutralization of Script-Related HTML Tags in a Web Page (Basic XSS)",
+      "cwe_id": "80",
+      "display_text": "\u003cspan\u003eThis call to innerHTML() contains a cross-site scripting (XSS) flaw.  The application populates the HTTP response with untrusted input, allowing an attacker to embed malicious content, such as Javascript code, which will be executed in the context of the victim\u0027s browser.  XSS vulnerabilities are commonly exploited to steal or manipulate cookies, modify presentation of content, and compromise confidential information, with new attack vectors being discovered on a regular basis. \u003c/span\u003e \u003cspan\u003eUse contextual escaping on all untrusted data before using it to construct any portion of an HTTP response.  The escaping method should be chosen based on the specific use case of the untrusted data, otherwise it may not protect fully against the attack. For example, if the data is being written to the body of an HTML page, use HTML entity escaping; if the data is being written to an attribute, use attribute escaping; etc.  Both the OWASP Java Encoder library and the Microsoft AntiXSS library provide contextual escaping methods. For more details on contextual escaping, see https://github.com/OWASP/CheatSheetSeries/blob/master/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.md. In addition, as a best practice, always validate untrusted input to ensure that it conforms to the expected format, using centralized data validation routines when possible.\u003c/span\u003e \u003cspan\u003eReferences: \u003ca href\u003d\"https://cwe.mitre.org/data/definitions/79.html\"\u003eCWE\u003c/a\u003e \u003ca href\u003d\"https://www.owasp.org/index.php/XSS\"\u003eOWASP\u003c/a\u003e \u003ca href\u003d\"https://webappsec.pbworks.com/Cross-Site-Scripting\"\u003eWASC\u003c/a\u003e \u003ca href\u003d\"https://help.veracode.com/reader/4EKhlLSMHm5jC8P8j3XccQ/IiF_rOE79ANbwnZwreSPGA\"\u003eSupported Cleansers\u003c/a\u003e\u003c/span\u003e",
+      "files": {
+        "source_file": {
+          "file": "plugin/ClientSideFiltering/js/clientSideFiltering.js",
+          "line": 98,
+          "function_name": "!func",
+          "qualified_function_name": "!main.ajaxFunction.!func.!lambda1.!func",
+          "function_prototype": "!js_object !func(!js_object, ...)",
+          "scope": "^::!main::ajaxFunction::!func::!lambda1"
+        }
+      },
+      "flaw_match": {
+        "procedure_hash": "29757659",
+        "prototype_hash": "410821927",
+        "flaw_hash": "3734439054",
+        "flaw_hash_count": 1,
+        "flaw_hash_ordinal": 1,
+        "cause_hash": "2866949028",
+        "cause_hash_count": 1,
+        "cause_hash_ordinal": 1
+      }
+    },
+    {
+      "title": "Node.appendChild",
+      "issue_id": 1001,
+      "gob": "B",
+      "severity": 3,
+      "issue_type_id": "taint",
+      "issue_type": "Improper Neutralization of Script-Related HTML Tags in a Web Page (Basic XSS)",
+      "cwe_id": "80",
+      "display_text": "\u003cspan\u003eThis call to Node.appendChild() contains a cross-site scripting (XSS) flaw.  The application populates the HTTP response with untrusted input, allowing an attacker to embed malicious content, such as Javascript code, which will be executed in the context of the victim\u0027s browser.  XSS vulnerabilities are commonly exploited to steal or manipulate cookies, modify presentation of content, and compromise confidential information, with new attack vectors being discovered on a regular basis. \u003c/span\u003e \u003cspan\u003eUse contextual escaping on all untrusted data before using it to construct any portion of an HTTP response.  The escaping method should be chosen based on the specific use case of the untrusted data, otherwise it may not protect fully against the attack. For example, if the data is being written to the body of an HTML page, use HTML entity escaping; if the data is being written to an attribute, use attribute escaping; etc.  Both the OWASP Java Encoder library and the Microsoft AntiXSS library provide contextual escaping methods. For more details on contextual escaping, see https://github.com/OWASP/CheatSheetSeries/blob/master/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.md. In addition, as a best practice, always validate untrusted input to ensure that it conforms to the expected format, using centralized data validation routines when possible.\u003c/span\u003e \u003cspan\u003eReferences: \u003ca href\u003d\"https://cwe.mitre.org/data/definitions/79.html\"\u003eCWE\u003c/a\u003e \u003ca href\u003d\"https://www.owasp.org/index.php/XSS\"\u003eOWASP\u003c/a\u003e \u003ca href\u003d\"https://webappsec.pbworks.com/Cross-Site-Scripting\"\u003eWASC\u003c/a\u003e \u003ca href\u003d\"https://help.veracode.com/reader/4EKhlLSMHm5jC8P8j3XccQ/IiF_rOE79ANbwnZwreSPGA\"\u003eSupported Cleansers\u003c/a\u003e\u003c/span\u003e",
+      "files": {
+        "source_file": {
+          "file": "plugin/ClientSideFiltering/js/clientSideFiltering.js",
+          "line": 100,
+          "function_name": "!func",
+          "qualified_function_name": "!main.ajaxFunction.!func.!lambda1.!func",
+          "function_prototype": "!js_object !func(!js_object, ...)",
+          "scope": "^::!main::ajaxFunction::!func::!lambda1"
+        }
+      },
+      "flaw_match": {
+        "procedure_hash": "29757659",
+        "prototype_hash": "410821927",
+        "flaw_hash": "3132762339",
+        "flaw_hash_count": 1,
+        "flaw_hash_ordinal": 1,
+        "cause_hash": "1176028798",
+        "cause_hash_count": 1,
+        "cause_hash_ordinal": 1
+      }
+    }
+  ],
+  "pipeline_scan": "21.1.3-0",
+  "dev_stage": "DEVELOPMENT"
+}

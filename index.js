@@ -1,11 +1,19 @@
 const core = require('@actions/core');
 const github = require('@actions/github');
+const fs = require('fs');
 
 try {
     // get input filename, and validate it
-    const resultsFile = core.getInput('pipeline-results-json');
-    console.log(`Processing file: ${resultsFile}`);
+    const resultsFile = core.getInput('pipeline-results-json', {required: true} );
+
     // validate file exists
+    try {
+        if(fs.existsSync(resultsFile)) {
+            core.info(`Processing file: ${resultsFile}`);
+        }
+    } catch(err) {
+        core.setFailed(`Unable to locate file: ${resultsFile}`);
+    }
 
     const time = (new Date()).toTimeString();
     core.setOutput("time", time);
