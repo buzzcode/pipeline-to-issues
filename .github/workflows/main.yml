@@ -15,8 +15,8 @@ jobs:
       #uses: buzzcode/pipeline-to-issues@v1.0.0
       uses: buzzcode/pipeline-to-issues@main
       with:
-        pipeline-results-json: 'test/results.json'
-        
+        pipeline-results-json: 'test/foobar-results.json'
+
     # Use the output from the `hello` step
     - name: Get the output time
       run: echo "The time was ${{ steps.import.outputs.time }}"
