@@ -9,7 +9,7 @@ try {
     // validate file exists
     try {
         if(fs.existsSync(resultsFile)) {
-            core.info(`Processing file: ${resultsFile}`);
+            console.log(`Processing file: ${resultsFile}`);
         }
     } catch(err) {
         core.setFailed(`Unable to locate file: ${resultsFile}`);
