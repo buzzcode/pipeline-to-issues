@@ -4,13 +4,19 @@ jobs:
   import_flaws_job:
     runs-on: ubuntu-latest
     name: import flaws
+
     steps:
+    # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+    - name: checkout code
+      uses: actions/checkout@v2
+
     - name: Flaw importer action step
       id: import
       #uses: buzzcode/pipeline-to-issues@v1.0.0
       uses: buzzcode/pipeline-to-issues@main
       with:
         pipeline-results-json: 'test/results.json'
+        
     # Use the output from the `hello` step
     - name: Get the output time
       run: echo "The time was ${{ steps.import.outputs.time }}"

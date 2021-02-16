@@ -11,10 +11,11 @@ try {
         if(fs.existsSync(resultsFile)) {
             console.log(`Processing file: ${resultsFile}`);
         } else {
-            console.log(`Unable to locate file: ${resultsFile}`);
+            //console.log(`Unable to locate file: ${resultsFile}`);
+            core.setFailed(`Unable to locate file: ${resultsFile}`)
         }
     } catch(err) {
-        core.setFailed(`FATAL: Unable to locate file: ${resultsFile}`);
+        core.setFailed(`FATAL Error attempting to locate file: ${resultsFile}`);
     }
 
     const time = (new Date()).toTimeString();
