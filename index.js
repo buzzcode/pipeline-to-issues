@@ -32,7 +32,8 @@ try {
     // walk through the list of flaws in the input file
     for( var i=0; i < flawData.findings.length; i++) {
         var flaw = flawData.findings[i];
-        console.log(`processing flaw ${flaw}`)
+        let flawString = JSON.stringify(flaw, undefined, 2)
+        console.log(`processing flaw ${flawString}`)
     }
 
     // add to repo's Issues (checking for duplicates)
