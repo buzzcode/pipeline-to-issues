@@ -1,6 +1,13 @@
+//
+// entry point when called from a Workflow Action
+//
+
 const core = require('@actions/core');
 const github = require('@actions/github');
 const fs = require('fs');
+
+import importFlaws from './importer.js'
+
 
 try {
     // get input filename, and validate it
@@ -12,7 +19,6 @@ try {
         if(fs.existsSync(resultsFile)) {
             console.log(`Processing file: ${resultsFile}`);
 
-            flawData = JSON.parse(fs.readFileSync(resultsFile, 'utf8'));
             //flawData = JSON.parse(flawRawData.toString());
         } else {
             //console.log(`Unable to locate file: ${resultsFile}`);
@@ -29,19 +35,7 @@ try {
     const payload = JSON.stringify(github.context.payload, undefined, 2)
     console.log(`The event payload: ${payload}`);
 
-    // walk through the list of flaws in the input file
-    for( var i=0; i < flawData.findings.length; i++) {
-        var flaw = flawData.findings[i];
-        let flawString = JSON.stringify(flaw, undefined, 2)
-        console.log(`processing flaw ${flawString}`)
-    }
-
-    // add to repo's Issues (checking for duplicates)
-
-
-    // progress counter for large flaw counts
-
-
+    importFlaws(resultsFile);
 
 } catch (error) {
     core.setFailed(error.message);

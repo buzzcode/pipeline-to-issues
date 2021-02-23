@@ -2,7 +2,7 @@
   "name": "pipeline-to-issues",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "cli.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -19,6 +19,8 @@
   "homepage": "https://github.com/buzzcode/pipeline-to-issues#readme",
   "dependencies": {
     "@actions/core": "^1.2.6",
-    "@actions/github": "^4.0.0"
+    "@actions/github": "^4.0.0",
+    "commander": "^7.1.0",
+    "fs": "^0.0.1-security"
   }
 }
