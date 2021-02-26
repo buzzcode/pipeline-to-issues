@@ -5,7 +5,25 @@
 const fs = require('fs');
 const { request } = require('@octokit/request');
 
-function createLabel(options) {
+
+// Map of existing VeracodeFlaw ID's
+var veracodeFlaws = new Map()
+
+function addVeracodeFlaw() {
+
+}
+
+function veracodeFlawExists() {
+
+}
+
+function createVeracodeFlawID() {
+    // [VID:CWE:filename:linenum]
+
+}
+
+
+async function createLabel(options) {
     const githubOwner = options.githubOwner;
     const githubRepo = options.githubRepo;
     const githubToken = options.githubToken;
@@ -15,7 +33,7 @@ function createLabel(options) {
 
     var authToken = 'token ' + githubToken;
 
-    return request('POST /repos/{owner}/{repo}/labels', {
+    return await request('POST /repos/{owner}/{repo}/labels', {
         headers: {
             authorization: authToken
         },
@@ -33,7 +51,7 @@ function createLabel(options) {
     .catch( error => {
         // 422 = label exists
         if(error.status == 422) {
-            return('VeracodeFlaw label already exists');
+            return(`VeracodeFlaw label probably exists, ${error.message}`);
         } else {
             throw new Error (`Error ${error.status} creating VeracodeFlaw label: ${error.message}`);
         }           
@@ -66,13 +84,38 @@ function mapSeverity(sevNumber) {
     }
 }
 
-function getAllVeracodeIssues() {
+async function getAllVeracodeIssues() {
+    const githubOwner = options.githubOwner;
+    const githubRepo = options.githubRepo;
+    const githubToken = options.githubToken;
 
+    // get list of all flaws with the VeracodeFlaw label
+    console.log('getting list of VeracodeFlaws');
+
+    var authToken = 'token ' + githubToken;
+
+    // loop through possible multiple pages of issues
+
+    return await request('GET /repos/{owner}/{repo}/issues?labels=VeracodeFlaw', {
+        headers: {
+            authorization: authToken
+        },
+        owner: githubOwner,
+        repo: githubRepo
+    })
+    .then( result => {
+        return(`result: ${result.status}`);
+    })
+    .catch( error => {
+        
+            throw new Error (`Error ${error.status} getting VeracodeFlaw issues: ${error.message}`);
+          
+    });
 }
 
-function flawExists() {
 
-}
+
+
 
 async function importFlaws(options) {
     const resultsFile = options.resultsFile;
@@ -113,19 +156,18 @@ async function importFlaws(options) {
     })
     .catch( error => {
         console.error(error.message)
+        throw new Error()                   // TODO: fixme
     });
-   
-
-    //console.log(result);
-    // .then( result => {
-    //     console.log(result)
-    // })
-    // .catch( error => {
-    //     console.error(`caught error ${error}`)
-    // });
 
     // get a list of all open VeracodeSecurity issues in the repo
-    getAllVeracodeIssues();
+    await getAllVeracodeIssues(options)
+    .then( val => {
+        console.log(val);
+    })
+    .catch( error => {
+        console.error(error.message)
+        throw new Error()                   // TODO: fixme   
+    });
 
     // walk through the list of flaws in the input file
     for( var i=0; i < flawData.findings.length; i++) {

@@ -36,7 +36,7 @@ try {
          githubOwner: githubOwner,
          githubRepo: githubRepo,
          githubToken: githubToken}
-    ).then (console.log('Done'))
+    )
 } catch (error) {
     console.error(error.message);
 }
