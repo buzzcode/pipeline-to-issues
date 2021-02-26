@@ -22,6 +22,13 @@ function createVeracodeFlawID() {
 
 }
 
+// given a flaw title, extract the FlawID string
+function getVeracodeFlawID(title) {
+    let start = title.indexOf('[VID');
+    let end = title.indexOf(']', start);
+
+    return title.substring(start, end+1);
+}
 
 async function createLabel(options) {
     const githubOwner = options.githubOwner;
@@ -40,7 +47,7 @@ async function createLabel(options) {
         owner: githubOwner,
         repo: githubRepo,
         data: {
-            "name":"VeracodeSecurity",
+            "name":"VeracodeFlaw",
             "color":"4661af",
             "description":"A security vulnerability found by the Veracode scanner"
         }
@@ -84,7 +91,7 @@ function mapSeverity(sevNumber) {
     }
 }
 
-async function getAllVeracodeIssues() {
+async function getAllVeracodeIssues(options) {
     const githubOwner = options.githubOwner;
     const githubRepo = options.githubRepo;
     const githubToken = options.githubToken;
@@ -94,23 +101,52 @@ async function getAllVeracodeIssues() {
 
     var authToken = 'token ' + githubToken;
 
-    // loop through possible multiple pages of issues
 
-    return await request('GET /repos/{owner}/{repo}/issues?labels=VeracodeFlaw', {
-        headers: {
-            authorization: authToken
-        },
-        owner: githubOwner,
-        repo: githubRepo
-    })
-    .then( result => {
-        return(`result: ${result.status}`);
-    })
-    .catch( error => {
-        
-            throw new Error (`Error ${error.status} getting VeracodeFlaw issues: ${error.message}`);
-          
-    });
+    // loop through possible multiple pages of issues
+    //          wrap in a custom Promise? - do I really need to return anything??
+    //              just throw error if needed?
+
+    let done = false;
+    let pageNum = 1;
+
+    while(!done) {
+        await request('GET /repos/{owner}/{repo}/issues?labels=VeracodeFlaw&page={page}&per_page={pageMax}', {
+            headers: {
+                authorization: authToken
+            },
+            owner: githubOwner,
+            repo: githubRepo,
+            page: pageNum,
+            pageMax: 2
+        })
+        .then( result => {
+            console.log(`result: ${result.status}, ${result.data.length} flaw(s) found`);
+
+            // check if we need to loop
+            // (if there is a link field in the headers, we have more than will fit into 1 query, so 
+            //  need to loop.  On the last query we'll still have the link, but the data will be empty)
+            if(result.headers.link.length && result.data.length > 0) {
+                
+                // walk findings and populate VeracodeFlaws map
+                result.data.forEach(element => {
+                    let flawID = getVeracodeFlawID(element.title);
+
+                    // Map using VeracodeFlawID as index, for easy searching.  element.id for a useful value
+                    veracodeFlaws.set(flawID, element.id);
+
+                })
+
+                pageNum += 1;
+            }
+            else 
+                done = true;
+        })
+        .catch( error => {
+// TODO: test
+                throw new Error (`Error ${error.status} getting VeracodeFlaw issues: ${error.message}`);
+            
+        });
+    }
 }
 
 
@@ -161,9 +197,9 @@ async function importFlaws(options) {
 
     // get a list of all open VeracodeSecurity issues in the repo
     await getAllVeracodeIssues(options)
-    .then( val => {
-        console.log(val);
-    })
+    // .then( val => {
+    //     console.log(val);
+    // })
     .catch( error => {
         console.error(error.message)
         throw new Error()                   // TODO: fixme   
