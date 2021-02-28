@@ -1,3 +1,4 @@
 #node_modules/      # needed to run as an Action
 
+#local settings for testing
 .env

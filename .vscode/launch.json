@@ -12,7 +12,6 @@
                 "<node_internals>/**"
             ],
             "program": "${workspaceFolder}/cli.js",
-            //"envFile": "${workspaceFolder}/.env",
             "args": ["-r", "test/results.json"]
         }
     ]
