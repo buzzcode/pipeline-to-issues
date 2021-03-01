@@ -10,32 +10,38 @@ const flawLabels = [
     {
         'name': 'VeracodeFlaw: Very High',
         'color': 'f71297',
-        'description': 'A Veracode Flaw, Very High severity'
+        'description': 'A Veracode Flaw, Very High severity',
+        'severity': 5
     },
     {
         'name': 'VeracodeFlaw: High',
         'color': 'd11141',
-        'description': 'A Veracode Flaw, High severity'
+        'description': 'A Veracode Flaw, High severity',
+        'severity': 4
     },
     {
         'name': 'VeracodeFlaw: Medium',
         'color': 'f37735',
-        'description': 'A Veracode Flaw, Medium severity'
+        'description': 'A Veracode Flaw, Medium severity',
+        'severity': 3
     },
     {
         'name': 'VeracodeFlaw: Low',
         'color': 'ffc425',
-        'description': 'A Veracode Flaw, Low severity'
+        'description': 'A Veracode Flaw, Low severity',
+        'severity': 2
     },
     {
         'name': 'VeracodeFlaw: Very Low',
         'color': '0057e7',
-        'description': 'A Veracode Flaw, Very Low severity'
+        'description': 'A Veracode Flaw, Very Low severity',
+        'severity': 1
     },
     {
         'name': 'VeracodeFlaw: Informational',
         'color': '00b159',
-        'description': 'A Veracode Flaw, Informational severity'
+        'description': 'A Veracode Flaw, Informational severity',
+        'severity': 0
     }
 ];
 
@@ -80,17 +86,43 @@ async function createLabels(options) {
 // Map of existing VeracodeFlaw ID's
 var veracodeFlaws = new Map()
 
-function addVeracodeFlaw() {
+async function addVeracodeFlaw(options, flaw) {
+    const githubOwner = options.githubOwner;
+    const githubRepo = options.githubRepo;
+    const githubToken = options.githubToken;
 
+    const vid = getVeracodeFlawID(flaw);
+    console.debug(`Adding VeracodeFlaw ${vid}`);
+
+    var authToken = 'token ' + githubToken;
+
+    await request('POST /repos/{owner}/{repo}/issues', {
+        headers: {
+            authorization: authToken
+        },
+        owner: githubOwner,
+        repo: githubRepo,
+        data: {
+            "title": flaw.issue_type + ` ${vid}`,
+            "labels": [severityToLabel(flaw.severity)],
+        }
+    })
+    .then( result => {
+        console.log(`VeracodeFlaw \"${vid}\" successfully created, result: ${result.status}`);
+    })
+    .catch( error => {
+        // 422 (Unprocessable Entity) = label exists
+        //if(error.status == 422) {
+        //    console.warn(`VeracodeFlaw label \"${element.name}\" probably exists, ${error.message}`);
+        //} else {
+            throw new Error (`Error ${error.status} creating VeracodeFlaw \"${vid}\": ${error.message}`);
+        //}           
+    });
 }
 
-function veracodeFlawExists() {
-
-}
-
-function createVeracodeFlawID() {
+function createVeracodeFlawID(flaw) {
     // [VID:CWE:filename:linenum]
-
+    return('[VID:' + flaw.cwe_id +':' + flaw.files.source_file.file + ':' + flaw.files.source_file.line)
 }
 
 // given a flaw title, extract the FlawID string
@@ -105,31 +137,16 @@ function getVeracodeFlawID(title) {
 }
 
 
+var severityXref = new Map()
 
-// convert from the severity number in the results file to a string
-function mapSeverity(sevNumber) {
-    switch(sevNumber) {
-        case 5:
-            return 'Very High';
-            break;
-        case 4:
-            return 'High';
-            break;
-        case 3:
-            return 'Medium';
-            break;
-        case 2:
-            return 'Low';
-            break;
-        case 1:
-            return 'Very Low';
-            break;
-        case 0:
-            return 'Informational';
-            break;
-        default:
-            return 'Unknown';
-    }
+function buildSeverityXref() {
+    flawLabels.forEach( element => {
+        severityXref.set(element.severity, element.name)
+    })
+}
+
+function severityToLabel(sevNumber) {
+    return severityXref.get(sevNumber);
 }
 
 async function getAllVeracodeIssues(options) {
@@ -151,7 +168,6 @@ async function getAllVeracodeIssues(options) {
 
         let uriName = encodeURIComponent(element.name);
         let reqStr = `GET /repos/{owner}/{repo}/issues?labels=${uriName}&page={page}`
-        //let uriStr = encodeURIComponent(reqStr);
 
         while(!done) {
             //await request('GET /repos/{owner}/{repo}/issues?labels=VeracodeFlaw&page={page}&per_page={pageMax}', {
@@ -165,7 +181,7 @@ async function getAllVeracodeIssues(options) {
                 //pageMax: 2
             })
             .then( result => {
-                console.log(`result: ${result.status}, ${result.data.length} flaw(s) found`);
+                console.log(`${result.data.length} flaw(s) found, (result code: ${result.status})`);
 
                 // walk findings and populate VeracodeFlaws map
                 result.data.forEach(element => {
@@ -183,6 +199,7 @@ async function getAllVeracodeIssues(options) {
                 // check if we need to loop
                 // (if there is a link field in the headers, we have more than will fit into 1 query, so 
                 //  need to loop.  On the last query we'll still have the link, but the data will be empty)
+// TODO: do I need link.length??                
                 if(result.headers.link !== undefined && (result.headers.link.length && result.data.length > 0)) {
                         pageNum += 1;
                 }
@@ -192,14 +209,10 @@ async function getAllVeracodeIssues(options) {
             .catch( error => {
 // TODO: test
                 throw new Error (`Error ${error.status} getting VeracodeFlaw issues: ${error.message}`);
-            
             });
         }
     }
 }
-
-
-
 
 //
 // do the actual work of importing the flaws
@@ -250,21 +263,31 @@ async function importFlaws(options) {
         throw new Error()                   // TODO: fixme   
     });
 
+    buildSeverityXref();
+
     // walk through the list of flaws in the input file
     for( var i=0; i < flawData.findings.length; i++) {
         var flaw = flawData.findings[i];
 
-        //console.debug(`processing flaw ${flawString}`)
+        let vid = createVeracodeFlawID(flaw);
+        console.debug(`processing flaw ${flaw.issue_id}, VeracodeID: ${vid}`);
 
-        
+        // check for duplicate
+        if(veracodeFlaws.has(vid)) {
+            console.warn('Issue already exists, skipping import');
+            continue;
+        }
 
-        // add to repo's Issues (checking for duplicates)
-
+        // add to repo's Issues
+        await addVeracodeFlaw(options, flaw)
+        .catch( error => {
+            console.error(error.message)
+            throw new Error()                   // TODO: fixme   
+        })
 
         // progress counter for large flaw counts
-
-
-
+        if(i % 25 == 0)
+            console.log(`Processed ${i} flaws`)
     }
 }
 
