@@ -5,6 +5,9 @@
 const fs = require('fs');
 const { request } = require('@octokit/request');
 
+var veracodeFlaws = new Map()       // Map of existing VeracodeFlaw ID's
+var severityXref = new Map()
+
 // https://www.color-hex.com/color-palette/700 (among others)
 const flawLabels = [
     {
@@ -83,15 +86,13 @@ async function createLabels(options) {
     }
 }
 
-// Map of existing VeracodeFlaw ID's
-var veracodeFlaws = new Map()
-
+// add the flaw to GitHub as an Issue
 async function addVeracodeFlaw(options, flaw) {
     const githubOwner = options.githubOwner;
     const githubRepo = options.githubRepo;
     const githubToken = options.githubToken;
 
-    const vid = getVeracodeFlawID(flaw);
+    var vid = createVeracodeFlawID(flaw);
     console.debug(`Adding VeracodeFlaw ${vid}`);
 
     var authToken = 'token ' + githubToken;
@@ -103,8 +104,9 @@ async function addVeracodeFlaw(options, flaw) {
         owner: githubOwner,
         repo: githubRepo,
         data: {
-            "title": flaw.issue_type + ` ${vid}`,
+            "title": `${flaw.issue_type} ${vid}`,
             "labels": [severityToLabel(flaw.severity)],
+            "body": decodeURI(flaw.display_text)                           // TODO: better format w/file, line, etc.
         }
     })
     .then( result => {
@@ -122,7 +124,7 @@ async function addVeracodeFlaw(options, flaw) {
 
 function createVeracodeFlawID(flaw) {
     // [VID:CWE:filename:linenum]
-    return('[VID:' + flaw.cwe_id +':' + flaw.files.source_file.file + ':' + flaw.files.source_file.line)
+    return('[VID:' + flaw.cwe_id +':' + flaw.files.source_file.file + ':' + flaw.files.source_file.line + ']')
 }
 
 // given a flaw title, extract the FlawID string
@@ -136,9 +138,6 @@ function getVeracodeFlawID(title) {
     return title.substring(start, end+1);
 }
 
-
-var severityXref = new Map()
-
 function buildSeverityXref() {
     flawLabels.forEach( element => {
         severityXref.set(element.severity, element.name)
@@ -149,6 +148,7 @@ function severityToLabel(sevNumber) {
     return severityXref.get(sevNumber);
 }
 
+// get existing Veracode-entered flaws, to avoid dups
 async function getAllVeracodeIssues(options) {
     const githubOwner = options.githubOwner;
     const githubRepo = options.githubRepo;
@@ -212,6 +212,10 @@ async function getAllVeracodeIssues(options) {
             });
         }
     }
+}
+
+function sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 //
@@ -279,6 +283,7 @@ async function importFlaws(options) {
         }
 
         // add to repo's Issues
+        // TODO: no await here??
         await addVeracodeFlaw(options, flaw)
         .catch( error => {
             console.error(error.message)
@@ -288,6 +293,10 @@ async function importFlaws(options) {
         // progress counter for large flaw counts
         if(i % 25 == 0)
             console.log(`Processed ${i} flaws`)
+
+        // rate limiter, per GitHub: https://docs.github.com/en/rest/guides/best-practices-for-integrators
+        await sleep(2000);
+
     }
 }
 
