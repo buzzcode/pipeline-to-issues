@@ -137,65 +137,64 @@ async function getAllVeracodeIssues(options) {
     const githubRepo = options.githubRepo;
     const githubToken = options.githubToken;
 
-    // get list of all flaws with the VeracodeFlaw label
-    console.log('getting list of VeracodeFlaws');
-
     var authToken = 'token ' + githubToken;
 
     // when searching for issues, the label list is AND-ed (all requested labels must exist for the issue),
     // so we need to loop through each severity level manually
-    
-    let done = false;
-    let pageNum = 1;
+    for(const element of flawLabels) {
 
-    while(!done) {
-        //await request('GET /repos/{owner}/{repo}/issues?labels=VeracodeFlaw&page={page}&per_page={pageMax}', {
-        await request('GET /repos/{owner}/{repo}/issues?labels=VeracodeFlaw&page={page}', {
-            headers: {
-                authorization: authToken
-            },
-            owner: githubOwner,
-            repo: githubRepo,
-            page: pageNum,
-            //pageMax: 2
-        })
-        .then( result => {
-            console.log(`result: ${result.status}, ${result.data.length} flaw(s) found`);
+        // get list of all flaws with the VeracodeFlaw label
+        console.log(`Getting list of \"${element.name}\" flaws`);
 
+        let done = false;
+        let pageNum = 1;
 
-            // TODO: verify outside if()
+        let uriName = encodeURIComponent(element.name);
+        let reqStr = `GET /repos/{owner}/{repo}/issues?labels=${uriName}&page={page}`
+        //let uriStr = encodeURIComponent(reqStr);
 
-
-            // walk findings and populate VeracodeFlaws map
-            result.data.forEach(element => {
-                let flawID = getVeracodeFlawID(element.title);
-
-                // Map using VeracodeFlawID as index, for easy searching.  element.id for a useful value
-                if(flawID === null){
-                    console.warn(`Flaw \"${element.title}\" has no Veracode Flaw ID, ignored.`)
-                } else {
-                    veracodeFlaws.set(flawID, element.id);
-                }
-
+        while(!done) {
+            //await request('GET /repos/{owner}/{repo}/issues?labels=VeracodeFlaw&page={page}&per_page={pageMax}', {
+            await request(reqStr, {
+                headers: {
+                    authorization: authToken
+                },
+                owner: githubOwner,
+                repo: githubRepo,
+                page: pageNum,
+                //pageMax: 2
             })
+            .then( result => {
+                console.log(`result: ${result.status}, ${result.data.length} flaw(s) found`);
 
-            // check if we need to loop
-            // (if there is a link field in the headers, we have more than will fit into 1 query, so 
-            //  need to loop.  On the last query we'll still have the link, but the data will be empty)
-            if(result.headers.link.length && result.data.length > 0) {
-                
-                
+                // walk findings and populate VeracodeFlaws map
+                result.data.forEach(element => {
+                    let flawID = getVeracodeFlawID(element.title);
 
-                pageNum += 1;
-            }
-            else 
-                done = true;
-        })
-        .catch( error => {
+                    // Map using VeracodeFlawID as index, for easy searching.  element.id for a useful value
+                    if(flawID === null){
+                        console.warn(`Flaw \"${element.title}\" has no Veracode Flaw ID, ignored.`)
+                    } else {
+                        veracodeFlaws.set(flawID, element.id);
+                    }
+
+                })
+
+                // check if we need to loop
+                // (if there is a link field in the headers, we have more than will fit into 1 query, so 
+                //  need to loop.  On the last query we'll still have the link, but the data will be empty)
+                if(result.headers.link !== undefined && (result.headers.link.length && result.data.length > 0)) {
+                        pageNum += 1;
+                }
+                else 
+                    done = true;
+            })
+            .catch( error => {
 // TODO: test
                 throw new Error (`Error ${error.status} getting VeracodeFlaw issues: ${error.message}`);
             
-        });
+            });
+        }
     }
 }
 
