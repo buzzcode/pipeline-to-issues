@@ -5,8 +5,13 @@
 const fs = require('fs');
 const { request } = require('@octokit/request');
 
-var veracodeFlaws = new Map()       // Map of existing VeracodeFlaw ID's
-var severityXref = new Map()
+/* Map of files that contain flaws
+ *  each entry is a struct of {CWE, line_number}  
+ *  for some admittedly loose, fuzzy matching to prevent duplicate issues */
+var flawFiles = new Map();
+
+//var veracodeFlaws = new Map()
+var severityXref = new Map();       // for faster lookups, map severity # to text string
 
 // https://www.color-hex.com/color-palette/700 (among others)
 const flawLabels = [
@@ -55,7 +60,7 @@ async function createLabels(options) {
     const githubToken = options.githubToken;
 
     // create label, accept error code if it already exists
-    console.log(`creating VeracodeFlaw labels for ${githubOwner}/${githubRepo}`);
+    console.log('Creating VeracodeFlaw labels');
 
     var authToken = 'token ' + githubToken;
 
@@ -86,48 +91,12 @@ async function createLabels(options) {
     }
 }
 
-// add the flaw to GitHub as an Issue
-async function addVeracodeFlaw(options, flaw) {
-    const githubOwner = options.githubOwner;
-    const githubRepo = options.githubRepo;
-    const githubToken = options.githubToken;
-
-    var vid = createVeracodeFlawID(flaw);
-    console.debug(`Adding VeracodeFlaw ${vid}`);
-
-    var authToken = 'token ' + githubToken;
-
-    await request('POST /repos/{owner}/{repo}/issues', {
-        headers: {
-            authorization: authToken
-        },
-        owner: githubOwner,
-        repo: githubRepo,
-        data: {
-            "title": `${flaw.issue_type} ${vid}`,
-            "labels": [severityToLabel(flaw.severity)],
-            "body": decodeURI(flaw.display_text)                           // TODO: better format w/file, line, etc.
-        }
-    })
-    .then( result => {
-        console.log(`VeracodeFlaw \"${vid}\" successfully created, result: ${result.status}`);
-    })
-    .catch( error => {
-        // 422 (Unprocessable Entity) = label exists
-        //if(error.status == 422) {
-        //    console.warn(`VeracodeFlaw label \"${element.name}\" probably exists, ${error.message}`);
-        //} else {
-            throw new Error (`Error ${error.status} creating VeracodeFlaw \"${vid}\": ${error.message}`);
-        //}           
-    });
-}
-
 function createVeracodeFlawID(flaw) {
     // [VID:CWE:filename:linenum]
     return('[VID:' + flaw.cwe_id +':' + flaw.files.source_file.file + ':' + flaw.files.source_file.line + ']')
 }
 
-// given a flaw title, extract the FlawID string
+// given an Issue title, extract the FlawID string (for existing issues)
 function getVeracodeFlawID(title) {
     let start = title.indexOf('[VID');
     if(start == -1) {
@@ -136,6 +105,48 @@ function getVeracodeFlawID(title) {
     let end = title.indexOf(']', start);
 
     return title.substring(start, end+1);
+}
+
+function parseVeracodeFlawID(vid) {
+    let parts = vid.split(':');
+
+    return ({
+        "prefix": parts[0],
+        "cwe": parts[1],
+        "file": parts[2],
+        "line": parts[3].substring(0, parts[3].length - 1)
+      })
+}
+
+function addExistingFlawToMap(vid) {
+    let flawInfo = parseVeracodeFlawID(vid);
+    let flaw = {'cwe': flawInfo.cwe,
+                'line': flawInfo.line};
+    
+    if(flawFiles.has(flawInfo.file)) {
+        // already have some flaws in this file, so just add this specific flaw to the array
+        let flaws = flawFiles.get(flawInfo.file);
+        flaws.push(flaw);
+    } else {
+        // add this file into the map, with the fist of (possible) multiple flaws
+        flawFiles.set(flawInfo.file, [flaw])
+    }
+}
+
+function flawExists(vid) {
+    // same CWE and file, +/- 10 lines of code
+    let flawInfo = parseVeracodeFlawID(vid)
+
+    if(veracodeFlaws.has(flawInfo.file)) {
+        // check all the flaws in this file (+/- 10 lines) to see if we have a match
+        veracodeFlaws.get(flawInfo.file).forEach(flaw => {
+            if(flawInfo.line >= (flaw.line - 10) && flawInfo.line <= (flaw.line + 10)) {
+                return true;
+            }
+        })
+    }
+
+    return false;
 }
 
 function buildSeverityXref() {
@@ -167,7 +178,7 @@ async function getAllVeracodeIssues(options) {
         let pageNum = 1;
 
         let uriName = encodeURIComponent(element.name);
-        let reqStr = `GET /repos/{owner}/{repo}/issues?labels=${uriName}&page={page}`
+        let reqStr = `GET /repos/{owner}/{repo}/issues?labels=${uriName}&state=open&page={page}`       // TODO: only open issues??
 
         while(!done) {
             //await request('GET /repos/{owner}/{repo}/issues?labels=VeracodeFlaw&page={page}&per_page={pageMax}', {
@@ -187,13 +198,12 @@ async function getAllVeracodeIssues(options) {
                 result.data.forEach(element => {
                     let flawID = getVeracodeFlawID(element.title);
 
-                    // Map using VeracodeFlawID as index, for easy searching.  element.id for a useful value
+                    // Map using VeracodeFlawID as index, for easy searching.  Line # for simple flaw matching
                     if(flawID === null){
                         console.warn(`Flaw \"${element.title}\" has no Veracode Flaw ID, ignored.`)
                     } else {
-                        veracodeFlaws.set(flawID, element.id);
+                        addExistingFlawToMap(flawID);
                     }
-
                 })
 
                 // check if we need to loop
@@ -214,8 +224,50 @@ async function getAllVeracodeIssues(options) {
     }
 }
 
+// delay method to deal with rate-limiting
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+// add the flaw to GitHub as an Issue
+async function addVeracodeIssue(options, flaw) {
+    const githubOwner = options.githubOwner;
+    const githubRepo = options.githubRepo;
+    const githubToken = options.githubToken;
+
+    var vid = createVeracodeFlawID(flaw);
+    console.debug(`Adding VeracodeFlaw ${vid}`);
+
+    var authToken = 'token ' + githubToken;
+
+    await request('POST /repos/{owner}/{repo}/issues', {
+        headers: {
+            authorization: authToken
+        },
+        owner: githubOwner,
+        repo: githubRepo,
+        data: {
+            "title": `${flaw.issue_type} ${vid}`,
+            "labels": [severityToLabel(flaw.severity)],
+            "body": decodeURI(flaw.display_text)                           // TODO: better format w/file, line, etc.
+        }
+    })
+    .then( result => {
+        console.log(`VeracodeFlaw \"${vid}\" successfully created, result: ${result.status}`);
+    })
+    .catch( error => {
+        // 403 possible rate-limit error
+        if(error.status == 403) {
+
+            // check headers to determine if rate-limiter was hit??
+            // delay, back-off, try again?
+
+            console.warn(`GitHub rate limiter tripped, ${error.message}`);
+            throw new Error('Rate Limiter');            // TODO: fixme
+        } else {
+            throw new Error (`Error ${error.status} creating VeracodeFlaw \"${vid}\": ${error.message}`);
+        }           
+    });
 }
 
 //
@@ -250,6 +302,8 @@ async function importFlaws(options) {
         throw new Error(err);
     }
 
+    console.log(`Importing flaws into  ${githubOwner}/${githubRepo}`);
+
     // create the label 
     await createLabels(options)
     // .then( val => {
@@ -270,6 +324,7 @@ async function importFlaws(options) {
     buildSeverityXref();
 
     // walk through the list of flaws in the input file
+    // TODO: 'violating' flaws only?  How to check?
     for( var i=0; i < flawData.findings.length; i++) {
         var flaw = flawData.findings[i];
 
@@ -277,14 +332,14 @@ async function importFlaws(options) {
         console.debug(`processing flaw ${flaw.issue_id}, VeracodeID: ${vid}`);
 
         // check for duplicate
-        if(veracodeFlaws.has(vid)) {
+        if(flawExists(vid)) {
             console.warn('Issue already exists, skipping import');
             continue;
         }
 
         // add to repo's Issues
-        // TODO: no await here??
-        await addVeracodeFlaw(options, flaw)
+        // (in theory, we could do this w/o await-ing, but GitHub has rate throttling, so single-threading this helps)
+        await addVeracodeIssue(options, flaw)
         .catch( error => {
             console.error(error.message)
             throw new Error()                   // TODO: fixme   
