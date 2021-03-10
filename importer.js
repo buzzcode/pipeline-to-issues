@@ -10,7 +10,6 @@ const { request } = require('@octokit/request');
  *  for some admittedly loose, fuzzy matching to prevent duplicate issues */
 var flawFiles = new Map();
 
-//var veracodeFlaws = new Map()
 var severityXref = new Map();       // for faster lookups, map severity # to text string
 
 // https://www.color-hex.com/color-palette/700 (among others)
@@ -133,17 +132,26 @@ function addExistingFlawToMap(vid) {
     }
 }
 
-function flawExists(vid) {
-    // same CWE and file, +/- 10 lines of code
+function issueExists(vid) {
+    // same file and CWE, +/- 10 lines of code
     let flawInfo = parseVeracodeFlawID(vid)
 
-    if(veracodeFlaws.has(flawInfo.file)) {
-        // check all the flaws in this file (+/- 10 lines) to see if we have a match
-        veracodeFlaws.get(flawInfo.file).forEach(flaw => {
-            if(flawInfo.line >= (flaw.line - 10) && flawInfo.line <= (flaw.line + 10)) {
-                return true;
+    if(flawFiles.has(flawInfo.file)) {
+        // check all the flaws in this file to see if we have a match
+        for(i = 0; i < flawFiles.get(flawInfo.file).length; i++) {
+            let existingFlaw = flawFiles.get(flawInfo.file)[i];
+            
+            // check CWE
+            if(flawInfo.cwe == existingFlaw.cwe) {
+                // check (+/- 10 lines)
+                let newFlawLine = parseInt(flawInfo.line);
+
+                let existingFlawLine = parseInt(existingFlaw.line);
+                if( (newFlawLine >= (existingFlawLine - 10)) && (newFlawLine <= (existingFlawLine + 10)) ) {
+                    return true;
+                }
             }
-        })
+        }
     }
 
     return false;
@@ -236,9 +244,15 @@ async function addVeracodeIssue(options, flaw) {
     const githubToken = options.githubToken;
 
     var vid = createVeracodeFlawID(flaw);
-    console.debug(`Adding VeracodeFlaw ${vid}`);
+    console.debug(`Adding Issue for ${vid}`);
 
     var authToken = 'token ' + githubToken;
+
+    // build the Issue body text
+    let bodyText = `**Filename:** ${flaw.files.source_file.file}`;
+    bodyText += `\n\n**Line:** ${flaw.files.source_file.line}`;
+    bodyText += `\n\n**CWE:** ${flaw.cwe_id} (${flaw.issue_type})`;
+    bodyText += '\n\n' + decodeURI(flaw.display_text);
 
     await request('POST /repos/{owner}/{repo}/issues', {
         headers: {
@@ -249,11 +263,11 @@ async function addVeracodeIssue(options, flaw) {
         data: {
             "title": `${flaw.issue_type} ${vid}`,
             "labels": [severityToLabel(flaw.severity)],
-            "body": decodeURI(flaw.display_text)                           // TODO: better format w/file, line, etc.
+            "body": bodyText
         }
     })
     .then( result => {
-        console.log(`VeracodeFlaw \"${vid}\" successfully created, result: ${result.status}`);
+        console.log(`Issue for \"${vid}\" successfully created, result: ${result.status}`);
     })
     .catch( error => {
         // 403 possible rate-limit error
@@ -265,7 +279,7 @@ async function addVeracodeIssue(options, flaw) {
             console.warn(`GitHub rate limiter tripped, ${error.message}`);
             throw new Error('Rate Limiter');            // TODO: fixme
         } else {
-            throw new Error (`Error ${error.status} creating VeracodeFlaw \"${vid}\": ${error.message}`);
+            throw new Error (`Error ${error.status} creating Issue for \"${vid}\": ${error.message}`);
         }           
     });
 }
@@ -324,15 +338,14 @@ async function importFlaws(options) {
     buildSeverityXref();
 
     // walk through the list of flaws in the input file
-    // TODO: 'violating' flaws only?  How to check?
     for( var i=0; i < flawData.findings.length; i++) {
-        var flaw = flawData.findings[i];
+        let flaw = flawData.findings[i];
 
         let vid = createVeracodeFlawID(flaw);
         console.debug(`processing flaw ${flaw.issue_id}, VeracodeID: ${vid}`);
 
         // check for duplicate
-        if(flawExists(vid)) {
+        if(issueExists(vid)) {
             console.warn('Issue already exists, skipping import');
             continue;
         }
@@ -346,12 +359,11 @@ async function importFlaws(options) {
         })
 
         // progress counter for large flaw counts
-        if(i % 25 == 0)
+        if( (i > 0) && (i % 25 == 0) )
             console.log(`Processed ${i} flaws`)
 
         // rate limiter, per GitHub: https://docs.github.com/en/rest/guides/best-practices-for-integrators
         await sleep(2000);
-
     }
 }
 
