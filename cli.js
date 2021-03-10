@@ -13,7 +13,7 @@ var githubToken = process.env.GITHUB_TOKEN;
 
 program
     .version('0.0.1')
-    .requiredOption('-r, --results <path>', 'Pipeline Scan results file to create issues from', 'results.json')
+    .requiredOption('-r, --results <path>', 'Pipeline Scan results file to create issues from', 'filtered_results.json')
     .option('-go, --github-owner <string>', 'GitHub owner name')
     .option('-gr, --github-repo <string>', 'GitHub repo name')
     .option('-t, --token <string>', 'GitHub auth token')
