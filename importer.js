@@ -187,9 +187,9 @@ async function getAllVeracodeIssues(options) {
 
         let uriName = encodeURIComponent(element.name);
         let reqStr = `GET /repos/{owner}/{repo}/issues?labels=${uriName}&state=open&page={page}`
+        //let reqStr = `GET /repos/{owner}/{repo}/issues?labels=${uriName}&state=open&page={page}&per_page={pageMax}`
 
         while(!done) {
-            //await request('GET /repos/{owner}/{repo}/issues?labels=VeracodeFlaw&page={page}&per_page={pageMax}', {
             await request(reqStr, {
                 headers: {
                     authorization: authToken
@@ -197,7 +197,7 @@ async function getAllVeracodeIssues(options) {
                 owner: githubOwner,
                 repo: githubRepo,
                 page: pageNum,
-                //pageMax: 2
+                //pageMax: 3
             })
             .then( result => {
                 console.log(`${result.data.length} flaw(s) found, (result code: ${result.status})`);
@@ -217,15 +217,13 @@ async function getAllVeracodeIssues(options) {
                 // check if we need to loop
                 // (if there is a link field in the headers, we have more than will fit into 1 query, so 
                 //  need to loop.  On the last query we'll still have the link, but the data will be empty)
-// TODO: do I need link.length??                
-                if(result.headers.link !== undefined && (result.headers.link.length && result.data.length > 0)) {
+                if( (result.headers.link !== undefined) && (result.data.length > 0)) {
                         pageNum += 1;
                 }
                 else 
                     done = true;
             })
             .catch( error => {
-// TODO: test
                 throw new Error (`Error ${error.status} getting VeracodeFlaw issues: ${error.message}`);
             });
         }
