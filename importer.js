@@ -186,7 +186,7 @@ async function getAllVeracodeIssues(options) {
         let pageNum = 1;
 
         let uriName = encodeURIComponent(element.name);
-        let reqStr = `GET /repos/{owner}/{repo}/issues?labels=${uriName}&state=open&page={page}`       // TODO: only open issues??
+        let reqStr = `GET /repos/{owner}/{repo}/issues?labels=${uriName}&state=open&page={page}`
 
         while(!done) {
             //await request('GET /repos/{owner}/{repo}/issues?labels=VeracodeFlaw&page={page}&per_page={pageMax}', {
@@ -237,6 +237,13 @@ function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
+class ApiError extends Error {
+    constructor(message) {
+        super(message);
+        this.code = 403;
+    }
+}
+
 // add the flaw to GitHub as an Issue
 async function addVeracodeIssue(options, flaw) {
     const githubOwner = options.githubOwner;
@@ -271,13 +278,11 @@ async function addVeracodeIssue(options, flaw) {
     })
     .catch( error => {
         // 403 possible rate-limit error
-        if(error.status == 403) {
-
-            // check headers to determine if rate-limiter was hit??
-            // delay, back-off, try again?
+        if((error.status == 403) && (error.message.indexOf('abuse detection') > 0) ) {
 
             console.warn(`GitHub rate limiter tripped, ${error.message}`);
-            throw new Error('Rate Limiter');            // TODO: fixme
+
+            throw new ApiError('Rate Limiter tripped');
         } else {
             throw new Error (`Error ${error.status} creating Issue for \"${vid}\": ${error.message}`);
         }           
@@ -292,6 +297,7 @@ async function importFlaws(options) {
     const githubOwner = options.githubOwner;
     const githubRepo = options.githubRepo;
     const githubToken = options.githubToken;
+    const waitTime = parseInt(options.waitTime);
     var flawData;
 
     // basic sanity checking
@@ -316,30 +322,28 @@ async function importFlaws(options) {
         throw new Error(err);
     }
 
-    console.log(`Importing flaws into  ${githubOwner}/${githubRepo}`);
+    console.log(`Importing flaws into  ${githubOwner}/${githubRepo}.  ${waitTime} seconds between imports (to handle GitHub rate limiting)`);
 
     // create the label 
     await createLabels(options)
-    // .then( val => {
-    //     console.log(val);
-    // })
-    .catch( error => {
-        console.error(error.message)                // TODO: ???
-        throw new Error(error.message)                   // TODO: fixme
-    });
+    // .catch( error => {
+    //     console.error(error.message)
+    //     throw new Error(error.message)
+    // });
 
     // get a list of all open VeracodeSecurity issues in the repo
     await getAllVeracodeIssues(options)
-    .catch( error => {
-        console.error(error.message)
-        throw new Error()                   // TODO: fixme   
-    });
+    // .catch( error => {
+    //     console.error(error.message)
+    //     throw new Error()  
+    // });
 
     buildSeverityXref();
 
     // walk through the list of flaws in the input file
-    for( var i=0; i < flawData.findings.length; i++) {
-        let flaw = flawData.findings[i];
+    var index;
+    for( index=0; index < flawData.findings.length; index++) {
+        let flaw = flawData.findings[index];
 
         let vid = createVeracodeFlawID(flaw);
         console.debug(`processing flaw ${flaw.issue_id}, VeracodeID: ${vid}`);
@@ -354,17 +358,38 @@ async function importFlaws(options) {
         // (in theory, we could do this w/o await-ing, but GitHub has rate throttling, so single-threading this helps)
         await addVeracodeIssue(options, flaw)
         .catch( error => {
-            console.error(error.message)
-            throw new Error()                   // TODO: fixme   
+            if(error instanceof ApiError) {
+
+                // TODO: fall back, retry this same issue, continue process
+
+                // for now, only 1 case - rate limit tripped
+                //console.warn('Rate limiter tripped.  30 second delay and time between issues increased by 2 seconds.');
+                // await sleep(30000);
+                // waitTime += 2;
+
+                // // retry this same issue again, bail out if this fails
+                // await addVeracodeIssue(options, flaw)
+                // .catch( error => {
+                //     throw new Error(`Issue retry failed ${error.message}`);
+                // })
+
+                throw error;
+            } else {
+                //console.error(error.message);
+                throw error; 
+            }
         })
 
         // progress counter for large flaw counts
-        if( (i > 0) && (i % 25 == 0) )
-            console.log(`Processed ${i} flaws`)
+        if( (index > 0) && (index % 25 == 0) )
+            console.log(`Processed ${index} flaws`)
 
         // rate limiter, per GitHub: https://docs.github.com/en/rest/guides/best-practices-for-integrators
-        await sleep(2000);
+        if(waitTime > 0)
+            await sleep(waitTime * 1000);
     }
+
+    console.log(`Done.  ${index} flaws processed.`);
 }
 
 module.exports = { importFlaws }
