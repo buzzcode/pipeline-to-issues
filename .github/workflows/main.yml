@@ -16,3 +16,4 @@ jobs:
       uses: buzzcode/pipeline-to-issues@main
       with:
         pipeline-results-json: 'test/results.json'
+        github-token: ${{ secrets.GITHUB_TOKEN }}
