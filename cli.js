@@ -35,7 +35,7 @@ try {
     if(opts.waitTime !== undefined)
         waitTime = opts.waitTime;
     else if(waitTime === undefined)
-        waitTime = 2
+        waitTime = 2;
 
     // do the thing
     importFlaws(
