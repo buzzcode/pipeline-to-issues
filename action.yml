@@ -1,10 +1,18 @@
 name: 'Veracode Pipeline scan results to GitHub issues'
-description: 'Import the results of a Veracode Pipeline scan as issues for a repo'
+description: 'Import the results of a Veracode Pipeline scan as Issues for a repo'
 inputs:
-  pipeline-results-json:  # id of input
+  pipeline-results-json:
     description: 'Pipeline scan results file'
     required: true
-    default: 'results.json'
+    default: 'filtered_results.json'
+  github-token:
+    description: 'GitHub token to access the repo'
+    required: true
+    default: '{{ secrets.GITHUB_TOKEN }}'
+  wait-time:
+    description: 'Delay (in seconds) between entering Issues into GitHub (due to rate limiting)'
+    required: false
+    default: '2'
 runs:
   using: 'node12'
   main: 'index.js'
