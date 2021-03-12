@@ -180,7 +180,7 @@ async function getAllVeracodeIssues(options) {
     for(const element of flawLabels) {
 
         // get list of all flaws with the VeracodeFlaw label
-        console.log(`Getting list of \"${element.name}\" flaws`);
+        console.log(`Getting list of existing \"${element.name}\" issues`);
 
         let done = false;
         let pageNum = 1;
