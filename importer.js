@@ -12,41 +12,40 @@ var flawFiles = new Map();
 
 var severityXref = new Map();       // for faster lookups, map severity # to text string
 
-// https://www.color-hex.com/color-palette/700 (among others)
 const flawLabels = [
     {
         'name': 'VeracodeFlaw: Very High',
-        'color': 'f71297',
+        'color': 'd92b85',
         'description': 'A Veracode Flaw, Very High severity',
         'severity': 5
     },
     {
         'name': 'VeracodeFlaw: High',
-        'color': 'd11141',
+        'color': 'e61f25',
         'description': 'A Veracode Flaw, High severity',
         'severity': 4
     },
     {
         'name': 'VeracodeFlaw: Medium',
-        'color': 'f37735',
+        'color': 'fd7333',
         'description': 'A Veracode Flaw, Medium severity',
         'severity': 3
     },
     {
         'name': 'VeracodeFlaw: Low',
-        'color': 'ffc425',
+        'color': 'ffcc33',
         'description': 'A Veracode Flaw, Low severity',
         'severity': 2
     },
     {
         'name': 'VeracodeFlaw: Very Low',
-        'color': '0057e7',
+        'color': 'c9da2c',
         'description': 'A Veracode Flaw, Very Low severity',
         'severity': 1
     },
     {
         'name': 'VeracodeFlaw: Informational',
-        'color': '00b159',
+        'color': '8dbd3e',
         'description': 'A Veracode Flaw, Informational severity',
         'severity': 0
     }
