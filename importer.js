@@ -115,7 +115,16 @@ async function importFlaws(options) {
         throw new Error(err);
     }
 
-    console.log(`Importing flaws into  ${githubOwner}/${githubRepo}.  ${waitTime} seconds between imports (to handle GitHub rate limiting)`);
+    // figure out which file type we're dealing with, pipeline or policy
+    let scanType = '';
+    if('pipeline_scan' in flawData)
+        scanType = 'pipeline';
+    else if('_embedded' in flawData)
+        scanType = 'policy';
+    else 
+        throw new Error ('Unknown file type for input file');
+
+    console.log(`Importing ${scanType} flaws into  ${githubOwner}/${githubRepo}.  ${waitTime} seconds between imports (to handle GitHub rate limiting)`);
 
     // create the label 
     await createLabels(options)
