@@ -1,0 +1,162 @@
+{
+  "_embedded": {
+    "applications": [
+      {
+        "id": 217980,
+        "oid": 44109,
+        "last_completed_scan_date": "2020-10-01T19:33:23.000Z",
+        "guid": "f29a9c76-6ed3-473d-aacd-c68ec65d35cf",
+        "created": "2016-03-08T15:36:25.000Z",
+        "modified": "2020-10-01T19:33:26.000Z",
+        "app_profile_url": "HomeAppProfile:44109:217980",
+        "scans": [
+          {
+            "scan_type": "DYNAMIC",
+            "status": "PUBLISHED",
+            "modified_date": "2016-09-08T23:50:41.000Z",
+            "scan_url": "DynamicParamsView:44109:217980:9105452:927982::943731",
+            "internal_status": "resultsready"
+          },
+          {
+            "scan_type": "STATIC",
+            "status": "PUBLISHED",
+            "modified_date": "2020-10-01T19:33:23.000Z",
+            "scan_url": "StaticOverview:44109:217980:9105452:9080959:9096622",
+            "internal_status": "resultsready"
+          },
+          {
+            "scan_type": "MANUAL",
+            "status": "PUBLISHED",
+            "modified_date": "2016-10-31T12:28:29.000Z",
+            "scan_url": "ManualParamsView:44109:217980:9105452:1022482:::1038232",
+            "internal_status": "resultsready"
+          }
+        ],
+        "profile": {
+          "name": "WebGoat 7.1",
+          "tags": null,
+          "business_unit": {
+            "id": 38855,
+            "name": "Not Specified",
+            "guid": "c78d0f67-26fa-44d0-aab6-d0406dea9726"
+          },
+          "business_owners": [
+            {
+              "email": "krise@veracode.com"
+            }
+          ],
+          "archer_app_name": null,
+          "policies": [
+            {
+              "guid": "69c4a7e9-760a-415e-9fd0-fa45c8603772",
+              "name": "PCI 3.2.1",
+              "is_default": true,
+              "policy_compliance_status": "DID_NOT_PASS"
+            }
+          ],
+          "teams": [
+            {
+              "team_id": 181534,
+              "team_name": "Notification Team",
+              "guid": "09488d5d-d1ed-477b-9d26-7aa90ade96d3"
+            }
+          ],
+          "custom_fields": null,
+          "description": null,
+          "settings": {
+            "nextday_consultation_allowed": false,
+            "static_scan_dependencies_allowed": true,
+            "dynamic_scan_approval_not_required": false,
+            "sca_enabled": false
+          },
+          "business_criticality": "VERY_HIGH"
+        },
+        "results_url": "ViewReportsResultSummary:44109:217980:9105452",
+        "_links": {
+          "self": {
+            "href": "https://api.veracode.com/appsec/v1/applications/f29a9c76-6ed3-473d-aacd-c68ec65d35cf"
+          },
+          "sandboxes": {
+            "href": "https://api.veracode.com/appsec/v1/applications/f29a9c76-6ed3-473d-aacd-c68ec65d35cf/sandboxes{?page,size}",
+            "templated": true
+          },
+          "policy": {
+            "href": "https://api.veracode.com/appsec/v1/policies/69c4a7e9-760a-415e-9fd0-fa45c8603772"
+          }
+        }
+      },
+      {
+        "id": 270682,
+        "oid": 44109,
+        "last_completed_scan_date": "2016-11-04T16:25:33.000Z",
+        "guid": "f8138a45-a07b-4ec3-a47b-cb942c30a7d4",
+        "created": "2016-11-04T11:00:14.000Z",
+        "modified": "2020-05-21T04:10:21.000Z",
+        "app_profile_url": "HomeAppProfile:44109:270682",
+        "scans": [
+          {
+            "scan_type": "STATIC",
+            "status": "PUBLISHED",
+            "modified_date": "2016-11-04T16:25:33.000Z",
+            "scan_url": "StaticOverview:44109:270682:1041533:1030282:1046032",
+            "internal_status": "resultsready"
+          }
+        ],
+        "profile": {
+          "name": "WebGoat 7.1 - Packaging Testing",
+          "tags": null,
+          "business_unit": {
+            "id": 38855,
+            "name": "Not Specified",
+            "guid": "c78d0f67-26fa-44d0-aab6-d0406dea9726"
+          },
+          "business_owners": [],
+          "archer_app_name": null,
+          "policies": [
+            {
+              "guid": "c8ffa32c-58fa-48a3-9d53-e4cbf7d29283",
+              "name": "Veracode Recommended Very High",
+              "is_default": true,
+              "policy_compliance_status": "DID_NOT_PASS"
+            }
+          ],
+          "teams": [],
+          "custom_fields": null,
+          "description": null,
+          "settings": {
+            "nextday_consultation_allowed": false,
+            "static_scan_dependencies_allowed": true,
+            "dynamic_scan_approval_not_required": false,
+            "sca_enabled": false
+          },
+          "business_criticality": "VERY_HIGH"
+        },
+        "results_url": "ViewReportsResultSummary:44109:270682:1041533",
+        "_links": {
+          "self": {
+            "href": "https://api.veracode.com/appsec/v1/applications/f8138a45-a07b-4ec3-a47b-cb942c30a7d4"
+          },
+          "sandboxes": {
+            "href": "https://api.veracode.com/appsec/v1/applications/f8138a45-a07b-4ec3-a47b-cb942c30a7d4/sandboxes{?page,size}",
+            "templated": true
+          },
+          "policy": {
+            "href": "https://api.veracode.com/appsec/v1/policies/c8ffa32c-58fa-48a3-9d53-e4cbf7d29283"
+          }
+        }
+      }
+    ]
+  },
+  "_links": {
+    "self": {
+      "href": "https://api.veracode.com/appsec/v1/applications/?name=WebGoat%207.1{&page,size,org,policy_id,policy_guid,legacy_id,business_unit,tag,policy,policy_compliance,scan_status,scan_type,modified_after,team,custom_field_names,custom_field_values,sort_by_custom_field_name}",
+      "templated": true
+    }
+  },
+  "page": {
+    "size": 50,
+    "total_elements": 2,
+    "total_pages": 1,
+    "number": 0
+  }
+}

@@ -1,0 +1,834 @@
+{
+  "_embedded": {
+    "findings": [
+      {
+        "issue_id": 22,
+        "scan_type": "STATIC",
+        "description": "<span>This call to org.slf4j.Logger.debug() could result in a log forging attack.  Writing untrusted data into a log file allows an attacker to forge log entries or inject malicious content into log files.  Corrupted log files can be used to cover an attacker's tracks or as a delivery mechanism for an attack on a log viewing or processing utility.  For example, if a web administrator uses a browser-based utility to review logs, a cross-site scripting attack might be possible. The first argument to debug() contains tainted data from the variable output. The tainted data originated from earlier calls to javax.servlet.ServletRequest.getRemoteHost, javax.servlet.ServletRequest.getParameterNames, and javax.servlet.ServletRequest.getParameterValues.</span> <span>Avoid directly embedding user input in log files when possible.  Sanitize untrusted data used to construct log entries by using a safe logging mechanism such as the OWASP ESAPI Logger, which will automatically remove unexpected carriage returns and line feeds and can be configured to use HTML entity encoding for non-alphanumeric data.  Alternatively, some of the XSS escaping functions from the OWASP Java Encoder project will also sanitize CRLF sequences.  Only create a custom blocklist when absolutely necessary.  Always validate untrusted input to ensure that it conforms to the expected format, using centralized data validation routines when possible.</span> <span>References: <a href=\"https://cwe.mitre.org/data/definitions/117.html\">CWE</a> <a href=\"https://www.owasp.org/index.php/Log_injection\">OWASP</a> <a href=\"https://webappsec.pbworks.com/Improper-Output-Handling\">WASC</a> <a href=\"https://help.veracode.com/reader/4EKhlLSMHm5jC8P8j3XccQ/IiF_rOE79ANbwnZwreSPGA\">Supported Cleansers</a></span>",
+        "count": 1,
+        "context_type": "APPLICATION",
+        "context_guid": "f29a9c76-6ed3-473d-aacd-c68ec65d35cf",
+        "violates_policy": true,
+        "finding_status": {
+          "first_found_date": "2016-03-08T15:37:00.739Z",
+          "status": "OPEN",
+          "resolution": "UNRESOLVED",
+          "mitigation_review_status": "NONE",
+          "new": false,
+          "resolution_status": "NONE",
+          "last_seen_date": "2020-10-01T19:33:23.620Z"
+        },
+        "finding_details": {
+          "severity": 3,
+          "cwe": {
+            "id": 117,
+            "name": "Improper Output Neutralization for Logs",
+            "href": "https://api.veracode.com/appsec/v1/cwes/117"
+          },
+          "file_path": "org/owasp/webgoat/HammerHead.java",
+          "file_name": "HammerHead.java",
+          "module": "webgoat-container-7.1-SNAPSHOT.war",
+          "relative_location": 91,
+          "finding_category": {
+            "id": 21,
+            "name": "CRLF Injection",
+            "href": "https://api.veracode.com/appsec/v1/categories/21"
+          },
+          "procedure": "org.owasp.webgoat.HammerHead.log",
+          "exploitability": 1,
+          "attack_vector": "org.slf4j.Logger.debug",
+          "file_line_number": 258
+        },
+        "build_id": 9105452
+      },
+      {
+        "issue_id": 242,
+        "scan_type": "STATIC",
+        "description": "<span>The program fails to release or incorrectly releases the variable getSolution, which was previously allocated by a call to java.io.BufferedReader.!operator_javanewinit().</span> <span>Ensure that all code paths properly release this resource.</span> <span>References: <a href=\"https://cwe.mitre.org/data/definitions/404.html\">CWE</a></span>",
+        "count": 1,
+        "context_type": "APPLICATION",
+        "context_guid": "f29a9c76-6ed3-473d-aacd-c68ec65d35cf",
+        "violates_policy": true,
+        "finding_status": {
+          "first_found_date": "2020-09-15T10:07:38.834Z",
+          "status": "OPEN",
+          "resolution": "UNRESOLVED",
+          "mitigation_review_status": "NONE",
+          "new": false,
+          "resolution_status": "NONE",
+          "last_seen_date": "2020-10-01T19:33:23.620Z"
+        },
+        "finding_details": {
+          "severity": 0,
+          "cwe": {
+            "id": 404,
+            "name": "Improper Resource Shutdown or Release",
+            "href": "https://api.veracode.com/appsec/v1/cwes/404"
+          },
+          "file_path": "org/owasp/webgoat/lessons/AbstractLesson.java",
+          "file_name": "AbstractLesson.java",
+          "module": "webgoat-container-7.1-SNAPSHOT.war",
+          "relative_location": 19,
+          "finding_category": {
+            "id": 17,
+            "name": "Code Quality",
+            "href": "https://api.veracode.com/appsec/v1/categories/17"
+          },
+          "procedure": "org.owasp.webgoat.lessons.AbstractLesson.getSolution",
+          "exploitability": 0,
+          "attack_vector": "java.io.BufferedReader.!operator_javanewinit",
+          "file_line_number": 599
+        },
+        "build_id": 9105452
+      },
+      {
+        "issue_id": 254,
+        "scan_type": "STATIC",
+        "description": "<span>The program fails to release or incorrectly releases the variable results, which was previously allocated by a call to java.sql.Statement.executeQuery().</span> <span>Ensure that all code paths properly release this resource.</span> <span>References: <a href=\"https://cwe.mitre.org/data/definitions/404.html\">CWE</a></span>",
+        "count": 1,
+        "context_type": "APPLICATION",
+        "context_guid": "f29a9c76-6ed3-473d-aacd-c68ec65d35cf",
+        "violates_policy": true,
+        "finding_status": {
+          "first_found_date": "2020-09-15T10:07:38.834Z",
+          "status": "OPEN",
+          "resolution": "UNRESOLVED",
+          "mitigation_review_status": "NONE",
+          "new": false,
+          "resolution_status": "NONE",
+          "last_seen_date": "2020-10-01T19:33:23.620Z"
+        },
+        "finding_details": {
+          "severity": 0,
+          "cwe": {
+            "id": 404,
+            "name": "Improper Resource Shutdown or Release",
+            "href": "https://api.veracode.com/appsec/v1/cwes/404"
+          },
+          "file_path": "org/owasp/webgoat/lessons/admin/ProductsAdminScreen.java",
+          "file_name": "ProductsAdminScreen.java",
+          "module": "webgoat-container-7.1-SNAPSHOT.war",
+          "relative_location": 33,
+          "finding_category": {
+            "id": 17,
+            "name": "Code Quality",
+            "href": "https://api.veracode.com/appsec/v1/categories/17"
+          },
+          "procedure": "org.owasp.webgoat.lessons.admin.ProductsAdminScreen.createContent",
+          "exploitability": 0,
+          "attack_vector": "java.sql.Statement.executeQuery",
+          "file_line_number": 66
+        },
+        "build_id": 9105452
+      },
+      {
+        "issue_id": 259,
+        "scan_type": "STATIC",
+        "description": "<span>The program fails to release or incorrectly releases the variable statement, which was previously allocated by a call to java.sql.Connection.createStatement().</span> <span>Ensure that all code paths properly release this resource.</span> <span>References: <a href=\"https://cwe.mitre.org/data/definitions/404.html\">CWE</a></span>",
+        "count": 1,
+        "context_type": "APPLICATION",
+        "context_guid": "f29a9c76-6ed3-473d-aacd-c68ec65d35cf",
+        "violates_policy": true,
+        "finding_status": {
+          "first_found_date": "2020-09-15T10:07:38.834Z",
+          "status": "OPEN",
+          "resolution": "UNRESOLVED",
+          "mitigation_review_status": "NONE",
+          "new": false,
+          "resolution_status": "NONE",
+          "last_seen_date": "2020-10-01T19:33:23.620Z"
+        },
+        "finding_details": {
+          "severity": 0,
+          "cwe": {
+            "id": 404,
+            "name": "Improper Resource Shutdown or Release",
+            "href": "https://api.veracode.com/appsec/v1/cwes/404"
+          },
+          "file_path": "org/owasp/webgoat/session/CreateDB.java",
+          "file_name": "CreateDB.java",
+          "module": "webgoat-container-7.1-SNAPSHOT.war",
+          "relative_location": 2,
+          "finding_category": {
+            "id": 17,
+            "name": "Code Quality",
+            "href": "https://api.veracode.com/appsec/v1/categories/17"
+          },
+          "procedure": "org.owasp.webgoat.session.CreateDB.createTransactionTable",
+          "exploitability": 0,
+          "attack_vector": "java.sql.Connection.createStatement",
+          "file_line_number": 957
+        },
+        "build_id": 9105452
+      },
+      {
+        "issue_id": 251,
+        "scan_type": "STATIC",
+        "description": "<span>The program fails to release or incorrectly releases the variable statement, which was previously allocated by a call to java.sql.Connection.createStatement().</span> <span>Ensure that all code paths properly release this resource.</span> <span>References: <a href=\"https://cwe.mitre.org/data/definitions/404.html\">CWE</a></span>",
+        "count": 1,
+        "context_type": "APPLICATION",
+        "context_guid": "f29a9c76-6ed3-473d-aacd-c68ec65d35cf",
+        "violates_policy": true,
+        "finding_status": {
+          "first_found_date": "2020-09-15T10:07:38.834Z",
+          "status": "OPEN",
+          "resolution": "UNRESOLVED",
+          "mitigation_review_status": "NONE",
+          "new": false,
+          "resolution_status": "NONE",
+          "last_seen_date": "2020-10-01T19:33:23.620Z"
+        },
+        "finding_details": {
+          "severity": 0,
+          "cwe": {
+            "id": 404,
+            "name": "Improper Resource Shutdown or Release",
+            "href": "https://api.veracode.com/appsec/v1/cwes/404"
+          },
+          "file_path": "org/owasp/webgoat/lessons/admin/ViewDatabase.java",
+          "file_name": "ViewDatabase.java",
+          "module": "webgoat-container-7.1-SNAPSHOT.war",
+          "relative_location": 51,
+          "finding_category": {
+            "id": 17,
+            "name": "Code Quality",
+            "href": "https://api.veracode.com/appsec/v1/categories/17"
+          },
+          "procedure": "org.owasp.webgoat.lessons.admin.ViewDatabase.createContent",
+          "exploitability": 0,
+          "attack_vector": "java.sql.Connection.createStatement",
+          "file_line_number": 78
+        },
+        "build_id": 9105452
+      },
+      {
+        "issue_id": 252,
+        "scan_type": "STATIC",
+        "description": "<span>The program fails to release or incorrectly releases the variable results, which was previously allocated by a call to java.sql.Statement.executeQuery().</span> <span>Ensure that all code paths properly release this resource.</span> <span>References: <a href=\"https://cwe.mitre.org/data/definitions/404.html\">CWE</a></span>",
+        "count": 1,
+        "context_type": "APPLICATION",
+        "context_guid": "f29a9c76-6ed3-473d-aacd-c68ec65d35cf",
+        "violates_policy": true,
+        "finding_status": {
+          "first_found_date": "2020-09-15T10:07:38.834Z",
+          "status": "OPEN",
+          "resolution": "UNRESOLVED",
+          "mitigation_review_status": "NONE",
+          "new": false,
+          "resolution_status": "NONE",
+          "last_seen_date": "2020-10-01T19:33:23.620Z"
+        },
+        "finding_details": {
+          "severity": 0,
+          "cwe": {
+            "id": 404,
+            "name": "Improper Resource Shutdown or Release",
+            "href": "https://api.veracode.com/appsec/v1/cwes/404"
+          },
+          "file_path": "org/owasp/webgoat/lessons/admin/UserAdminScreen.java",
+          "file_name": "UserAdminScreen.java",
+          "module": "webgoat-container-7.1-SNAPSHOT.war",
+          "relative_location": 33,
+          "finding_category": {
+            "id": 17,
+            "name": "Code Quality",
+            "href": "https://api.veracode.com/appsec/v1/categories/17"
+          },
+          "procedure": "org.owasp.webgoat.lessons.admin.UserAdminScreen.createContent",
+          "exploitability": 0,
+          "attack_vector": "java.sql.Statement.executeQuery",
+          "file_line_number": 66
+        },
+        "build_id": 9105452
+      },
+      {
+        "issue_id": 6,
+        "scan_type": "STATIC",
+        "description": "<span>The application calls getSession(), and never invalidates user sessions, which can lead to session fixation attacks.  As a result, the session identifier stays the same before, during, and after a user has logged in or out.  An attacker may attempt to force a user into using a specific session identifier, then hijack the session once the user has logged in.</span> <span>Invalidate any existing session after the user has authenticated but before calling methods that establish the UserPrincipal.  Also, invalidate the session object when a user logs out, otherwise the session will remain valid on the server.</span> <span>References: <a href=\"https://cwe.mitre.org/data/definitions/384.html\">CWE</a> <a href=\"https://www.owasp.org/index.php/Session_Fixation\">OWASP</a> <a href=\"https://webappsec.pbworks.com/Session-Fixation\">WASC</a></span>",
+        "count": 1,
+        "context_type": "APPLICATION",
+        "context_guid": "f29a9c76-6ed3-473d-aacd-c68ec65d35cf",
+        "violates_policy": true,
+        "finding_status": {
+          "first_found_date": "2016-03-08T15:37:00.739Z",
+          "status": "OPEN",
+          "resolution": "UNRESOLVED",
+          "mitigation_review_status": "NONE",
+          "new": false,
+          "resolution_status": "REJECTED",
+          "last_seen_date": "2020-10-01T19:33:23.620Z"
+        },
+        "finding_details": {
+          "severity": 3,
+          "cwe": {
+            "id": 384,
+            "name": "Session Fixation",
+            "href": "https://api.veracode.com/appsec/v1/cwes/384"
+          },
+          "file_path": "org/owasp/webgoat/controller/Welcome.java",
+          "file_name": "Welcome.java",
+          "module": "webgoat-container-7.1-SNAPSHOT.war",
+          "relative_location": 12,
+          "finding_category": {
+            "id": 15,
+            "name": "Session Fixation",
+            "href": "https://api.veracode.com/appsec/v1/categories/15"
+          },
+          "procedure": "org.owasp.webgoat.controller.Welcome.welcome",
+          "exploitability": 0,
+          "attack_vector": "getSession",
+          "file_line_number": 46
+        },
+        "build_id": 9105452
+      },
+      {
+        "issue_id": 249,
+        "scan_type": "STATIC",
+        "description": "<span>The program fails to release or incorrectly releases the variable statement, which was previously allocated by a call to java.sql.Connection.createStatement().</span> <span>Ensure that all code paths properly release this resource.</span> <span>References: <a href=\"https://cwe.mitre.org/data/definitions/404.html\">CWE</a></span>",
+        "count": 1,
+        "context_type": "APPLICATION",
+        "context_guid": "f29a9c76-6ed3-473d-aacd-c68ec65d35cf",
+        "violates_policy": true,
+        "finding_status": {
+          "first_found_date": "2020-09-15T10:07:38.834Z",
+          "status": "OPEN",
+          "resolution": "UNRESOLVED",
+          "mitigation_review_status": "NONE",
+          "new": false,
+          "resolution_status": "NONE",
+          "last_seen_date": "2020-10-01T19:33:23.620Z"
+        },
+        "finding_details": {
+          "severity": 0,
+          "cwe": {
+            "id": 404,
+            "name": "Improper Resource Shutdown or Release",
+            "href": "https://api.veracode.com/appsec/v1/cwes/404"
+          },
+          "file_path": "org/owasp/webgoat/lessons/admin/ProductsAdminScreen.java",
+          "file_name": "ProductsAdminScreen.java",
+          "module": "webgoat-container-7.1-SNAPSHOT.war",
+          "relative_location": 22,
+          "finding_category": {
+            "id": 17,
+            "name": "Code Quality",
+            "href": "https://api.veracode.com/appsec/v1/categories/17"
+          },
+          "procedure": "org.owasp.webgoat.lessons.admin.ProductsAdminScreen.createContent",
+          "exploitability": 0,
+          "attack_vector": "java.sql.Connection.createStatement",
+          "file_line_number": 64
+        },
+        "build_id": 9105452
+      },
+      {
+        "issue_id": 3,
+        "scan_type": "STATIC",
+        "description": "<span>The java.sql.DriverManager.getConnection() method reads and/or stores sensitive information in plaintext, making the data more susceptible to compromise.</span> <span>Never store sensitive data in plaintext.  Consider using cryptographic hashes as an alternative to plaintext. The third argument to getConnection() contains data from server-side storage from the variable password. The data from server-side storage originated from an earlier call to javax.servlet.GenericServlet.getInitParameter.</span> <span>References: <a href=\"https://cwe.mitre.org/data/definitions/256.html\">CWE</a></span>",
+        "count": 1,
+        "context_type": "APPLICATION",
+        "context_guid": "f29a9c76-6ed3-473d-aacd-c68ec65d35cf",
+        "violates_policy": true,
+        "finding_status": {
+          "first_found_date": "2016-03-08T15:37:00.739Z",
+          "status": "OPEN",
+          "resolution": "UNRESOLVED",
+          "mitigation_review_status": "NONE",
+          "new": false,
+          "resolution_status": "NONE",
+          "last_seen_date": "2020-10-01T19:33:23.620Z"
+        },
+        "finding_details": {
+          "severity": 3,
+          "cwe": {
+            "id": 256,
+            "name": "Unprotected Storage of Credentials",
+            "href": "https://api.veracode.com/appsec/v1/cwes/256"
+          },
+          "file_path": "org/owasp/webgoat/session/DatabaseUtilities.java",
+          "file_name": "DatabaseUtilities.java",
+          "module": "webgoat-container-7.1-SNAPSHOT.war",
+          "relative_location": 63,
+          "finding_category": {
+            "id": 10,
+            "name": "Credentials Management",
+            "href": "https://api.veracode.com/appsec/v1/categories/10"
+          },
+          "procedure": "org.owasp.webgoat.session.DatabaseUtilities.makeConnection",
+          "exploitability": 0,
+          "attack_vector": "java.sql.DriverManager.getConnection",
+          "file_line_number": 120
+        },
+        "build_id": 9105452
+      },
+      {
+        "issue_id": 244,
+        "scan_type": "STATIC",
+        "description": "<span>The program fails to release or incorrectly releases the variable userResults, which was previously allocated by a call to java.sql.Statement.executeQuery().</span> <span>Ensure that all code paths properly release this resource.</span> <span>References: <a href=\"https://cwe.mitre.org/data/definitions/404.html\">CWE</a></span>",
+        "count": 1,
+        "context_type": "APPLICATION",
+        "context_guid": "f29a9c76-6ed3-473d-aacd-c68ec65d35cf",
+        "violates_policy": true,
+        "finding_status": {
+          "first_found_date": "2020-09-15T10:07:38.834Z",
+          "status": "OPEN",
+          "resolution": "UNRESOLVED",
+          "mitigation_review_status": "NONE",
+          "new": false,
+          "resolution_status": "NONE",
+          "last_seen_date": "2020-10-01T19:33:23.620Z"
+        },
+        "finding_details": {
+          "severity": 0,
+          "cwe": {
+            "id": 404,
+            "name": "Improper Resource Shutdown or Release",
+            "href": "https://api.veracode.com/appsec/v1/cwes/404"
+          },
+          "file_path": "org/owasp/webgoat/session/UserDatabase.java",
+          "file_name": "UserDatabase.java",
+          "module": "webgoat-container-7.1-SNAPSHOT.war",
+          "relative_location": 27,
+          "finding_category": {
+            "id": 17,
+            "name": "Code Quality",
+            "href": "https://api.veracode.com/appsec/v1/categories/17"
+          },
+          "procedure": "org.owasp.webgoat.session.UserDatabase.getUsers",
+          "exploitability": 0,
+          "attack_vector": "java.sql.Statement.executeQuery",
+          "file_line_number": 119
+        },
+        "build_id": 9105452
+      },
+      {
+        "issue_id": 275,
+        "scan_type": "STATIC",
+        "description": "<span>The program fails to release or incorrectly releases the variable statement, which was previously allocated by a call to java.sql.Connection.createStatement().</span> <span>Ensure that all code paths properly release this resource.</span> <span>References: <a href=\"https://cwe.mitre.org/data/definitions/404.html\">CWE</a></span>",
+        "count": 1,
+        "context_type": "APPLICATION",
+        "context_guid": "f29a9c76-6ed3-473d-aacd-c68ec65d35cf",
+        "violates_policy": true,
+        "finding_status": {
+          "first_found_date": "2020-09-15T10:07:38.834Z",
+          "status": "OPEN",
+          "resolution": "UNRESOLVED",
+          "mitigation_review_status": "NONE",
+          "new": false,
+          "resolution_status": "NONE",
+          "last_seen_date": "2020-10-01T19:33:23.620Z"
+        },
+        "finding_details": {
+          "severity": 0,
+          "cwe": {
+            "id": 404,
+            "name": "Improper Resource Shutdown or Release",
+            "href": "https://api.veracode.com/appsec/v1/cwes/404"
+          },
+          "file_path": "org/owasp/webgoat/session/UserDatabase.java",
+          "file_name": "UserDatabase.java",
+          "module": "webgoat-container-7.1-SNAPSHOT.war",
+          "relative_location": 29,
+          "finding_category": {
+            "id": 17,
+            "name": "Code Quality",
+            "href": "https://api.veracode.com/appsec/v1/categories/17"
+          },
+          "procedure": "org.owasp.webgoat.session.UserDatabase.createDefaultRoles",
+          "exploitability": 0,
+          "attack_vector": "java.sql.Connection.createStatement",
+          "file_line_number": 240
+        },
+        "build_id": 9105452
+      },
+      {
+        "issue_id": 239,
+        "scan_type": "STATIC",
+        "description": "<span>The program fails to release or incorrectly releases the variable statement, which was previously allocated by a call to java.sql.Connection.createStatement().</span> <span>Ensure that all code paths properly release this resource.</span> <span>References: <a href=\"https://cwe.mitre.org/data/definitions/404.html\">CWE</a></span>",
+        "count": 1,
+        "context_type": "APPLICATION",
+        "context_guid": "f29a9c76-6ed3-473d-aacd-c68ec65d35cf",
+        "violates_policy": true,
+        "finding_status": {
+          "first_found_date": "2020-09-15T10:07:38.834Z",
+          "status": "OPEN",
+          "resolution": "UNRESOLVED",
+          "mitigation_review_status": "NONE",
+          "new": false,
+          "resolution_status": "NONE",
+          "last_seen_date": "2020-10-01T19:33:23.620Z"
+        },
+        "finding_details": {
+          "severity": 0,
+          "cwe": {
+            "id": 404,
+            "name": "Improper Resource Shutdown or Release",
+            "href": "https://api.veracode.com/appsec/v1/cwes/404"
+          },
+          "file_path": "org/owasp/webgoat/session/CreateDB.java",
+          "file_name": "CreateDB.java",
+          "module": "webgoat-container-7.1-SNAPSHOT.war",
+          "relative_location": 4,
+          "finding_category": {
+            "id": 17,
+            "name": "Code Quality",
+            "href": "https://api.veracode.com/appsec/v1/categories/17"
+          },
+          "procedure": "org.owasp.webgoat.session.CreateDB.createBlindSQLLessonTable",
+          "exploitability": 0,
+          "attack_vector": "java.sql.Connection.createStatement",
+          "file_line_number": 306
+        },
+        "build_id": 9105452
+      },
+      {
+        "issue_id": 258,
+        "scan_type": "STATIC",
+        "description": "<span>The program fails to release or incorrectly releases the variable statement, which was previously allocated by a call to java.sql.Connection.createStatement().</span> <span>Ensure that all code paths properly release this resource.</span> <span>References: <a href=\"https://cwe.mitre.org/data/definitions/404.html\">CWE</a></span>",
+        "count": 1,
+        "context_type": "APPLICATION",
+        "context_guid": "f29a9c76-6ed3-473d-aacd-c68ec65d35cf",
+        "violates_policy": true,
+        "finding_status": {
+          "first_found_date": "2020-09-15T10:07:38.834Z",
+          "status": "OPEN",
+          "resolution": "UNRESOLVED",
+          "mitigation_review_status": "NONE",
+          "new": false,
+          "resolution_status": "NONE",
+          "last_seen_date": "2020-10-01T19:33:23.620Z"
+        },
+        "finding_details": {
+          "severity": 0,
+          "cwe": {
+            "id": 404,
+            "name": "Improper Resource Shutdown or Release",
+            "href": "https://api.veracode.com/appsec/v1/cwes/404"
+          },
+          "file_path": "org/owasp/webgoat/session/CreateDB.java",
+          "file_name": "CreateDB.java",
+          "module": "webgoat-container-7.1-SNAPSHOT.war",
+          "relative_location": 2,
+          "finding_category": {
+            "id": 17,
+            "name": "Code Quality",
+            "href": "https://api.veracode.com/appsec/v1/categories/17"
+          },
+          "procedure": "org.owasp.webgoat.session.CreateDB.createUserDataTable",
+          "exploitability": 0,
+          "attack_vector": "java.sql.Connection.createStatement",
+          "file_line_number": 222
+        },
+        "build_id": 9105452
+      },
+      {
+        "issue_id": 253,
+        "scan_type": "STATIC",
+        "description": "<span>The program fails to release or incorrectly releases the variable reader, which was previously allocated by a call to java.io.BufferedReader.!operator_javanewinit().</span> <span>Ensure that all code paths properly release this resource.</span> <span>References: <a href=\"https://cwe.mitre.org/data/definitions/404.html\">CWE</a></span>",
+        "count": 1,
+        "context_type": "APPLICATION",
+        "context_guid": "f29a9c76-6ed3-473d-aacd-c68ec65d35cf",
+        "violates_policy": true,
+        "finding_status": {
+          "first_found_date": "2020-09-15T10:07:38.834Z",
+          "status": "OPEN",
+          "resolution": "UNRESOLVED",
+          "mitigation_review_status": "NONE",
+          "new": false,
+          "resolution_status": "NONE",
+          "last_seen_date": "2020-10-01T19:33:23.620Z"
+        },
+        "finding_details": {
+          "severity": 0,
+          "cwe": {
+            "id": 404,
+            "name": "Improper Resource Shutdown or Release",
+            "href": "https://api.veracode.com/appsec/v1/cwes/404"
+          },
+          "file_path": "org/owasp/webgoat/lessons/AbstractLesson.java",
+          "file_name": "AbstractLesson.java",
+          "module": "webgoat-container-7.1-SNAPSHOT.war",
+          "relative_location": 45,
+          "finding_category": {
+            "id": 17,
+            "name": "Code Quality",
+            "href": "https://api.veracode.com/appsec/v1/categories/17"
+          },
+          "procedure": "org.owasp.webgoat.lessons.AbstractLesson.readFromURL",
+          "exploitability": 0,
+          "attack_vector": "java.io.BufferedReader.!operator_javanewinit",
+          "file_line_number": 830
+        },
+        "build_id": 9105452
+      },
+      {
+        "issue_id": 246,
+        "scan_type": "STATIC",
+        "description": "<span>The program fails to release or incorrectly releases the variable statement, which was previously allocated by a call to java.sql.Connection.createStatement().</span> <span>Ensure that all code paths properly release this resource.</span> <span>References: <a href=\"https://cwe.mitre.org/data/definitions/404.html\">CWE</a></span>",
+        "count": 1,
+        "context_type": "APPLICATION",
+        "context_guid": "f29a9c76-6ed3-473d-aacd-c68ec65d35cf",
+        "violates_policy": true,
+        "finding_status": {
+          "first_found_date": "2020-09-15T10:07:38.834Z",
+          "status": "OPEN",
+          "resolution": "UNRESOLVED",
+          "mitigation_review_status": "NONE",
+          "new": false,
+          "resolution_status": "NONE",
+          "last_seen_date": "2020-10-01T19:33:23.620Z"
+        },
+        "finding_details": {
+          "severity": 0,
+          "cwe": {
+            "id": 404,
+            "name": "Improper Resource Shutdown or Release",
+            "href": "https://api.veracode.com/appsec/v1/cwes/404"
+          },
+          "file_path": "org/owasp/webgoat/session/CreateDB.java",
+          "file_name": "CreateDB.java",
+          "module": "webgoat-container-7.1-SNAPSHOT.war",
+          "relative_location": 4,
+          "finding_category": {
+            "id": 17,
+            "name": "Code Quality",
+            "href": "https://api.veracode.com/appsec/v1/categories/17"
+          },
+          "procedure": "org.owasp.webgoat.session.CreateDB.createProductTable",
+          "exploitability": 0,
+          "attack_vector": "java.sql.Connection.createStatement",
+          "file_line_number": 127
+        },
+        "build_id": 9105452
+      },
+      {
+        "issue_id": 24,
+        "scan_type": "STATIC",
+        "description": "<span>This call to javax.servlet.jsp.JspWriter.println() contains a cross-site scripting (XSS) flaw.  The application populates the HTTP response with untrusted input, allowing an attacker to embed malicious content, such as Javascript code, which will be executed in the context of the victim's browser.  XSS vulnerabilities are commonly exploited to steal or manipulate cookies, modify presentation of content, and compromise confidential information, with new attack vectors being discovered on a regular basis. The first argument to println() contains tainted data from the variable printCookies. The tainted data originated from an earlier call to javax.servlet.http.HttpServletRequest.getCookies. The tainted data is directed into an output stream returned by javax.servlet.jsp.JspWriter.</span> <span>Use contextual escaping on all untrusted data before using it to construct any portion of an HTTP response.  The escaping method should be chosen based on the specific use case of the untrusted data, otherwise it may not protect fully against the attack. For example, if the data is being written to the body of an HTML page, use HTML entity escaping; if the data is being written to an attribute, use attribute escaping; etc.  Both the OWASP Java Encoder library and the Microsoft AntiXSS library provide contextual escaping methods. For more details on contextual escaping, see https://github.com/OWASP/CheatSheetSeries/blob/master/cheatsheets/Cross_Site_Scripting_Prevention_Cheat_Sheet.md. In addition, as a best practice, always validate untrusted input to ensure that it conforms to the expected format, using centralized data validation routines when possible.</span> <span>References: <a href=\"https://cwe.mitre.org/data/definitions/79.html\">CWE</a> <a href=\"https://www.owasp.org/index.php/XSS\">OWASP</a> <a href=\"https://webappsec.pbworks.com/Cross-Site-Scripting\">WASC</a> <a href=\"https://help.veracode.com/reader/4EKhlLSMHm5jC8P8j3XccQ/IiF_rOE79ANbwnZwreSPGA\">Supported Cleansers</a></span>",
+        "count": 1,
+        "context_type": "APPLICATION",
+        "context_guid": "f29a9c76-6ed3-473d-aacd-c68ec65d35cf",
+        "violates_policy": true,
+        "finding_status": {
+          "first_found_date": "2016-03-08T15:37:00.739Z",
+          "status": "OPEN",
+          "resolution": "UNRESOLVED",
+          "mitigation_review_status": "NONE",
+          "new": false,
+          "resolution_status": "NONE",
+          "last_seen_date": "2020-10-01T19:33:23.620Z"
+        },
+        "finding_details": {
+          "severity": 3,
+          "cwe": {
+            "id": 80,
+            "name": "Improper Neutralization of Script-Related HTML Tags in a Web Page (Basic XSS)",
+            "href": "https://api.veracode.com/appsec/v1/cwes/80"
+          },
+          "file_path": "main.jsp",
+          "file_name": "main.jsp",
+          "module": "webgoat-container-7.1-SNAPSHOT.war",
+          "relative_location": 83,
+          "finding_category": {
+            "id": 20,
+            "name": "Cross-Site Scripting (XSS)",
+            "href": "https://api.veracode.com/appsec/v1/categories/20"
+          },
+          "procedure": "com.veracode.compiledjsp.xwebgoatcontainer71SNAPSHOTwar.main_jsp._jspService",
+          "exploitability": 2,
+          "attack_vector": "javax.servlet.jsp.JspWriter.println",
+          "file_line_number": 247
+        },
+        "build_id": 9105452
+      },
+      {
+        "issue_id": 250,
+        "scan_type": "STATIC",
+        "description": "<span>The program fails to release or incorrectly releases the variable statement, which was previously allocated by a call to java.sql.Connection.createStatement().</span> <span>Ensure that all code paths properly release this resource.</span> <span>References: <a href=\"https://cwe.mitre.org/data/definitions/404.html\">CWE</a></span>",
+        "count": 1,
+        "context_type": "APPLICATION",
+        "context_guid": "f29a9c76-6ed3-473d-aacd-c68ec65d35cf",
+        "violates_policy": true,
+        "finding_status": {
+          "first_found_date": "2020-09-15T10:07:38.834Z",
+          "status": "OPEN",
+          "resolution": "UNRESOLVED",
+          "mitigation_review_status": "NONE",
+          "new": false,
+          "resolution_status": "NONE",
+          "last_seen_date": "2020-10-01T19:33:23.620Z"
+        },
+        "finding_details": {
+          "severity": 0,
+          "cwe": {
+            "id": 404,
+            "name": "Improper Resource Shutdown or Release",
+            "href": "https://api.veracode.com/appsec/v1/cwes/404"
+          },
+          "file_path": "org/owasp/webgoat/session/UserDatabase.java",
+          "file_name": "UserDatabase.java",
+          "module": "webgoat-container-7.1-SNAPSHOT.war",
+          "relative_location": 29,
+          "finding_category": {
+            "id": 17,
+            "name": "Code Quality",
+            "href": "https://api.veracode.com/appsec/v1/categories/17"
+          },
+          "procedure": "org.owasp.webgoat.session.UserDatabase.createDefaultUsers",
+          "exploitability": 0,
+          "attack_vector": "java.sql.Connection.createStatement",
+          "file_line_number": 226
+        },
+        "build_id": 9105452
+      },
+      {
+        "issue_id": 265,
+        "scan_type": "STATIC",
+        "description": "<span>The program fails to release or incorrectly releases the variable statement, which was previously allocated by a call to java.sql.Connection.createStatement().</span> <span>Ensure that all code paths properly release this resource.</span> <span>References: <a href=\"https://cwe.mitre.org/data/definitions/404.html\">CWE</a></span>",
+        "count": 1,
+        "context_type": "APPLICATION",
+        "context_guid": "f29a9c76-6ed3-473d-aacd-c68ec65d35cf",
+        "violates_policy": true,
+        "finding_status": {
+          "first_found_date": "2020-09-15T10:07:38.834Z",
+          "status": "OPEN",
+          "resolution": "UNRESOLVED",
+          "mitigation_review_status": "NONE",
+          "new": false,
+          "resolution_status": "NONE",
+          "last_seen_date": "2020-10-01T19:33:23.620Z"
+        },
+        "finding_details": {
+          "severity": 0,
+          "cwe": {
+            "id": 404,
+            "name": "Improper Resource Shutdown or Release",
+            "href": "https://api.veracode.com/appsec/v1/cwes/404"
+          },
+          "file_path": "org/owasp/webgoat/session/CreateDB.java",
+          "file_name": "CreateDB.java",
+          "module": "webgoat-container-7.1-SNAPSHOT.war",
+          "relative_location": 8,
+          "finding_category": {
+            "id": 17,
+            "name": "Code Quality",
+            "href": "https://api.veracode.com/appsec/v1/categories/17"
+          },
+          "procedure": "org.owasp.webgoat.session.CreateDB.createMessageTable",
+          "exploitability": 0,
+          "attack_vector": "java.sql.Connection.createStatement",
+          "file_line_number": 53
+        },
+        "build_id": 9105452
+      },
+      {
+        "issue_id": 233,
+        "scan_type": "STATIC",
+        "description": "<span>This call to org.slf4j.Logger.error() could result in a log forging attack.  Writing untrusted data into a log file allows an attacker to forge log entries or inject malicious content into log files.  Corrupted log files can be used to cover an attacker's tracks or as a delivery mechanism for an attack on a log viewing or processing utility.  For example, if a web administrator uses a browser-based utility to review logs, a cross-site scripting attack might be possible. The first argument to error() contains tainted data. The tainted data originated from earlier calls to javax.servlet.http.HttpServletRequest.getRequestURL, and AnnotationVirtualController.vc_annotation_entry.</span> <span>Avoid directly embedding user input in log files when possible.  Sanitize untrusted data used to construct log entries by using a safe logging mechanism such as the OWASP ESAPI Logger, which will automatically remove unexpected carriage returns and line feeds and can be configured to use HTML entity encoding for non-alphanumeric data.  Alternatively, some of the XSS escaping functions from the OWASP Java Encoder project will also sanitize CRLF sequences.  Only create a custom blocklist when absolutely necessary.  Always validate untrusted input to ensure that it conforms to the expected format, using centralized data validation routines when possible.</span> <span>References: <a href=\"https://cwe.mitre.org/data/definitions/117.html\">CWE</a> <a href=\"https://www.owasp.org/index.php/Log_injection\">OWASP</a> <a href=\"https://webappsec.pbworks.com/Improper-Output-Handling\">WASC</a> <a href=\"https://help.veracode.com/reader/4EKhlLSMHm5jC8P8j3XccQ/IiF_rOE79ANbwnZwreSPGA\">Supported Cleansers</a></span>",
+        "count": 1,
+        "context_type": "APPLICATION",
+        "context_guid": "f29a9c76-6ed3-473d-aacd-c68ec65d35cf",
+        "violates_policy": true,
+        "finding_status": {
+          "first_found_date": "2018-05-03T20:02:06.583Z",
+          "status": "OPEN",
+          "resolution": "UNRESOLVED",
+          "mitigation_review_status": "NONE",
+          "new": false,
+          "resolution_status": "NONE",
+          "last_seen_date": "2020-10-01T19:33:23.620Z"
+        },
+        "finding_details": {
+          "severity": 3,
+          "cwe": {
+            "id": 117,
+            "name": "Improper Output Neutralization for Logs",
+            "href": "https://api.veracode.com/appsec/v1/cwes/117"
+          },
+          "file_path": "org/owasp/webgoat/service/BaseService.java",
+          "file_name": "BaseService.java",
+          "module": "webgoat-container-7.1-SNAPSHOT.war",
+          "relative_location": 50,
+          "finding_category": {
+            "id": 21,
+            "name": "CRLF Injection",
+            "href": "https://api.veracode.com/appsec/v1/categories/21"
+          },
+          "procedure": "org.owasp.webgoat.service.BaseService.handleException",
+          "exploitability": 1,
+          "attack_vector": "org.slf4j.Logger.error",
+          "file_line_number": 68
+        },
+        "build_id": 9105452
+      },
+      {
+        "issue_id": 247,
+        "scan_type": "STATIC",
+        "description": "<span>The program fails to release or incorrectly releases the variable in, which was previously allocated by a call to java.io.BufferedReader.!operator_javanewinit().</span> <span>Ensure that all code paths properly release this resource.</span> <span>References: <a href=\"https://cwe.mitre.org/data/definitions/404.html\">CWE</a></span>",
+        "count": 1,
+        "context_type": "APPLICATION",
+        "context_guid": "f29a9c76-6ed3-473d-aacd-c68ec65d35cf",
+        "violates_policy": true,
+        "finding_status": {
+          "first_found_date": "2020-09-15T10:07:38.834Z",
+          "status": "OPEN",
+          "resolution": "UNRESOLVED",
+          "mitigation_review_status": "NONE",
+          "new": false,
+          "resolution_status": "NONE",
+          "last_seen_date": "2020-10-01T19:33:23.620Z"
+        },
+        "finding_details": {
+          "severity": 0,
+          "cwe": {
+            "id": 404,
+            "name": "Improper Resource Shutdown or Release",
+            "href": "https://api.veracode.com/appsec/v1/cwes/404"
+          },
+          "file_path": "org/owasp/webgoat/lessons/LessonAdapter.java",
+          "file_name": "LessonAdapter.java",
+          "module": "webgoat-container-7.1-SNAPSHOT.war",
+          "relative_location": 29,
+          "finding_category": {
+            "id": 17,
+            "name": "Code Quality",
+            "href": "https://api.veracode.com/appsec/v1/categories/17"
+          },
+          "procedure": "org.owasp.webgoat.lessons.LessonAdapter.getInstructions",
+          "exploitability": 0,
+          "attack_vector": "java.io.BufferedReader.!operator_javanewinit",
+          "file_line_number": 182
+        },
+        "build_id": 9105452
+      }
+    ]
+  },
+  "_links": {
+    "first": {
+      "href": "https://api.veracode.com/appsec/v2/applications/f29a9c76-6ed3-473d-aacd-c68ec65d35cf/findings?violates_policy=true&scan_type=STATIC&page=0&size=20"
+    },
+    "self": {
+      "href": "https://api.veracode.com/appsec/v2/applications/f29a9c76-6ed3-473d-aacd-c68ec65d35cf/findings?violates_policy=true&scan_type=STATIC{&context,severity,severity_gte,cwe,finding_category,cvss,cvss_gte,cve,include_annot,new,include_exp_date,mitigated_after,sca_scan_mode,sca_dep_mode}",
+      "templated": true
+    },
+    "next": {
+      "href": "https://api.veracode.com/appsec/v2/applications/f29a9c76-6ed3-473d-aacd-c68ec65d35cf/findings?violates_policy=true&scan_type=STATIC&page=1&size=20"
+    },
+    "last": {
+      "href": "https://api.veracode.com/appsec/v2/applications/f29a9c76-6ed3-473d-aacd-c68ec65d35cf/findings?violates_policy=true&scan_type=STATIC&page=2&size=20"
+    },
+    "application": {
+      "href": "https://api.veracode.com/appsec/v1/applications/f29a9c76-6ed3-473d-aacd-c68ec65d35cf"
+    },
+    "sca": {
+      "href": "https://api.veracode.com/appsec/v2/applications/f29a9c76-6ed3-473d-aacd-c68ec65d35cf/findings?violates_policy=true&scan_type=SCA{&context,severity,severity_gte,cwe,finding_category,cvss,cvss_gte,cve,include_annot,new,include_exp_date,mitigated_after,sca_scan_mode,sca_dep_mode}",
+      "templated": true
+    }
+  },
+  "page": {
+    "size": 20,
+    "total_elements": 59,
+    "total_pages": 3,
+    "number": 0
+  }
+}
