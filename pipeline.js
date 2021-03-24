@@ -4,12 +4,13 @@
 
 const { request } = require('@octokit/request');
 const label = require('./label');
+const util = require('./util');
+const addVeracodeIssue = require('./util').addVeracodeIssue;
 
 /* Map of files that contain flaws
  *  each entry is a struct of {CWE, line_number}  
  *  for some admittedly loose, fuzzy matching to prevent duplicate issues */
 var flawFiles = new Map();
-
 
 function createVeracodeFlawID(flaw) {
     // [VID:CWE:filename:linenum]
@@ -78,7 +79,7 @@ function issueExists(vid) {
     return false;
 }
 
-// get existing Veracode-entered flaws, to avoid dups
+// get existing Veracode-entered issues, to avoid dups
 async function getAllVeracodeIssues(options) {
     const githubOwner = options.githubOwner;
     const githubRepo = options.githubRepo;
@@ -88,7 +89,7 @@ async function getAllVeracodeIssues(options) {
 
     // when searching for issues, the label list is AND-ed (all requested labels must exist for the issue),
     // so we need to loop through each severity level manually
-    for(const element of flawLabels) {
+    for(const element of label.flawLabels) {
 
         // get list of all flaws with the VeracodeFlaw label
         console.log(`Getting list of existing \"${element.name}\" issues`);
@@ -96,11 +97,11 @@ async function getAllVeracodeIssues(options) {
         let done = false;
         let pageNum = 1;
 
-        let uriName = encodeURIComponent(element.name);
-// TODO: also label for pipeline scan
-        let str = importer.otherLabels.find( val => val.id === 'pipeline');
-        let reqStr = `GET /repos/{owner}/{repo}/issues?labels=${uriName},${str}&state=open&page={page}`
-        //let reqStr = `GET /repos/{owner}/{repo}/issues?labels=${uriName}&state=open&page={page}&per_page={pageMax}`
+        let uriSeverity = encodeURIComponent(element.name);
+
+        let uriType = encodeURIComponent(label.otherLabels.find( val => val.id === 'pipeline').name);
+        let reqStr = `GET /repos/{owner}/{repo}/issues?labels=${uriSeverity},${uriType}&state=open&page={page}`
+        //let reqStr = `GET /repos/{owner}/{repo}/issues?labels=${uriName},${uriType}&state=open&page={page}&per_page={pageMax}`
 
         while(!done) {
             await request(reqStr, {
@@ -194,7 +195,7 @@ async function processPipelineFlaws(options, flawData) {
 
         // rate limiter, per GitHub: https://docs.github.com/en/rest/guides/best-practices-for-integrators
         if(waitTime > 0)
-            await sleep(waitTime * 1000);
+            await util.sleep(waitTime * 1000);
     }
 
     return index;
