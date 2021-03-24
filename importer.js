@@ -4,38 +4,9 @@
 
 const fs = require('fs');
 const { request } = require('@octokit/request');
-
-/* Map of files that contain flaws
- *  each entry is a struct of {CWE, line_number}  
- *  for some admittedly loose, fuzzy matching to prevent duplicate issues */
-var flawFiles = new Map();
-
-var severityXref = new Map();       // for faster lookups, map severity # to text string
-
-
-function buildSeverityXref() {
-    flawLabels.forEach( element => {
-        severityXref.set(element.severity, element.name)
-    })
-}
-
-function severityToLabel(sevNumber) {
-    return severityXref.get(sevNumber);
-}
-
-
-
-// delay method to deal with rate-limiting
-function sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-}
-
-class ApiError extends Error {
-    constructor(message) {
-        super(message);
-        this.code = 403;
-    }
-}
+const processPipelineFlaws = require('./pipeline').processPipelineFlaws;
+const label = require('./label');
+const util = require('./util');
 
 // add the flaw to GitHub as an Issue
 async function addVeracodeIssue(options, flaw) {
@@ -126,72 +97,23 @@ async function importFlaws(options) {
 
     console.log(`Importing ${scanType} flaws into  ${githubOwner}/${githubRepo}.  ${waitTime} seconds between imports (to handle GitHub rate limiting)`);
 
-    // create the label 
-    await createLabels(options)
-    // .catch( error => {
-    //     console.error(error.message)
-    //     throw new Error(error.message)
-    // });
+    // create the labels 
+    await label.createLabels(options)
 
-    // get a list of all open VeracodeSecurity issues in the repo
-    await getAllVeracodeIssues(options)
-    // .catch( error => {
-    //     console.error(error.message)
-    //     throw new Error()  
-    // });
+    label.buildSeverityXref();          // TODO: cleanup, merge into label init?
 
-    buildSeverityXref();
-
-    // walk through the list of flaws in the input file
-    var index;
-    for( index=0; index < flawData.findings.length; index++) {
-        let flaw = flawData.findings[index];
-
-        let vid = createVeracodeFlawID(flaw);
-        console.debug(`processing flaw ${flaw.issue_id}, VeracodeID: ${vid}`);
-
-        // check for duplicate
-        if(issueExists(vid)) {
-            console.warn('Issue already exists, skipping import');
-            continue;
-        }
-
-        // add to repo's Issues
-        // (in theory, we could do this w/o await-ing, but GitHub has rate throttling, so single-threading this helps)
-        await addVeracodeIssue(options, flaw)
-        .catch( error => {
-            if(error instanceof ApiError) {
-
-                // TODO: fall back, retry this same issue, continue process
-
-                // for now, only 1 case - rate limit tripped
-                //console.warn('Rate limiter tripped.  30 second delay and time between issues increased by 2 seconds.');
-                // await sleep(30000);
-                // waitTime += 2;
-
-                // // retry this same issue again, bail out if this fails
-                // await addVeracodeIssue(options, flaw)
-                // .catch( error => {
-                //     throw new Error(`Issue retry failed ${error.message}`);
-                // })
-
-                throw error;
-            } else {
-                //console.error(error.message);
-                throw error; 
-            }
+    // process the flaws
+    if(scanType == 'pipeline') {
+        await processPipelineFlaws(options, flawData)
+        .then (count => {
+            console.log(`Done.  ${count} flaws processed.`);
         })
-
-        // progress counter for large flaw counts
-        if( (index > 0) && (index % 25 == 0) )
-            console.log(`Processed ${index} flaws`)
-
-        // rate limiter, per GitHub: https://docs.github.com/en/rest/guides/best-practices-for-integrators
-        if(waitTime > 0)
-            await sleep(waitTime * 1000);
+    } else {
+        await processPolicyFlaws(options, flawData)
+        .then (count => {
+            console.log(`Done.  ${count} flaws processed.`);
+        })
     }
-
-    console.log(`Done.  ${index} flaws processed.`);
 }
 
-module.exports = { importFlaws }
+module.exports = { importFlaws };

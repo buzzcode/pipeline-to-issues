@@ -1,84 +1,15 @@
+//
+// handle pipeline scan flaws
+//
 
+const { request } = require('@octokit/request');
+const label = require('./label');
 
+/* Map of files that contain flaws
+ *  each entry is a struct of {CWE, line_number}  
+ *  for some admittedly loose, fuzzy matching to prevent duplicate issues */
+var flawFiles = new Map();
 
-
-
-const flawLabels = [
-    {
-        'name': 'VeracodeFlaw: Very High',
-        'color': 'd92b85',
-        'description': 'A Veracode Flaw, Very High severity',
-        'severity': 5
-    },
-    {
-        'name': 'VeracodeFlaw: High',
-        'color': 'e61f25',
-        'description': 'A Veracode Flaw, High severity',
-        'severity': 4
-    },
-    {
-        'name': 'VeracodeFlaw: Medium',
-        'color': 'fd7333',
-        'description': 'A Veracode Flaw, Medium severity',
-        'severity': 3
-    },
-    {
-        'name': 'VeracodeFlaw: Low',
-        'color': 'ffcc33',
-        'description': 'A Veracode Flaw, Low severity',
-        'severity': 2
-    },
-    {
-        'name': 'VeracodeFlaw: Very Low',
-        'color': 'c9da2c',
-        'description': 'A Veracode Flaw, Very Low severity',
-        'severity': 1
-    },
-    {
-        'name': 'VeracodeFlaw: Informational',
-        'color': '8dbd3e',
-        'description': 'A Veracode Flaw, Informational severity',
-        'severity': 0
-    }
-];
-
-// create the labels we need to tag issues with
-async function createLabels(options) {
-    const githubOwner = options.githubOwner;
-    const githubRepo = options.githubRepo;
-    const githubToken = options.githubToken;
-
-    // create label, accept error code if it already exists
-    console.log('Creating VeracodeFlaw labels');
-
-    var authToken = 'token ' + githubToken;
-
-    for(const element of flawLabels) {
-        await request('POST /repos/{owner}/{repo}/labels', {
-            headers: {
-                authorization: authToken
-            },
-            owner: githubOwner,
-            repo: githubRepo,
-            data: {
-                "name": element.name,
-                "color": element.color,
-                "description": element.description
-            }
-        })
-        .then( result => {
-            console.log(`VeracodeFlaw label \"${element.name}\" successfully created, result: ${result.status}`);
-        })
-        .catch( error => {
-            // 422 (Unprocessable Entity) = label exists
-            if(error.status == 422) {
-                console.warn(`VeracodeFlaw label \"${element.name}\" probably exists, ${error.message}`);
-            } else {
-                throw new Error (`Error ${error.status} creating VeracodeFlaw label \"${element.name}\": ${error.message}`);
-            }           
-        });
-    }
-}
 
 function createVeracodeFlawID(flaw) {
     // [VID:CWE:filename:linenum]
@@ -166,7 +97,9 @@ async function getAllVeracodeIssues(options) {
         let pageNum = 1;
 
         let uriName = encodeURIComponent(element.name);
-        let reqStr = `GET /repos/{owner}/{repo}/issues?labels=${uriName}&state=open&page={page}`
+// TODO: also label for pipeline scan
+        let str = importer.otherLabels.find( val => val.id === 'pipeline');
+        let reqStr = `GET /repos/{owner}/{repo}/issues?labels=${uriName},${str}&state=open&page={page}`
         //let reqStr = `GET /repos/{owner}/{repo}/issues?labels=${uriName}&state=open&page={page}&per_page={pageMax}`
 
         while(!done) {
@@ -209,3 +142,62 @@ async function getAllVeracodeIssues(options) {
         }
     }
 }
+
+async function processPipelineFlaws(options, flawData) {
+
+    // get a list of all open VeracodeSecurity issues in the repo
+    await getAllVeracodeIssues(options)
+
+    // walk through the list of flaws in the input file
+    var index;
+    for( index=0; index < flawData.findings.length; index++) {
+        let flaw = flawData.findings[index];
+
+        let vid = createVeracodeFlawID(flaw);
+        console.debug(`processing flaw ${flaw.issue_id}, VeracodeID: ${vid}`);
+
+        // check for duplicate
+        if(issueExists(vid)) {
+            console.warn('Issue already exists, skipping import');
+            continue;
+        }
+
+        // add to repo's Issues
+        // (in theory, we could do this w/o await-ing, but GitHub has rate throttling, so single-threading this helps)
+        await addVeracodeIssue(options, flaw)
+        .catch( error => {
+            if(error instanceof ApiError) {
+
+                // TODO: fall back, retry this same issue, continue process
+
+                // for now, only 1 case - rate limit tripped
+                //console.warn('Rate limiter tripped.  30 second delay and time between issues increased by 2 seconds.');
+                // await sleep(30000);
+                // waitTime += 2;
+
+                // // retry this same issue again, bail out if this fails
+                // await addVeracodeIssue(options, flaw)
+                // .catch( error => {
+                //     throw new Error(`Issue retry failed ${error.message}`);
+                // })
+
+                throw error;
+            } else {
+                //console.error(error.message);
+                throw error; 
+            }
+        })
+
+        // progress counter for large flaw counts
+        if( (index > 0) && (index % 25 == 0) )
+            console.log(`Processed ${index} flaws`)
+
+        // rate limiter, per GitHub: https://docs.github.com/en/rest/guides/best-practices-for-integrators
+        if(waitTime > 0)
+            await sleep(waitTime * 1000);
+    }
+
+    return index;
+}
+
+module.exports = { processPipelineFlaws }
