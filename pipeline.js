@@ -4,8 +4,8 @@
 
 const { request } = require('@octokit/request');
 const label = require('./label');
-const util = require('./util');
-const addVeracodeIssue = require('./util').addVeracodeIssue;
+//const util = require('./util');
+const addVeracodeIssue = require('./issue').addVeracodeIssue;
 
 /* Map of files that contain flaws
  *  each entry is a struct of {CWE, line_number}  
@@ -98,7 +98,6 @@ async function getAllVeracodeIssues(options) {
         let pageNum = 1;
 
         let uriSeverity = encodeURIComponent(element.name);
-
         let uriType = encodeURIComponent(label.otherLabels.find( val => val.id === 'pipeline').name);
         let reqStr = `GET /repos/{owner}/{repo}/issues?labels=${uriSeverity},${uriType}&state=open&page={page}`
         //let reqStr = `GET /repos/{owner}/{repo}/issues?labels=${uriName},${uriType}&state=open&page={page}&per_page={pageMax}`
@@ -146,6 +145,10 @@ async function getAllVeracodeIssues(options) {
 
 async function processPipelineFlaws(options, flawData) {
 
+    const util = require('./util');
+
+    const waitTime = parseInt(options.waitTime);
+
     // get a list of all open VeracodeSecurity issues in the repo
     await getAllVeracodeIssues(options)
 
@@ -165,9 +168,24 @@ async function processPipelineFlaws(options, flawData) {
 
         // add to repo's Issues
         // (in theory, we could do this w/o await-ing, but GitHub has rate throttling, so single-threading this helps)
-        await addVeracodeIssue(options, flaw)
+        let title = `${flaw.issue_type} ` + createVeracodeFlawID(flaw);
+        let lableBase = label.otherLabels.find( val => val.id === 'pipeline').name;
+        let severity = flaw.severity;
+        let bodyText = `**Filename:** ${flaw.files.source_file.file}`;
+        bodyText += `\n\n**Line:** ${flaw.files.source_file.line}`;
+        bodyText += `\n\n**CWE:** ${flaw.cwe_id} (${flaw.issue_type})`;
+        bodyText += '\n\n' + decodeURI(flaw.display_text);
+
+        let issue = {
+            'title': title,
+            'label': lableBase,
+            'severity': severity,
+            'body': bodyText
+        };
+        
+        await addVeracodeIssue(options, issue)
         .catch( error => {
-            if(error instanceof ApiError) {
+            if(error instanceof util.ApiError) {
 
                 // TODO: fall back, retry this same issue, continue process
 

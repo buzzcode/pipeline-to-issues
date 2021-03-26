@@ -117,4 +117,4 @@ function severityToLabel(sevNumber) {
 //     buildSeverityXref();
 // }
 
-module.exports = { flawLabels, otherLabels, createLabels, buildSeverityXref };
+module.exports = { flawLabels, otherLabels, createLabels, buildSeverityXref, severityToLabel };
