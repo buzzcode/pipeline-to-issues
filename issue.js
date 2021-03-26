@@ -3,8 +3,6 @@
 //
 
 const { request } = require('@octokit/request');
-//const label = require('./label');
-//const ApiError = require('./util').ApiError;
 
 // add the flaw to GitHub as an Issue
 async function addVeracodeIssue(options, issue) {

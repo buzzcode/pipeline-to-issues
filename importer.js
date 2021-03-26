@@ -3,9 +3,10 @@
 // 
 
 const fs = require('fs');
-const { request } = require('@octokit/request');
+//const { request } = require('@octokit/request');
 const processPipelineFlaws = require('./pipeline').processPipelineFlaws;
 const label = require('./label');
+
 
 //
 // main driver to handle importing the flaws

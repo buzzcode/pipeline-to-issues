@@ -4,7 +4,6 @@
 
 const { request } = require('@octokit/request');
 const label = require('./label');
-//const util = require('./util');
 const addVeracodeIssue = require('./issue').addVeracodeIssue;
 
 /* Map of files that contain flaws
