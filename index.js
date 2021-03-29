@@ -29,7 +29,7 @@ try {
          githubToken: token,
          waitTime: waitTime}
     )
-    .catch(error => {console.error(`Failure.  ${error.message}`)});
+    .catch(error => {console.error(`Failure at ${error.stack}`)});
 } catch (error) {
-    core.setFailed(error.message);
+    core.setFailed(error.stack);
 }
