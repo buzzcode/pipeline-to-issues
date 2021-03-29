@@ -119,8 +119,8 @@ async function processPolicyFlaws(options, flawData) {
 
     // walk through the list of flaws in the input file
     var index;
-    for( index=0; index < flawData.findings.length; index++) {
-        let flaw = flawData.findings[index];
+    for( index=0; index < flawData._embedded.findings.length; index++) {
+        let flaw = flawData._embedded.findings[index];
 
         let vid = createVeracodeFlawID(flaw);
         console.debug(`processing flaw ${flaw.issue_id}, VeracodeID: ${vid}`);
@@ -133,13 +133,13 @@ async function processPolicyFlaws(options, flawData) {
 
         // add to repo's Issues
         // (in theory, we could do this w/o await-ing, but GitHub has rate throttling, so single-threading this helps)
-        let title = `${flaw.finding_details.cwe.name} ` + createVeracodeFlawID(flaw);
+        let title = `${flaw.finding_details.cwe.name} ('${flaw.finding_details.finding_category.name}') ` + createVeracodeFlawID(flaw);
         let lableBase = label.otherLabels.find( val => val.id === 'policy').name;
         let severity = flaw.finding_details.severity;
-        let bodyText = `**Filename:** ${flaw.files.source_file.file}`;
-        bodyText += `\n\n**Line:** ${flaw.files.source_file.line}`;
-        bodyText += `\n\n**CWE:** ${flaw.cwe_id} (${flaw.issue_type})`;
-        bodyText += '\n\n' + decodeURI(flaw.display_text);
+        let bodyText = `**Filename:** ${flaw.finding_details.file_name}`;
+        bodyText += `\n\n**Line:** ${flaw.finding_details.file_line_number}`;
+        bodyText += `\n\n**CWE:** ${flaw.finding_details.cwe.id} (${flaw.finding_details.cwe.name} ('${flaw.finding_details.finding_category.name}'))`;
+        bodyText += '\n\n' + decodeURI(flaw.description);
 
         let issue = {
             'title': title,
