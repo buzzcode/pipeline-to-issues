@@ -14,7 +14,7 @@ var waitTime = process.env.WAIT_TIME;
 
 program
     .version('0.0.1')
-    .requiredOption('-r, --results <path>', 'Pipeline Scan results file to create issues from', 'filtered_results.json')
+    .requiredOption('-r, --results <path>', 'Scan results file to create issues from', 'filtered_results.json')
     .option('-go, --github-owner <string>', 'GitHub owner name')
     .option('-gr, --github-repo <string>', 'GitHub repo name')
     .option('-t, --token <string>', 'GitHub auth token')
@@ -45,8 +45,8 @@ try {
          githubToken: githubToken,
          waitTime: waitTime}
     )
-    .catch(error => {console.error(`Failure.  ${error.message}`)});
+    .catch(error => {console.error(`Failure at ${error.stack}`)});
 } catch (error) {
-    console.error(error.message);
+    console.error(error.stack);
 }
 
