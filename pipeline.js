@@ -152,6 +152,7 @@ async function processPipelineFlaws(options, flawData) {
     await getAllVeracodeIssues(options)
 
     // walk through the list of flaws in the input file
+    console.log(`Processing input file: \"${options.resultsFile}\" with ${flawData.findings.length} flaws to process.`)
     var index;
     for( index=0; index < flawData.findings.length; index++) {
         let flaw = flawData.findings[index];

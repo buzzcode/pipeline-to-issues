@@ -118,6 +118,7 @@ async function processPolicyFlaws(options, flawData) {
     await getAllVeracodeIssues(options)
 
     // walk through the list of flaws in the input file
+    console.log(`Processing input file: \"${options.resultsFile}\" with ${flawData._embedded.findings.length} flaws to process.`)
     var index;
     for( index=0; index < flawData._embedded.findings.length; index++) {
         let flaw = flawData._embedded.findings[index];
