@@ -14,16 +14,9 @@ async function addVeracodeIssue(options, issue) {
     const githubRepo = options.githubRepo;
     const githubToken = options.githubToken;
 
-    //var vid = createVeracodeFlawID(flaw);
     console.debug(`Adding Issue for ${issue.title}`);
 
     var authToken = 'token ' + githubToken;
-
-    // build the Issue body text
-    //let bodyText = `**Filename:** ${flaw.files.source_file.file}`;
-    //bodyText += `\n\n**Line:** ${flaw.files.source_file.line}`;
-    //bodyText += `\n\n**CWE:** ${flaw.cwe_id} (${flaw.issue_type})`;
-    //bodyText += '\n\n' + decodeURI(flaw.display_text);
 
     await request('POST /repos/{owner}/{repo}/issues', {
         headers: {

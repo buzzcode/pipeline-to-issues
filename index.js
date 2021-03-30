@@ -6,7 +6,6 @@ const core = require('@actions/core');
 const github = require('@actions/github');
 
 const importFlaws = require('./importer').importFlaws;
-//import importFlaws from './importer.js'
 
 try {
     // get input params

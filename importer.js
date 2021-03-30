@@ -3,7 +3,6 @@
 // 
 
 const fs = require('fs');
-//const { request } = require('@octokit/request');
 const processPipelineFlaws = require('./pipeline').processPipelineFlaws;
 const processPolicyFlaws = require('./policy').processPolicyFlaws;
 const label = require('./label');
