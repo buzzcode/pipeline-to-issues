@@ -15,5 +15,5 @@ jobs:
       #uses: buzzcode/pipeline-to-issues@v0.0.1
       uses: buzzcode/pipeline-to-issues@main
       with:
-        pipeline-results-json: 'test/results.json'
+        pipeline-results-json: 'test/results_trimmed.json'
         github-token: ${{ secrets.GITHUB_TOKEN }}
