@@ -1,5 +1,17 @@
 # Import Veracode Static Analysis Pipeline Scan to GitHub Issues - GitHub Action
 
+
+### WARNING
+### WARNING
+
+This Action has been deprecated.
+Please switch to [Veracode flaws to Issues](https://github.com/buzzcode/veracode-flaws-to-issues)
+
+### WARNING
+### WARNING
+
+
+
 This action can be used in a workflow after a Veracode Static Analysis Pipeline Scan to take the results of the scan and import them into GitHub as Issues.
 
 Typically this is done with the filtered results of the Pipeline Scan, see [Pipeline Scan commands](https://help.veracode.com/r/r_pipeline_scan_commands) .
@@ -57,7 +69,7 @@ scan:
         with:
           name: filtered-results
           path: filtered_results.json
-  	
+
 # This step will import the flaws from the previous step above
   import-issues:
     needs: scan

@@ -7,6 +7,11 @@ const github = require('@actions/github');
 
 const importFlaws = require('./importer').importFlaws;
 
+console.log('WARNING');
+console.log('WARNING: This Action has been deprecated.');
+console.log('WARNING: Please switch to https://github.com/buzzcode/veracode-flaws-to-issues');
+console.log('WARNING');
+
 try {
     // get input params
     const resultsFile = core.getInput('pipeline-results-json', {required: true} );
